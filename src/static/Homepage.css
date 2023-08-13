@@ -1,0 +1,66 @@
+.brand-first-letter{
+  color: green;
+  font-weight: bold;
+  font-size: 27px;
+ 
+
+}
+
+.brand-text{
+  text-decoration: overline;
+  text-decoration-color: green;
+  text-decoration-style: solid;  
+  text-decoration-thickness: 2px;
+}
+
+@font-face {
+  font-family: 'Great_Vibes';
+  src: url('../fonts/Great_Vibes/GreatVibes-Regular.ttf') format('truetype');
+} 
+
+@media only screen and (min-width: 992px) {
+
+  .carousel-caption{
+    position: absolute; 
+    top: 0;
+  
+    right: 0 !important;
+    bottom: 1.25rem;
+    left: 0 !important;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    color: #fff;
+    text-align: center;
+  }
+
+  .carousel-caption h3{
+
+    position: absolute;
+     top: 30vh; 
+    right: 0 !important;
+     color: white;
+     font-size: 48px;
+     width: 50%;
+     font-weight: 700;
+     color: rgb(18, 187, 18);
+     /* text-align: left; */
+  }
+
+  .carousel-caption p{
+
+    position: absolute;
+     top: 43vh; 
+     right: 0 !important;
+     color: white;
+     font-size: 18px;
+     width: 50%;
+     /* text-align: left; */
+  }
+
+  /* .readmorehero{
+    top: 43vh; 
+     right: 0;
+     text-align: left;
+  } */
+
+}
