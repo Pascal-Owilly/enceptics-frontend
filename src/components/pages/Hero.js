@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../static/Homepage.css';
+import '../../static/Styles.css';
 import axios from 'axios';
 import naturewalk from '../../videos/naturewalk.mp4';
 import bonfire from '../../videos/bonfire.mp4';
@@ -11,25 +12,27 @@ const VideoCarousel = () => {
 
   
   const [activeIndex, setActiveIndex] = useState(0);
+
   const videos = [
     {
-      src: naturewalk,
-      title: 'Check Your Bucket List',
-      text: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum, quis. Quasi debitis iure libero ipsam laudantium, neque molestiae. Veritatis ipsum, dignissimos distinctio natus aperiam sint cum eos nam mollitia hic.',
-      more: 'Read more',
-    },
-    {
       src: bonfire,
-      title: 'Travel with Enceptics',
-      text: 'Eum, quis. Quasi debitis iure libero ipsam laudantium, neque molestiae. Veritatis ipsum, dignissimos distinctio natus aperiam sint cum eos nam mollitia hic. ',
+      title: 'Plan anywhere',
+      text: 'Sit back and wait',
       more: 'Read more',
     },
     {
       src: waterfall,
-      title: 'Your travel partner for life',
-      text: ' Quasi debitis iure libero ipsam laudantium, neque molestiae. Veritatis ipsum, dignissimos distinctio natus aperiam sint cum eos nam mollitia hic.',
+      title: 'We take care of the rest',
+      text: ' Enjoy your vacation in style',
       more: 'Read more',
     },
+    {
+      src: naturewalk,
+      title: 'Check Your Bucket List',
+      text: 'Repeat ...',
+      more: 'Read more',
+    },
+
   ];
 
   useEffect(() => {
@@ -50,35 +53,29 @@ const VideoCarousel = () => {
 
   return (
     <>
-
-<div className='continer-fluid'style={{postion: 'relative'}}>
-
-
-      <div className="carousel" style={{position: 'relative'}}>
+    <div className='continer-fluid hero-section' style={{overflow:'hidden'}}>
+      <div className="carousel" >
         {videos.map((video, index) => (
           <div
             key={index}
-            className={`carousel-item ${index === activeIndex ? 'active' : ''}`}
+            className={`   ${index === activeIndex ? 'active' : ''}`}
             style={{
               display: index === activeIndex ? 'block' : 'none',
               position: 'relative',
             }}
           >
-            <video className="mt-5" src={video.src} autoPlay muted loop style={{ width: '100%' }}>
+            <video className="mt-5 hero-video" src={video.src} autoPlay muted loop style={{ width: '100%' }}>
               Your browser does not support the video tag.
             </video>
-            <div className="carousel-caption " style={{ backgroundColor: 'rgb(18, 22, 97, 0.4)' }}>
-              <h3 className=''>{video.title}</h3>
-              <p className="mt-5">{video.text}</p>
+            <div className="carousel-caption " style={{ backgroundColor: 'rgb(18, 22, 97, 0.4)', height:'auto' }}>
+              <h3 style={{marginRight:'3rem'}} className='mt-5'>{video.title}</h3>
+              <p className='caption-p mt-5 style-p' style={{marginRight:'3rem',  fontSize:'22px', fontWeight:'bolder'}} >{video.text}</p>
             </div>
           </div>
         ))}
-
-
       </div> 
     </div>
 </>
-
   );
 };
 

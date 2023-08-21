@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import '../../static/Homepage.css';
 import axios from 'axios';
 
+import Login from './authenticate/Login';
+import { useNavigate } from 'react-router-dom';
+
 const Booking = () => {
   const [bookingData, setBookingData] = useState({
     numPeople: 1,
@@ -85,11 +88,23 @@ const Booking = () => {
     checkDestination();
   };
 
+  const navigate = useNavigate();
+
+  const [token,setToken] = useState();
+
+  if(token){
+    navigate('/booking', {replace: true})
+  }
+  else{
+    return <Login setToken={setToken} />
+  }
+
   return (
     <>
-      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '100vh', color: 'white' }}>
-        <div className='container m-auto'>
-          <h1 className='text-center'>Booking for Salar De Uyuni</h1>
+      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '100vh', color: 'white', margin:'auto' }}>
+        <br />
+        <div className='container mt-5'>
+          <h1 className='text-center'>Booking </h1>
           <hr style={{ color: 'white', height: '2rem' }} />
           <div className='row'>
             <div className='col-md-3 mt-2'>
@@ -131,7 +146,6 @@ const Booking = () => {
                 </label>
               </div>
               <p>
-                <label htmlFor="vehicleCapacity">Two way? &nbsp;</label>
                 <input
                   style={{ backgroundColor: '#d9d9d9', color: '#121661', border: 'none', borderRadius: '30px', padding: '.2rem' }}
                   type="checkbox"
@@ -143,18 +157,6 @@ const Booking = () => {
               {/* <button type="submit" onClick={handleCheckDestinationSubmit}>
                 Book
               </button> */}
-            </div>
-
-            <div className='col-md-3 mt-2'>
-              <h5 className='mt-2'>Check the box for separate rooms</h5>
-              <label htmlFor="separateRooms">Separate rooms? &nbsp;</label>
-              <input
-                style={{ backgroundColor: '#d9d9d9', color: '#121661', border: 'none', borderRadius: '30px', padding: '.1rem' }}
-                type="checkbox"
-                id="vehicleCapacity"
-                value=""
-                onChange=""
-              />
             </div>
 
             <div className='col-md-3 text-white'>
@@ -234,7 +236,7 @@ const Booking = () => {
                   onClick={handleCheckDestinationSubmit}
                   type="submit"
                   className="btn btn-lg text-center mt-3"
-                  style={{ backgroundColor: 'green', color: '#fff', width: '30%', margin: 'auto' }}
+                  style={{ backgroundColor: 'green', color: '#fff', width: '300px', margin: 'auto' }}
                 >
                   Book this destination
                 </button>
@@ -279,5 +281,6 @@ const Booking = () => {
     </>
   );
 };
+
 
 export default Booking;

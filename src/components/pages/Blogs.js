@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {Col} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faTrashAlt, faEdit, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Card } from 'react-bootstrap';
@@ -126,7 +127,7 @@ const PostComponent = () => {
       await axios.put(`http://127.0.0.1:8000/api/v1/posts/${postId}`, editedPost);
       setEditMode((prevEditMode) => ({
         ...prevEditMode,
-        [postId]: false,
+        [postId]: true,
       }));
       // Refresh posts after successful update
       fetchPosts();
@@ -157,7 +158,7 @@ const PostComponent = () => {
     }));
   };
 
-  const totalPages = Math.ceil(posts.length / itemsPerPage);
+  // const totalPages = Math.ceil(posts.length / itemsPerPage);
   // Calculate the index range of posts to be displayed on the current page
   const indexOfLastPost = currentPage * itemsPerPage;
   const indexOfFirstPost = indexOfLastPost - itemsPerPage;
@@ -170,32 +171,27 @@ const PostComponent = () => {
 
   return (
     <>
-    <div className='container-fluid' style={{position: 'relative'}}>
-
-    
-      <div style={{ backgroundColor: '#d9d9d9', color: '#2f8e92' }}>
-        <h4 className="text-center chatroom">Chatroom</h4>
-
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8">
+    <div className='container-fluid' style={{position: 'relative', backgroundColor:'rgb(18, 187, 18)'}}>
+      <div className='row'>
+      <h3 className="text-left mt-3 text-center mb-4" style={{color:'#ddd2d2'}}>What our visitors say</h3>
+           <div className="col-md-3 col-lg-12 col-sm-12 d-flex" >
               {currentPosts.map((post) => (
-                <Card className="mt-3" key={post.id} style={{ width: '100%', margin: 'auto' }}>
+                <Card className="m-2" key={post.id} style={{ width: '100%', marginLeft: '',backgroundColor:'#121661', color:'#d9d9d9' }}>
                   <div className="row no-gutters" style={{ backgroundColor: '#d9d9g8' }}>
-                    <div className="col-md-4">
+                    <div className="col-md-12">
                       <Card.Img
                         src={img}
-                        className="card-img m-4"
+                        className="card-img"
                         alt="..."
-                        style={{ width: '150px', height: '150px', margin: 'auto', borderRadius: '50%' }}
+                        style={{ width: '100px', height: '10  0px', margin: 'auto', borderRadius: '10px' }}
                       />
                     </div>
-                    <div className="col-md-8">
-                      <Card.Body style={{ width: '100%', backgroundColor: 'green', color: '#ebebf2' }}>
+                    <div className="">
+                      <Card.Body style={{ width: '', backgroundColor: 'transparent' }}>
                         {!editMode[post.id] ? (
                           <>
                             <Card.Title>{post.title}</Card.Title>
-                            <Card.Text>{post.body}</Card.Text>
+                            {post.body}
                             <div>
                               <FontAwesomeIcon
                                 icon={faHeart}
@@ -204,13 +200,12 @@ const PostComponent = () => {
                               />
                               {likes[post.id] || 0}
                             </div>
-                            <Card.Text style={{ textAlign: '', fontSize: '13px' }}>
-                              Posted by: {post.author}
-                            </Card.Text>
+                              Posted by: User {post.author}
+                            
                             <div>
-                              <Card.Text style={{ textAlign: '', fontSize: '10px' }}>
+                              <span style={{ textAlign: 'right', fontSize: '10px' }}>
                                 {post.created_at}
-                              </Card.Text>
+                              </span>
                               <p onClick={() => handleCommentChange(post.id)}>Add Comment</p>
 
                               {commentFormOpen[post.id] && (
@@ -272,31 +267,17 @@ const PostComponent = () => {
                   </div>
                 </Card>
               ))}
-
-              {/* Render pagination buttons */}
-              <div>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handlePageChange(index + 1)}
-                    disabled={currentPage === index + 1}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="col-md-4">
-              <h4>Top chats</h4> <hr />
+                          <div className="col-md-2 " style={{marginLeft:'4rem'}}>
+              <h4 style={{color:'#ddd2d2'}}>Top chats</h4> <hr />
               <p>More cool places</p>
               <p>I love Kenya</p>
               <p>The cool waters of Lake Victoria</p>
               <p>I love it all</p>
             </div>
-          </div>
+            </div>
+
         </div>
-      </div>
-      </div>
+        </div>      
     </>
   );
 };

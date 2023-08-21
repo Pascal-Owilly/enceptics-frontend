@@ -1,33 +1,51 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState} from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 import '../src/static/Homepage.css';
 import Homepage from './components/pages/Hero';
 import Blogs from '../src/components/pages/Blogs';
-import ProfilePage from '../src/components/pages/ProfilePage';
+import Profile from '../src/components/pages/Profile';
 import BookingPage from '../src/components/pages/BookingPage';
 import Places from '../src/components/pages/Places';
 import Description from '../src/components/pages/Description';
 import About from '../src/components/pages/About';
+import Aboutus from '../src/components/pages/Aboutus';
 import BookNew from '../src/components/pages/BookNew';
 import NavigationBar from './components/pages/NavigationBar';
 import Home from './components/pages/Home';
+import Login from './components/pages/authenticate/Login';
+import Footer from './components/pages/Footer';
+import CurrencyConverter from './components/pages/CurrencyConverter'
 
 function App() {
+
+
+
+  const [token,setToken] = useState(null);
+  // const navigate = useNavigate();
+
+  // if(!token){
+  //   return <Login setToken={setToken} />
+  // }
+
   return (  
     <Router>
-      <div>
+      <div className='wrapper'>
         <NavigationBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/places" element={<Places />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<Aboutus />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/booknew" element={<BookNew />} />
-          <Route path="/booking" element={<BookingPage />} />
+          <Route path="/booking" element={<BookingPage setToken={setToken} />} >
+            </Route>
           <Route path="/description" element={<Description />} />
+          <Route path="/currencyconverter" element={<CurrencyConverter />} />
         </Routes>
+        <Footer />  
       </div>
     </Router>
   );
