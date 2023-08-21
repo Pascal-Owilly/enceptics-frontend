@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import '../../static/Homepage.css';
 import '../../static/Styles.css';
 import axios from 'axios';
-import naturewalk from '../../videos/naturewalk.mp4';
-import bonfire from '../../videos/bonfire.mp4';
-import waterfall from '../../videos/waterfall.mp4';
-import './ProfilePage.js';
+import naturewalk from '../../images/vace1.avif';
+import bonfire from '../../images/vace2.jpg';
+import waterfall from '../../images/mombasa.jpg';
 import { Dropdown } from 'react-bootstrap';
 import heroimg from '../../images/heroimg.png'
 const VideoCarousel = () => {
@@ -13,9 +12,9 @@ const VideoCarousel = () => {
   
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const videos = [
+  const images = [
     {
-      src: bonfire,
+      src: naturewalk,
       title: 'Plan anywhere',
       text: 'Sit back and wait',
       more: 'Read more',
@@ -27,7 +26,7 @@ const VideoCarousel = () => {
       more: 'Read more',
     },
     {
-      src: naturewalk,
+      src: bonfire,
       title: 'Check Your Bucket List',
       text: 'Repeat ...',
       more: 'Read more',
@@ -37,11 +36,11 @@ const VideoCarousel = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % videos.length);
+      setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [videos.length]);
+  }, [images.length]);
 
   const greatvibes = {
     fontFamily: 'cursive',
@@ -55,7 +54,7 @@ const VideoCarousel = () => {
     <>
     <div className='continer-fluid hero-section' style={{overflow:'hidden'}}>
       <div className="carousel" >
-        {videos.map((video, index) => (
+        {images.map((image, index) => (
           <div
             key={index}
             className={`   ${index === activeIndex ? 'active' : ''}`}
@@ -64,12 +63,11 @@ const VideoCarousel = () => {
               position: 'relative',
             }}
           >
-            <video className="mt-5 hero-video" src={video.src} autoPlay muted loop style={{ width: '100%' }}>
-              Your browser does not support the video tag.
-            </video>
-            <div className="carousel-caption " style={{ backgroundColor: 'rgb(18, 22, 97, 0.4)', height:'auto' }}>
-              <h3 style={{marginRight:'3rem'}} className='mt-5'>{video.title}</h3>
-              <p className='caption-p mt-5 style-p' style={{marginRight:'3rem',  fontSize:'22px', fontWeight:'bolder'}} >{video.text}</p>
+            <img className="mt-5 hero-video" src={image.src} style={{ width: '100%' }} />
+
+            <div className="carousel-caption " style={{ backgroundColor: '#121661', height:'auto' }}>
+              <h3 style={{marginRight:'3rem'}} className='mt-5'>{image.title}</h3>
+              <p className='caption-p mt-5 style-p' style={{marginRight:'3rem',  fontSize:'22px', fontWeight:'bolder'}} >{image.text}</p>
             </div>
           </div>
         ))}
