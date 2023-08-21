@@ -172,7 +172,7 @@ const handleRegistrationChange = (e) => {
 
 <>
 <nav
-        className="navbar navbar-expand-lg navbar-dark"
+        className="navbar navbar-expand-lg "
         variant="fixed"
         style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%' }}
       >
@@ -182,12 +182,12 @@ const handleRegistrationChange = (e) => {
             <sub className="brand-text">nceptics</sub>
           </a>
           <button
-            className="navbar-toggler"
+            class="navbar-toggler"
             type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
             aria-controls="navbarNav"
-            aria-expanded="true"
+            aria-expanded="false"
             aria-label="Toggle navigation"
           >
           <span className="navbar-toggler-icon"></span>

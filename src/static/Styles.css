@@ -64,7 +64,7 @@
 }
 
 @keyframes caption-p {
-  100%{left: 43%;
+  100%{left: 47%;
     overflow: hidden;
   }
 }
@@ -427,7 +427,7 @@
 
     }
     .c-container{
-      height: auto;
+      height: 100vh;
       width: 50%;
       display: flex;
       justify-content: space-around;
