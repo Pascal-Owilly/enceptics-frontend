@@ -103,10 +103,11 @@ const Booking = () => {
     <>
       <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '100vh', color: 'white', margin:'auto' }}>
         <br />
-        <div className='container mt-5'>
+        <div className='container mt-5 m-auto' >
           <h1 className='text-center'>Booking </h1>
           <hr style={{ color: 'white', height: '2rem' }} />
-          <div className='row'>
+          <div className='row' style={{boxShadow:'2px 2px 0 2px solid white'}}>
+            <div className='col-md-3'></div>
             <div className='col-md-3 mt-2'>
               <h5 className='mt-1'>Number of people</h5>
               <p>
@@ -145,15 +146,6 @@ const Booking = () => {
                   Book Place
                 </label>
               </div>
-              <p>
-                <input
-                  style={{ backgroundColor: '#d9d9d9', color: '#121661', border: 'none', borderRadius: '30px', padding: '.2rem' }}
-                  type="checkbox"
-                  id="vehicleCapacity"
-                  value=""
-                  onChange=""
-                />
-              </p>
               {/* <button type="submit" onClick={handleCheckDestinationSubmit}>
                 Book
               </button> */}
@@ -217,7 +209,7 @@ const Booking = () => {
               </form>
             </div>
 
-            <div className='col-md-3'>
+            {/* <div className='col-md-3'>
               <h5 className='mt-2'>Enter pick up location</h5>
               <p>
                 <input
@@ -228,7 +220,7 @@ const Booking = () => {
                   onChange={handleBookingChange}
                 />
               </p>
-            </div>
+            </div> */}
 
             <div className='row m-auto'>
               <div className='col-md-12 text-center mt-5' style={{ margin: 'auto' }}>

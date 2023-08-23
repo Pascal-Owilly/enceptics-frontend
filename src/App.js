@@ -5,7 +5,7 @@ import './App.css';
 import '../src/static/Homepage.css';
 import Homepage from './components/pages/Hero';
 import Blogs from '../src/components/pages/Blogs';
-import Profile from '../src/components/pages/Profile';
+import Profile2 from '../src/components/pages/Profile2';
 import BookingPage from '../src/components/pages/BookingPage';
 import Places from '../src/components/pages/Places';
 import Description from '../src/components/pages/Description';
@@ -38,7 +38,7 @@ function App() {
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile2 />} />
           <Route path="/booknew" element={<BookNew />} />
           <Route path="/booking" element={<BookingPage setToken={setToken} />} >
             </Route>

@@ -27,7 +27,7 @@ const VideoCarousel = () => {
     },
     {
       src: bonfire,
-      title: 'Check Your Bucket List',
+      title: 'Check your bucket list',
       text: 'Repeat ...',
       more: 'Read more',
     },
@@ -37,7 +37,7 @@ const VideoCarousel = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % videos.length);
-    }, 5000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [videos.length]);
@@ -67,9 +67,9 @@ const VideoCarousel = () => {
               Your browser does not support this video 
               </video>
 
-            <div className="carousel-caption " style={{ backgroundColor: 'rgba(18, 22, 97 ,0.5)', height:'auto' }}>
-              <h3 style={{marginRight:'3rem'}} className='mt-5'>{video.title}</h3>
-              <p className='caption-p mt-5 style-p' style={{marginRight:'3rem',  fontSize:'22px', fontWeight:'bolder'}} >{video.text}</p>
+            <div className="carousel-caption " style={{ backgroundColor: 'rgba(18, 22, 97 ,0.5)', height:'' }}>
+              <h3 style={{marginRight:'3rem'}} className='mt-'>{video.title}</h3>
+              <p className='caption-p mt- style-p' style={{marginRight:'3rem',  fontSize:'22px', fontWeight:'bolder'}} >{video.text}</p>
             </div>
           </div>
         ))}
