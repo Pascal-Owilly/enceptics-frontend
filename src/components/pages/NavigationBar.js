@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../static/Homepage.css';
 import axios from 'axios';
-import './ProfilePage.js';
+import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 
