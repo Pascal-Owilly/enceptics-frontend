@@ -18,9 +18,13 @@ import Login from './components/pages/authenticate/Login';
 import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
 import "bootstrap/dist/css/bootstrap.min.css";
-import ManageBlog from './components/pages/ManageBlog';
-import AddPostModal from './components/pages/AddPostModal';
+// import ManageBlog from './components/pages/ManageBlog';
+// import AddPostModal from './components/pages/AddPostModal';
 // import VehicleTracker from './components/pages/VehicleTracker';
+
+import BlogList from './components/pages/BlogList';
+import BlogDetail from './components/pages/BlogDetail';
+import BlogForm from './components/pages/BlogForm';
 
 function App() {
 
@@ -35,11 +39,16 @@ function App() {
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
           {/* <Route path="/blogs" element={<BlogList />} /> */}
-          <Route path="/blogs" element={<Blogs />} />
+          {/* <Route path="/blogs" element={<ManageBlog />} /> */}
+
+          <Route path="/blog" element={ <BlogList />} />
+          <Route path="/post/:id" element={< BlogDetail />} />
+          <Route path="/create" element={< BlogForm />} />
+          <Route path="/edit/:id" element={ <BlogForm />} />
+
           <Route path="/profile" element={<Profile />} />
           {/* <Route path="/booknew" element={<BookNew />} /> */}
-          <Route path="/manageblog" element={<ManageBlog/>} />
-          <Route path="/addpost" element={<AddPostModal/>} />
+          {/* <Route path="/manageblog" element={<ManageBlog/>} /> */}
           {/* <Route path="/vehicleTracker" element={<VehicleTracker/>} /> */}
           <Route path="/booking" element={<BookingPage setToken={setToken} />} >
           </Route>

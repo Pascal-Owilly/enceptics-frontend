@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import '../../static/Homepage.css';
 import '../../static/Styles.css';
 import axios from 'axios';
-import naturewalk from '../../videos/naturewalk.mp4';
-import bonfire from '../../videos/waterfall.mp4';
-import waterfall from '../../videos/bonfire.mp4';
+// import naturewalk from '../../videos/naturewalk.mp4';
+// import bonfire from '../../videos/waterfall.mp4';
+// import waterfall from '../../videos/bonfire.mp4';
 import { Dropdown } from 'react-bootstrap';
 import heroimg from '../../images/heroimg.png'
 const VideoCarousel = () => {
@@ -14,19 +14,19 @@ const VideoCarousel = () => {
 
   const videos = [
     {
-      src: naturewalk,
+      // src: naturewalk,
       title: 'Plan anywhere',
       text: 'Sit back and wait',
       more: 'Read more',
     },
     {
-      src: waterfall,
+      // src: waterfall,
       title: 'We take care of the rest',
       text: ' Enjoy your vacation in style',
       more: 'Read more',
     },
     {
-      src: bonfire,
+      // src: bonfire,
       title: 'Check your bucket list',
       text: 'Repeat ...',
       more: 'Read more',

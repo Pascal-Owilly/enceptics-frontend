@@ -17,7 +17,6 @@ import w_img from '../../images/house2.jpg';
 import house3 from '../../images/house3.jpg';
 import house4 from '../../images/house4.jpg';
 import house5 from '../../images/house5.jpg';
-import city from '../../videos/city.mp4';
 
 const MySection = () => {
 

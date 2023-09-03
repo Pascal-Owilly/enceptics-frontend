@@ -214,7 +214,7 @@ const handleRegistrationChange = (e) => {
                 
               </li>
 
-              <li>
+              {/* <li>
               <Dropdown className='btn-sm'
                 style={{marginRight:'1rem'}}
               >
@@ -229,7 +229,7 @@ const handleRegistrationChange = (e) => {
                   <Dropdown.Item href="#">Beach</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-                </li>
+                </li> */}
                 <li className="nav-item">
                 <a className="nav-link text-white" href="#">
                     <form className='search-form align-right' 
