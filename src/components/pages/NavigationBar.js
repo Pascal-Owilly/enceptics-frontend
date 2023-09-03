@@ -310,8 +310,8 @@ const handleRegistrationChange = (e) => {
                   <button className="nav-item" 
                     style={{backgroundColor:'transparent', marginRight:'1rem', border:'none'}}
                     >
-                  <a className="nav-link text-white" href="/blogs">
-                    Blog
+                  <a className="nav-link text-white" href="/blog">
+                    Join Chat
                   </a>
                   </button> 
 
