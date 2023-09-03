@@ -5,6 +5,13 @@ import { formatDistanceToNow } from 'date-fns';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import natpark from '../../images/natpark.jpg';
+import placeholderImage1 from '../../images/house1.jpg';
+import placeholderImage2 from '../../images/house2.jpg';
+import placeholderImage3 from '../../images/house3.jpg';
+// import Slider from 'react-slick'; 
+import { Carousel } from 'react-bootstrap';
+
+
 
 function BlogList() {
   const [posts, setPosts] = useState([]);
@@ -72,10 +79,11 @@ function BlogList() {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
   };
 
+
   return (
     <div style={{backgroundColor:'rgb(18, 187, 18)'}}>
     <div className="container" style={{ minHeight: '100vh' }}>
-      <h1 className=""> <br /><br /> Travellers Blog</h1>
+      <h1 className="" style={{fontFamily:'cursive'}}> <br /><br /> Travellers Blog</h1>
       <div className="row mt-5">
       {/* <div className="col-md-1"></div> */}
         <div className="col-md-7">
@@ -83,9 +91,10 @@ function BlogList() {
             <input
               type="text"
               className="form-control m-1"
-              placeholder="Enter your new post content"
+              placeholder="Share your experience ..."
               value={newPostContent}
               onChange={handleNewPostContentChange}
+              style =  {{backgroundColor:'#d9d9d9', border:'none', borderRadius:'10px 0 10px 0'}}
             />
 
             <input
@@ -93,6 +102,7 @@ function BlogList() {
               accept="image/*"
               className="p-1 m-1"
               onChange={handleImageChange}
+              style =  {{ borderRadius:'10px 0 10px 0'}}
             />
 
             <div className="input-group-append">
@@ -107,11 +117,12 @@ function BlogList() {
           <div className="row">
             {posts.map(post => (
               <div className="col-md-12 mb-3" key={post.id}>
-                <div className="card what-card text-white" style={{ backgroundColor: '#121661'}}>
+                <div className="card what-card text-white" style={{ backgroundColor: '#121661', borderRadius:'10px 0 10px 0'}}>
                   <div className="card-header">
                     <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-                    <span>John Doe</span>
-                    <p style={{fontSize:'12px', color:'rgb(87, 187, 87)'}} className="mb-0 ms-5">{formatTimeDifference(post.created_at)}</p>
+                    <span className='text-success' style={{fontWeight:'bolder'}}>John Doe</span>  &nbsp;                  
+                      <button className="btn btn-outline-success btn-sm ms-2"><i className="fa fa-user-plus"></i> Follow</button>
+                    <p style={{fontSize:'12px', color:'rgb(87,187, 87)', fontWeight:'bold'}} className="mb-0 ms-5">{formatTimeDifference(post.created_at)}</p>
                   </div>
                   <div className="card-body">
                     <p className="card-text ">{post.content}</p>
@@ -124,6 +135,10 @@ function BlogList() {
                     <div className="d-flex justify-content-between">
                       
                       <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm"><i className="fa fa-trash"></i></button>
+                      <div>
+                        <button className="btn btn-outline-primary btn-sm me-2"><i className="fa fa-thumbs-up"></i> Like</button>
+                        <button className="btn btn-outline-secondary btn-sm"><i className="fa fa-comment"></i> Comment</button>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -131,12 +146,45 @@ function BlogList() {
             ))}
           </div>
         </div>
-        <div className='col-md-3 text-right'>
-          <h3 className='text-center mt-4'>Most talked about destinations</h3>
+        <div className='col-md-4 text-right'>
+  <h4 className='text-center mt-5' style={{fontFamily:'cursive', fontWeight:'bold'}}>Top chats</h4>
+ 
+          <Carousel className="fixed-carousel mt-3 ms-4"
+
+          style={{
+            height:'150px',
+            outline:'1px solid #198754',
+            padding:'1.2rem',
+            borderRadius:'0 20px 0 0',
+            
+          }}
+          
+          >
+            <Carousel.Item>
+            <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+            <span className='text-success' style={{fontWeight:'bolder'}}>Veronica Ouma</span>
+            <p className='ms-5'>I once tried biolminiscence it's amazing</p>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div className="mb-3">
+              <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+            <span className='text-success' style={{fontWeight:'bolder'}}>Pascal Owilly</span>
+            <p className='ms-5'>I have walked around the world but I have never seen a plce like Salar de Uyuni</p>
+              </div>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div className="mb-3">
+              <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+            <span className='text-success' style={{fontWeight:'bolder'}}>Leon Okoo</span>
+            <p className='ms-5'>Enceptics is amazing from start to finish</p>
+              </div>
+            </Carousel.Item>
+          </Carousel>
         </div>
       </div>
     </div>
     </div>
+
   );
 }
 

@@ -581,3 +581,13 @@
 }
 
 /* END FLASH MESSAGE */
+
+/* START BLOG CAROUSEL ITEMS */
+
+.fixed-carousel .carousel-control-prev,
+.fixed-carousel .carousel-control-next {
+  display: none;
+}
+
+
+/* END BLOG CAROUSEL ITEM */
