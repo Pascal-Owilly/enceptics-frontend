@@ -18,13 +18,11 @@ import Login from './components/pages/authenticate/Login';
 import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
 import "bootstrap/dist/css/bootstrap.min.css";
-// import ManageBlog from './components/pages/ManageBlog';
-// import AddPostModal from './components/pages/AddPostModal';
-// import VehicleTracker from './components/pages/VehicleTracker';
 
 import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
+import SignUp from './components/pages/authenticate/SignUp';
 
 function App() {
 
@@ -38,7 +36,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
-          {/* <Route path="/blogs" element={<BlogList />} /> */}
+          <Route path="/signup" element={<SignUp />} />
           {/* <Route path="/blogs" element={<ManageBlog />} /> */}
 
           <Route path="/blog" element={ <BlogList />} />

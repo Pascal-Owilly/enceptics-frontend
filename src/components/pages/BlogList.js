@@ -18,11 +18,25 @@ function BlogList() {
   const [newPostContent, setNewPostContent] = useState('');
   const [selectedImage, setSelectedImage] = useState(null); // State variable for the selected image
   const [imagePreview, setImagePreview] = useState(null); // State variable for image preview
+  const [profilePics, setProfilePics] = useState({}); // State variable to store profile pictures
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/blogposts/')
       .then(response => {
         setPosts(response.data);
+        // Fetch profile pictures for each post
+        response.data.forEach(post => {
+          axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`)
+            .then(profileResponse => {
+              setProfilePics(prevProfilePics => ({
+                ...prevProfilePics,
+                [post.author]: profileResponse.data.profile_pic
+              }));
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
       })
       .catch(error => {
         console.error(error);
@@ -115,14 +129,14 @@ function BlogList() {
             </div>
           )}
           <div className="row">
-            {posts.map(post => (
+          {posts.map(post => (
               <div className="col-md-12 mb-3" key={post.id}>
-                <div className="card what-card text-white" style={{ backgroundColor: '#121661', borderRadius:'10px 0 10px 0'}}>
+                <div className="card what-card text-white" style={{ backgroundColor: '#121661', borderRadius: '10px 0 10px 0' }}>
                   <div className="card-header">
-                    <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-                    <span className='text-success' style={{fontWeight:'bolder'}}>John Doe</span>  &nbsp;                  
-                      <button className="btn btn-outline-success btn-sm ms-2"><i className="fa fa-user-plus"></i> Follow</button>
-                    <p style={{fontSize:'12px', color:'rgb(87,187, 87)', fontWeight:'bold'}} className="mb-0 ms-5">{formatTimeDifference(post.created_at)}</p>
+                    <img src={profilePics[post.author]} alt="img" style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
+                    <span className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</span>  &nbsp;
+                    <button className="btn btn-outline-success btn-sm ms-2"><i className="fa fa-user-plus"></i> Follow</button>
+                    <p style={{ fontSize: '12px', color: 'rgb(87, 187, 87)', fontWeight: 'bold' }} className="mb-0 ms-5">{formatTimeDifference(post.created_at)}</p>
                   </div>
                   <div className="card-body">
                     <p className="card-text ">{post.content}</p>
@@ -133,17 +147,16 @@ function BlogList() {
 
                   <div className="card-footer text-muted">
                     <div className="d-flex justify-content-between">
-                      
                       <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm"><i className="fa fa-trash"></i></button>
                       <div>
                         <button className="btn btn-outline-primary btn-sm me-2"><i className="fa fa-thumbs-up"></i> Like</button>
                         <button className="btn btn-outline-secondary btn-sm"><i className="fa fa-comment"></i> Comment</button>
-                    </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+           ))}
           </div>
         </div>
         <div className='col-md-4 text-right'>
@@ -181,9 +194,11 @@ function BlogList() {
             </Carousel.Item>
           </Carousel>
         </div>
+         
       </div>
     </div>
     </div>
+    
 
   );
 }
