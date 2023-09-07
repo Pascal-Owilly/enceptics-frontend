@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
-import { useAuth } from "../pages/authenticate/AuthContext";
+// import { useAuth } from "../pages/authenticate/AuthContext";
 import { useNavigate } from 'react-router-dom';
 
 

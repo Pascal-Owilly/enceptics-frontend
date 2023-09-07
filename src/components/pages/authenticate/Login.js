@@ -1,84 +1,70 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../authenticate/AuthContext";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-export default function Login() {
-  const navigate = useNavigate();
-  const { login, authToken } = useAuth();
-
+function Login() {
   const [loginData, setLoginData] = useState({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
-
-  useEffect(() => {
-    // Check if authToken is present and redirect to the profile page if it is
-    if (authToken) {
-      navigate("/profile", { replace: true });
-    }
-    else{
-      navigate('/login')
-    }
-  }, [authToken, navigate]);
-
-  const handleLoginSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await login(loginData);
-      navigate("/profile", { replace: true });
-    } catch (error) {
-      alert("Login failed, please try again");
-    }
-  };
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  return (
-    <div className="login-form" style={{ backgroundColor: "#121661", height: "100vh", color: "white" }}>
-      <h3>Please login to continue</h3>
-      <form
-        className="col-md-3 col-lg-4 col-sm-10 col-xm-12"
-        onSubmit={handleLoginSubmit}
-      >
-        <div className="form-group">
-          <label className="mt-4" htmlFor="username">
-            Username
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="username"
-            name="username"
-            value={loginData.username}
-            placeholder="Enter username"
-            onChange={handleLoginChange}
-          />
-        </div>
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
+      const authToken = response.data.token;
+  
+      // Store the authToken in localStorage
+      localStorage.setItem('authToken', authToken);
+      console.log(JSON.stringify(response.data))
+  
+      // Attempt to retrieve the token from localStorage
+      const storedToken = localStorage.getItem('authToken');
+  
+      if (storedToken === null) {
+        console.error('Token not found in localStorage');
+      } else {
+        console.log('Stored Token:', storedToken);
+      }
+  
+      // Redirect the user to another page (e.g., '/profile') after successful login
+      // You can use a router for this purpose (e.g., React Router)
+      // Example:
+      // history.push('/profile');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+  
 
-        <div className="form-group">
-          <label className="mt-4" htmlFor="password">
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="Enter password"
-            className="form-control "
-            id="password"
-            name="password"
-            value={loginData.password}
-            onChange={handleLoginChange}
-          />
-        </div>
-        <button
-          type="submit"
-          className="btn btn-primary btn-sm mt-4"
-          style={{ backgroundColor: "#000092", borderColor: "#000092", width: "100%" }}
-        >
-          Login
-        </button>
+
+
+  return (
+    <div>
+      <h2 style={{ height: '100vh' }}>Login</h2>
+      <form onSubmit={handleLoginSubmit}>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={loginData.username}
+          onChange={handleLoginChange}
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={loginData.password}
+          onChange={handleLoginChange}
+        />
+        <button type="submit">Log In</button>
       </form>
     </div>
   );
 }
+
+export default Login;
