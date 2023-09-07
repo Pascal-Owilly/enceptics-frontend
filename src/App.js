@@ -23,19 +23,24 @@ import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
 import SignUp from './components/pages/authenticate/SignUp';
+import { AuthProvider } from "../src/components/pages/authenticate/AuthContext";
 
 function App() {
 
-  const [token,setToken] = useState(null);
+  // const [token,setToken] = useState(null);
 
   return (  
+   
     <Router>
+          <AuthProvider>
+
       <div className='wrapper'>
         <NavigationBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           {/* <Route path="/blogs" element={<ManageBlog />} /> */}
 
@@ -48,14 +53,17 @@ function App() {
           {/* <Route path="/booknew" element={<BookNew />} /> */}
           {/* <Route path="/manageblog" element={<ManageBlog/>} /> */}
           {/* <Route path="/vehicleTracker" element={<VehicleTracker/>} /> */}
-          <Route path="/booking" element={<BookingPage setToken={setToken} />} >
+          <Route path="/booking" element={<BookingPage />} >
           </Route>
           <Route path="/description" element={<Description />} />
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
         </Routes>
         <Footer />  
       </div>
+      
+      </AuthProvider>
     </Router>
+   
   );
 }
 

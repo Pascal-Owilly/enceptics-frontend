@@ -1,98 +1,84 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../authenticate/AuthContext";
 
+export default function Login() {
+  const navigate = useNavigate();
+  const { login, authToken } = useAuth();
 
-export default function Login({ setToken }){
-    const navigate = useNavigate();
+  const [loginData, setLoginData] = useState({
+    username: "",
+    password: "",
+  });
 
+  useEffect(() => {
+    // Check if authToken is present and redirect to the profile page if it is
+    if (authToken) {
+      navigate("/profile", { replace: true });
+    }
+    else{
+      navigate('/login')
+    }
+  }, [authToken, navigate]);
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleLoginSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await login(loginData);
+      navigate("/profile", { replace: true });
+    } catch (error) {
+      alert("Login failed, please try again");
+    }
+  };
 
-    const [loginData, setLoginData] = useState({
-        username: '',
-        password: '',
-      });
+  const handleLoginChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
 
-      useEffect(() => {
-        const storedToken = localStorage.getItem('authToken');
-        if (storedToken) {
-          setToken(storedToken);
-          setIsLoggedIn(true);
-        }
-      }, []);
-
-      const login = async (e) => {
-        if (e) {
-          e.preventDefault();
-        }
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
-          setIsLoggedIn(true); // Update authentication state
-          setToken(response.data.token); // Set the token here
-          localStorage.setItem('authToken', response.data.token); // Store token in localStorage
-          navigate('/booking', { replace: true });
-        } catch (error) {
-          alert("That didn't go well, try again");
-        }
-      };
-      
-      
-
-      const handleLoginSubmit = (event) => {
-        event.preventDefault();
-        login();
-      };
-
-      const handleLoginChange = (e) => {
-        setLoginData({ ...loginData, [e.target.name]: e.target.value });
-      };
-
-    return (
-        <div className="login-form" style={{backgroundColor:'#121661', height:'100vh', color:'white'}}>
-        <h3>Please login to continue</h3>
-            <form className="col-md-3  col-lg-4 col-sm-10 col-xm-12"
-
-             onSubmit={handleLoginSubmit}
-            >
-                      <div className="form-group">
-                        <label className="mt-4" htmlFor="username">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="username"
-                          name="username"
-                          value={loginData.username}
-                          placeholder="Enter username"
-                          onChange={handleLoginChange}
-                        />
-                      </div>
-
-                       <div className="form-group">
-                        <label className="mt-4" htmlFor="password">Password</label>
-                        <input
-                          type="password"
-                          placeholder="Enter password"
-                          className="form-control "
-                          id="password"
-                          name="password"
-                          value={loginData.password}
-                          onChange={handleLoginChange}
-                        />
-                      </div> 
-                      <button
-                        type="submit"
-                        className="btn btn-primary btn-sm mt-4"
-                        style={{ backgroundColor: '#000092', borderColor: '#000092', width:'100%' }}
-                      >
-                        Login
-                      </button>
-                    </form>
+  return (
+    <div className="login-form" style={{ backgroundColor: "#121661", height: "100vh", color: "white" }}>
+      <h3>Please login to continue</h3>
+      <form
+        className="col-md-3 col-lg-4 col-sm-10 col-xm-12"
+        onSubmit={handleLoginSubmit}
+      >
+        <div className="form-group">
+          <label className="mt-4" htmlFor="username">
+            Username
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="username"
+            name="username"
+            value={loginData.username}
+            placeholder="Enter username"
+            onChange={handleLoginChange}
+          />
         </div>
-    )
-}
 
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-  }
+        <div className="form-group">
+          <label className="mt-4" htmlFor="password">
+            Password
+          </label>
+          <input
+            type="password"
+            placeholder="Enter password"
+            className="form-control "
+            id="password"
+            name="password"
+            value={loginData.password}
+            onChange={handleLoginChange}
+          />
+        </div>
+        <button
+          type="submit"
+          className="btn btn-primary btn-sm mt-4"
+          style={{ backgroundColor: "#000092", borderColor: "#000092", width: "100%" }}
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  );
+}

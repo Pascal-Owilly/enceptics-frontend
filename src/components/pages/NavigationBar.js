@@ -4,6 +4,8 @@ import axios from 'axios';
 import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
+import { useAuth } from "../pages/authenticate/AuthContext";
+import { useNavigate } from 'react-router-dom';
 
 
 function FlashMessage({ message, type }) {
@@ -17,6 +19,8 @@ function FlashMessage({ message, type }) {
 function NavigationBar() {
   
 const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
+
+const navigate = useNavigate()
 
 useEffect(() => {
   if (flashMessage) {
@@ -44,6 +48,23 @@ const [loginData, setLoginData] = useState({
 const [profile, setProfile] = useState([]);
 
 
+const login = async (e) => {
+  if (e) {
+    e.preventDefault();
+  }
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
+    const authToken = response.data.token;
+
+    setIsLoggedIn(true); 
+    localStorage.setItem('authToken', authToken); // Store token in localStorage
+    console.log(response.data.token)
+    setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' }); // Set flash message
+    closeModal();
+  } catch (error) {
+    setFlashMessage({ message: "That didn't go well!", type: 'error' }); // Set flash message
+  }
+};
 
 useEffect(() => {
   const storedToken = localStorage.getItem('authToken');
@@ -55,14 +76,22 @@ useEffect(() => {
 
 const fetchProfile = async () => {
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/auth/profile/', {
-
-    });
-    setProfile(response.data);
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      const response = await axios.get('http://127.0.0.1:8000/profile/profile/', {
+        headers: {
+          Authorization: `Token ${storedToken}`,
+        },
+      });
+      setProfile(response.data);
+    } else {
+      navigate('/login');
+    }
   } catch (error) {
     console.error('Error fetching profile info:', error);
   }
 };
+
 
 const [showModal, setShowModal] = useState(false);
 const [isSignUpModal, setIsSignUpModal] = useState(false);
@@ -98,21 +127,7 @@ const handleRegistrationSubmit = (e) => {
 
 // Inside NavigationBar component
 
-const login = async (e) => {
-  if (e) {
-    e.preventDefault();
-  }
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
-    setIsLoggedIn(true); // Update authentication state
-    localStorage.setItem('authToken', response.data.token); // Store token in localStorage
 
-    setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' }); // Set flash message
-    closeModal();
-  } catch (error) {
-    setFlashMessage({ message: "That didn't go well!", type: 'error' }); // Set flash message
-  }
-};
 
 const logout = async () => {
   try {
@@ -309,9 +324,8 @@ const handleRegistrationChange = (e) => {
                     style={{backgroundColor:'transparent', marginRight:'1rem', width: '45px', height:'45px', borderRadius: '100%' }}
                   >
                   <a className="nav-link text-white" href="/profile">
-                    <img src={profile.image} style={{width:'40px',height:'40px', borderRadius:'100%', margin:'auto'}}/>
-                   {profile.user} 
-                  Profile
+                    <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%', margin:'auto'}}/>
+                   {profile.current_city} 
                    </a>
                    </button> 
                   ))} 
@@ -328,21 +342,6 @@ const handleRegistrationChange = (e) => {
                                 Logout
                                   
                                 </button>
-
-
-                                {/* <div>
-                    {profile.map((profile) => (
-                      <button className="nav-item"
-                        style={{backgroundColor:'transparent', marginRight:'1rem', width: '45px', height:'45px', borderRadius: '100%' }}
-                      >
-                      <a className="nav-link text-white" href="/profile">
-                        <img src={profile.image} style={{width:'40px',height:'40px', borderRadius:'100%', margin:'auto'}}/>
-                        {profile.user} 
-                      </a>
-                      hjgdwgiu
-                      </button>
-                ))}
-                      </div> */}
                                 </>
                               )} 
       {showModal && (
