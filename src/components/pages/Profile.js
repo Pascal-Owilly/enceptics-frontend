@@ -8,20 +8,24 @@ import { Card } from 'react-bootstrap';
 import natpark from '../../images/undraw_trip_re_f724.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './authenticate/AuthContext'; // Import the useAuth hook
+import Cookies from 'js-cookie'; // Import Cookies
 
 const Profile = () => {
   const { authToken, logout } = useAuth(); // Access the authentication status and logout function
   const [profile, setProfile] = useState([]);
   const [editingProfile, setEditingProfile] = useState(false);
   const [editedProfile, setEditedProfile] = useState({});
+  
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!authToken) {
-      // Redirect to login page if not authenticated
+      // Store the target URL in a cookie and redirect to login page if not authenticated
+      Cookies.set('targetUrl', '/profile', { sameSite: 'None', secure: true });
       navigate('/login');
     } else {
       fetchProfile();
+      navigate('/profile');
     }
   }, [authToken, navigate]);
 

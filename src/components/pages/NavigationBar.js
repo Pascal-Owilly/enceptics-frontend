@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../static/Homepage.css';
 import axios from 'axios';
+import Cookies from 'js-cookie'; // Import js-cookie library
 import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
@@ -54,24 +55,28 @@ const login = async (e) => {
   }
   try {
     const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
-    const authToken = response.data.token;
+    const authToken = response.data.key;
 
-    setIsLoggedIn(true); 
-    localStorage.setItem('authToken', authToken); // Store token in localStorage
-    console.log(response.data.token)
-    setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' }); // Set flash message
+    setIsLoggedIn(true);
+
+    // Store the token in a cookie with an expiration date (e.g., 1 day)
+    Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });    
+    console.log('Token is', JSON.stringify(response.data))
+    console.log(authToken)
+
+    setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' });
     closeModal();
   } catch (error) {
-    setFlashMessage({ message: "That didn't go well!", type: 'error' }); // Set flash message
+    setFlashMessage({ message: "That didn't go well!", type: 'error' });
   }
 };
 
 useEffect(() => {
-  const storedToken = localStorage.getItem('authToken');
+  const storedToken = Cookies.get('authToken'); // Retrieve the token from the cookie
   if (storedToken) {
     setIsLoggedIn(true);
   }
-  fetchProfile(); // Fetch profile even if not logged in, in case it's needed for displaying user info.
+  fetchProfile();
 }, []);
 
 const fetchProfile = async () => {
@@ -132,14 +137,16 @@ const handleRegistrationSubmit = (e) => {
 const logout = async () => {
   try {
     await axios.post('http://127.0.0.1:8000/api/auth/logout/');
-    setIsLoggedIn(false); // Update authentication state
-    localStorage.removeItem('authToken'); // Remove token from localStorage
-
-    setFlashMessage({ message: 'You have successfully logged out', type: 'success' }); // Set flash message
+    setIsLoggedIn(false);
+    
+    // Remove the authToken cookie
+    Cookies.remove('authToken', { sameSite: 'None', secure: true });
+    setFlashMessage({ message: 'You have successfully logged out', type: 'success' });
   } catch (error) {
-    setFlashMessage({ message: 'Failed to logout', type: 'error' }); // Set flash message
+    setFlashMessage({ message: 'Failed to logout', type: 'error' });
   }
 };
+
 
 
 const handleLoginSubmit = (event) => {
@@ -465,7 +472,7 @@ const handleRegistrationChange = (e) => {
       </nav>
 
       {flashMessage && (
-        <div className="flash-message">
+        <div className="flash-message" style={{backgroundColor:'#121661',  fontWeight:'normal'}}>
           {flashMessage.message}
         </div>
     )}

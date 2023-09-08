@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function Login() {
   const [loginData, setLoginData] = useState({
     username: '',
     password: '',
   });
+
+  const navigate = useNavigate();
+
+  const [redirectUrl, setRedirectUrl] = useState(null);
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -16,53 +22,72 @@ function Login() {
   
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
-      const authToken = response.data.token;
+      const authToken = response.data.key;
   
-      // Store the authToken in localStorage
-      localStorage.setItem('authToken', authToken);
-      console.log(JSON.stringify(response.data))
+      // Store the authToken in a cookie with an expiration date (e.g., 1 day)
+      Cookies.set('authToken', authToken, { expires: 2, sameSite: 'None', secure: true });
   
-      // Attempt to retrieve the token from localStorage
-      const storedToken = localStorage.getItem('authToken');
-  
-      if (storedToken === null) {
-        console.error('Token not found in localStorage');
-      } else {
-        console.log('Stored Token:', storedToken);
-      }
-  
-      // Redirect the user to another page (e.g., '/profile') after successful login
-      // You can use a router for this purpose (e.g., React Router)
-      // Example:
-      // history.push('/profile');
+      // Redirect to '/profile' immediately after a successful login
+      navigate('/profile');
     } catch (error) {
       console.error('Login failed:', error);
     }
   };
-  
 
+  const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor:'#121661'
+  };
 
+//   const cardStyle = {
+//     width: '300px',
+//     padding: '20px',
+//     border: '1px solid #ccc',
+//     borderRadius: '5px',
+//     boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+//   };
+
+  const forgottenPasswordStyle = {
+    marginTop: '10px',
+    textAlign: 'center',
+  };
 
   return (
-    <div>
-      <h2 style={{ height: '100vh' }}>Login</h2>
-      <form onSubmit={handleLoginSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={loginData.username}
-          onChange={handleLoginChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={loginData.password}
-          onChange={handleLoginChange}
-        />
-        <button type="submit">Log In</button>
-      </form>
+    <div style={containerStyle}>
+      <div className='what-card mt-4 p-2' style={{width:'350px', height:'400px'}}>
+        <h2 className='text-white' style={{ textAlign: 'center' }}>Login</h2>
+        <p></p>
+        <form className='p-4' onSubmit={handleLoginSubmit}>
+            <p className='text-white'>Username</p>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={loginData.username}
+            onChange={handleLoginChange}
+            style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
+          />
+          <p className='text-white'>Password</p>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={loginData.password}
+            onChange={handleLoginChange}
+            style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
+          />
+          <p></p>
+          <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: 'rgb(18, 187, 18)', color: 'white', border: 'none', borderRadius:'25px' }}>
+            Log In
+          </button>
+        </form>
+        <div style={forgottenPasswordStyle}>
+          <Link to="/forgot-password">Forgotten Password?</Link>
+        </div>
+      </div>
     </div>
   );
 }
