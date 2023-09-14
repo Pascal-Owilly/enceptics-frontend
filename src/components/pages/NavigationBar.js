@@ -243,17 +243,7 @@ const handleRegistrationChange = (e) => {
                 
               </li>
 
-              <li>
-              <a href="/blog">
-              <button className="btn btn-sm mx-4 what-card" 
-                    style={{borderRadius:'50%', fontSize:'20px', color:'rgb(87, 187,87)'}}
-                    >
-                      
-                    <IoMdChatboxes />
-                      
-                    
-                  </button> </a>
-              </li>
+
 
               {/* <li>
               <Dropdown className='btn-sm'
@@ -303,13 +293,22 @@ const handleRegistrationChange = (e) => {
                     </form>
                 </a>
               </li>
-              <li className="nav-item mx-3">
+              <li>
+              <a href="/blog">
+              <button className="btn btn-sm mx-4 what-card" 
+                    style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
+                    >
+                      
+                    <IoMdChatboxes style={{fontSize:'19px'}} /> chat
+                      
+                    
+                  </button> </a>
+              </li>
+              <li className="nav-item mx-1">
                 <a className="nav-link" href="/currencyconverter" style={greatvibes}>
                   Convert Currency
                 </a>
               </li>
-
-  
 
               <li>
               <div>
@@ -333,7 +332,7 @@ const handleRegistrationChange = (e) => {
           <div>
             <button
               type="button"
-              className="btn btn-sm m-1 what-card"
+              className="btn btn-sm mx-4 what-card"
               style={{ backgroundColor: '', color: '#d9d9d9', border: 'none' }}
               onClick={openSignUpModal}
             >
@@ -362,7 +361,7 @@ const handleRegistrationChange = (e) => {
 
                 <button
                                 type="button"
-                                className="btn btn-sm ml-4 what-card"
+                                className="btn btn-sm mx-4 what-card"
                                 style={{  color: '#d9d9d9', border: 'none'}}
                                 onClick={logout}
                               >
