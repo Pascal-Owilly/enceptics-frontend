@@ -11,8 +11,6 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [redirectUrl, setRedirectUrl] = useState(null);
-
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
@@ -29,6 +27,7 @@ function Login() {
   
       // Redirect to '/profile' immediately after a successful login
       navigate('/profile');
+      console.log('You are authenticated', authToken)
     } catch (error) {
       console.error('Login failed:', error);
     }

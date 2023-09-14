@@ -34,7 +34,7 @@ const PostComponent = () => {
           <h3 className="text-left mt-3 text-center mb-4" style={{ color: '#ddd2d2' }}>What our visitors say</h3>
           <div className="col-md-3 col-lg-12 col-sm-12 d-flex">
             {posts.map((post) => (
-              <div key={post.blog_id} className="m-2" style={{ width: '100%', marginLeft: '', color: '#d9d9d9' }}>
+              <div key={post.blog_id} className="" style={{ width: '100%', marginLeft: '', color: '#d9d9d9' }}>
                 <div className="row no-gutters" style={{ backgroundColor: '#d9d9g8' }}>
                   <div className="col-md-12">
                     <div

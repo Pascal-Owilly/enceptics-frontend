@@ -38,9 +38,6 @@ function BlogList() {
             });
         });
       })
-      .catch(error => {
-        console.error(error);
-      });
   }, []);
 
   const deletePost = (id) => {

@@ -5,6 +5,8 @@ import Cookies from 'js-cookie'; // Import js-cookie library
 import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
+import { IoMdChatboxes } from 'react-icons/io';
+
 // import { useAuth } from "../pages/authenticate/AuthContext";
 import { useNavigate } from 'react-router-dom';
 
@@ -55,6 +57,7 @@ const login = async (e) => {
   }
   try {
     const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
+  
     const authToken = response.data.key;
 
     setIsLoggedIn(true);
@@ -89,7 +92,9 @@ const fetchProfile = async () => {
         },
       });
       setProfile(response.data);
-    } else {
+    } 
+    
+    else {
       navigate('/login');
     }
   } catch (error) {
@@ -182,11 +187,13 @@ const handleRegistrationChange = (e) => {
   };
 
   const greatvibes = {
-    fontFamily: 'great_vibes',
-    fontSize: '20px',
+    fontFamily: 'lobster',
+    fontSize: '14px',
     textDecoration: 'overline',
     textDecorationColor: 'green',
-    textDecorationSkipInk: "2rem",
+    textDecorationSkipInk: "3rem",
+    color:'rgb(18, 187, 18)',
+    fontWeight:'500',
 
   };
 
@@ -194,9 +201,9 @@ const handleRegistrationChange = (e) => {
 
 <>
 <nav
-        className="navbar navbar-expand-lg "
+        className="navbar navbar-expand-lg what-card"
         variant="fixed"
-        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%' }}
+        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', top: 0 }}
       >
         <div className="container-fluid">
           <a className="navbar-brand text-white" href="/">
@@ -229,11 +236,23 @@ const handleRegistrationChange = (e) => {
               <li className="nav-item">
                
                 <a className="nav-link text-white" href="/places">
-                <button className='btn btn-sm' style={{backgroundColor:'rgb(18, 187, 18)', color:'#121661', fontWeight:'bolder'}}>
+                <button className='btn btn-sm what-card' style={{backgroundColor:'#121661', color:'#fff', fontWeight:'bolder'}}>
                   Book Now
                   </button>
                 </a>
                 
+              </li>
+
+              <li>
+              <a href="/blog">
+              <button className="btn btn-sm mx-4 what-card" 
+                    style={{borderRadius:'50%', fontSize:'20px', color:'rgb(87, 187,87)'}}
+                    >
+                      
+                    <IoMdChatboxes />
+                      
+                    
+                  </button> </a>
               </li>
 
               {/* <li>
@@ -262,10 +281,11 @@ const handleRegistrationChange = (e) => {
                       type="text"
                       // value={query}
                       // onChange={(event) => setQuery(event.target.value)}
-                      style={{width:'160px', height:'28px', padding:'10px'}}
+                      style={{width:'150px', height:'28px', padding:'10px',backgroundColor:'#d9d9d9'
+                    }}
                     />
                       <button
-                        className='search-btn d-inline p-1'
+                        className='search-btn d-inline p-1 what-card'
                         style={{
                           borderRadius: '0 25px 25px 25px',
                           width: '55px',
@@ -273,6 +293,7 @@ const handleRegistrationChange = (e) => {
                           fontSize: '11px',
                           height:'25px',
                           fontWeight:'bold',
+                          border:'none'
                         }}
                         type="submit"
                       >
@@ -282,50 +303,16 @@ const handleRegistrationChange = (e) => {
                     </form>
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link text-white " href="/currencyconverter" style={greatvibes}>
-                  Currency Converter
+              <li className="nav-item mx-3">
+                <a className="nav-link" href="/currencyconverter" style={greatvibes}>
+                  Convert Currency
                 </a>
               </li>
+
+  
+
               <li>
-              <button className="nav-item btn btn-sm btn-outline-secondary" 
-                    style={{backgroundColor:'', marginRight:'1rem', border:''}}
-                    >
-                  <a className="nav-link text-white" href="/blog">
-                    Join Chat
-                  </a>
-                  </button> 
-              </li>
-            </ul>
-
-            {!isLoggedIn && ( // Render only if not logged in
-          <div>
-            <button
-              type="button"
-              className="btn btn-sm btn-light m-1"
-              style={{ backgroundColor: 'white', color: '#000092', border: 'none' }}
-              onClick={openSignUpModal}
-            >
-              Sign Up 
-            </button>
-
-           
-              
-            <button
-              type="button"
-              className="btn btn-sm btn-light m-1"
-              style={{ backgroundColor: 'white', color: '#000092', border: 'none' }}
-              onClick={openLoginModal}
-            >
-              Login
-            </button>
-          </div>
-        )} 
-
-      {isLoggedIn && ( 
-            
-                <>
-                <div>
+              <div>
                 {profile.map((profile) => (
                   <button className="nav-item"
                     style={{backgroundColor:'transparent', marginRight:'1rem', width: '45px', height:'45px', borderRadius: '100%' }}
@@ -337,13 +324,46 @@ const handleRegistrationChange = (e) => {
                    </button> 
                   ))} 
                   </div> 
+              </li>
+
+
+            </ul>
+
+            {!isLoggedIn && ( // Render only if not logged in
+          <div>
+            <button
+              type="button"
+              className="btn btn-sm m-1 what-card"
+              style={{ backgroundColor: '', color: '#d9d9d9', border: 'none' }}
+              onClick={openSignUpModal}
+            >
+              Sign Up 
+            </button>
+
+           
+              
+            <button
+              type="button"
+              className="btn btn-sm m-1 what-card"
+              style={{color: '#d9d9d9', border: 'none' }}
+              onClick={openLoginModal}
+            >
+              Login
+            </button>
+          </div>
+        )} 
+
+      {isLoggedIn && ( 
+            
+                <>
+
 
 
 
                 <button
                                 type="button"
-                                className="btn btn-sm btn-light ml-4"
-                                style={{ backgroundColor: 'white', color: '#000092', border: 'none'}}
+                                className="btn btn-sm ml-4 what-card"
+                                style={{  color: '#d9d9d9', border: 'none'}}
                                 onClick={logout}
                               >
                                 Logout
@@ -352,7 +372,7 @@ const handleRegistrationChange = (e) => {
                                 </>
                               )} 
       {showModal && (
-          <div className="modal" style={{ display: 'block' }}>
+          <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh' }}>
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
@@ -426,7 +446,7 @@ const handleRegistrationChange = (e) => {
                   ) : (
                     <>
                     
-                    <form onSubmit={handleLoginSubmit}>
+                    <form onSubmit={handleLoginSubmit} >
                       <div className="form-group">
                         <label className="mt-4" htmlFor="username">Username</label>
                         <input

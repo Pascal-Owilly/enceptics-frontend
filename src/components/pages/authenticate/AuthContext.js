@@ -21,14 +21,18 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (loginData) => {
     try {
+
+      Cookies.remove("authToken");
+      
       const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", loginData);
       const authToken = response.data.key;
       setAuthToken(authToken);
       
       // Store the token in a cookie with an expiration date (e.g., 1 day)
-      Cookies.set("authToken", authToken, { expires: 1, sameSite: "None", secure: true });
+      Cookies.set("authToken", authToken, { expires: 2, sameSite: "None", secure: true });
 
       navigate('/profile');
+      console.log('User token is here', authToken)
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -40,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     // Remove the authToken cookie
     Cookies.remove("authToken");
 
-    navigate('/');
+    navigate('/blog');
   };
 
   return (
