@@ -7,6 +7,7 @@ import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg
 import { Card } from 'react-bootstrap';
 import natpark from '../../images/undraw_trip_re_f724.svg';
 import { useNavigate } from 'react-router-dom';
+import img from '../../images/about.svg'
 
 import { useParams } from 'react-router-dom';
 
@@ -30,7 +31,7 @@ const Profile = () => {
         },
       });
       const userProfile = response.data;
-      console.log('User Profile Data:', userProfile);
+      console.log('User Profile Data:', userProfile.profile_pic);
       setProfile(userProfile);
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -53,7 +54,7 @@ const Profile = () => {
 
   const saveProfileChanges = async () => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/p/profile/${profile.id}/`, editedProfile, {
+      const response = await axios.put(`http://127.0.0.1:8000/api/${profile.id}/`, editedProfile, {
         headers: {
           Authorization: `Token ${authToken}`,
         },
@@ -70,18 +71,18 @@ const Profile = () => {
       <div style={{ backgroundColor: '#121661', height: '100vh' }}>
       <div className="container bootstra snippets bootdey">
         <div className="row" style={{ backgroundColor: '#121661' }}>
-          <div className="profile-nav col-md-3" style={{ marginTop: '12vh', backgroundColor: 'rgb(18, 187, 18)' }}>
+          <div className="profile-nav col-md-3" style={{ marginTop: '15vh', backgroundColor: 'rgb(18, 187, 18)' }}>
             <div className="panel" style={{ backgroundColor: '#121661' }}>
               <div className="user-heading round">
-              {Object.values(profile).map((userProfile) => (
-                <div key={userProfile.id}>
-                  <h2>{userProfile.current_city}</h2>
-                  <img src={userProfile.profile_pic} alt="" style={{width:'100%'}}/>
-                  <p>{userProfile.bio}</p>
-                  <p>Created At: {userProfile.created_at}</p>
-                  {/* Add other profile details as needed */}
-                </div>
-              ))}
+              <div className="user-heading round">
+              <div>
+                <img src={profile.profile_pic} alt="Pic" style={{ width: '100px', height: '100px' }} />
+                <h2>{profile.user}</h2>
+                <p>Current City: {profile.current_city}</p>
+                <p>Bio: {profile.bio}</p>
+              </div>
+
+              </div>
 
               </div>
 
@@ -92,10 +93,9 @@ const Profile = () => {
               </ul>
             </div>
           </div>
-          <div className="profile-info col-md-9" style={{ marginTop: '12vh' }}>
+          <div className="profile-info col-md-9 text-center" style={{ marginTop: '12vh', color:'#d9d9d9' }}>
             <div className="panel">
-              {/* Profile content */}
-              {/* Add your profile content here */}
+          <p>What's your favourite quite?</p>         
    
             </div>
           </div>

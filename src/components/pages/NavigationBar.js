@@ -86,7 +86,7 @@ const fetchProfile = async () => {
   try {
     const storedToken = localStorage.getItem('authToken');
     if (storedToken) {
-      const response = await axios.get('http://127.0.0.1:8000/profile/profile/', {
+      const response = await axios.get('http://127.0.0.1:8000/api/profile/', {
         headers: {
           Authorization: `Token ${storedToken}`,
         },
@@ -206,7 +206,7 @@ const handleRegistrationChange = (e) => {
         style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', top: 0 }}
       >
         <div className="container-fluid">
-          <a className="navbar-brand text-white" href="/">
+          <a className="navbar-brand text-white mx-2" href="/">
             <span className="brand-first-letter">E</span>
             <sub className="brand-text">nceptics</sub>
           </a>
@@ -312,16 +312,14 @@ const handleRegistrationChange = (e) => {
 
               <li>
               <div>
-                {profile.map((profile) => (
-                  <button className="nav-item"
-                    style={{backgroundColor:'transparent', marginRight:'1rem', width: '45px', height:'45px', borderRadius: '100%' }}
+                  <li className="nav-item mx-2"
+                    style={{backgroundColor:'transparent', width: '45px', height:'45px', borderRadius: '100%' }}
                   >
                   <a className="nav-link text-white" href="/profile">
-                    <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%', margin:'auto'}}/>
+                    <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%'}}/>
                    {profile.current_city} 
                    </a>
-                   </button> 
-                  ))} 
+                   </li> 
                   </div> 
               </li>
 

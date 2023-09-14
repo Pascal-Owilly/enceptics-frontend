@@ -31,7 +31,7 @@ import { AuthProvider } from "../src/components/pages/authenticate/AuthContext";
 
 function App() {
 
-  // const [token,setToken] = useState(null);
+  const [token, setToken] = useState(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
@@ -60,7 +60,7 @@ useEffect(() => {
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signup" element={<SignUp setToken={setToken} />} />
 
           <Route path="/blog" element={ <BlogList />} />
           <Route path="/post/:id" element={< BlogDetail />} />

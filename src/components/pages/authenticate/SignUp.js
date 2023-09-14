@@ -1,57 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
+function FlashMessage({ message, type }) {
+  return (
+    <div className={`flash-message ${type}`}>
+      <p>{message}</p>
+    </div>
+  );
+}
 
 export default function Signup({ setToken }) {
   const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [flashMessage, setFlashMessage] = useState(null);
 
   const [userData, setUserData] = useState({
-    first_name: '',
-    last_name: '',
     username: '',
     email: '',
-    password1: '', // Corrected state field name
-    password2: '', // Corrected state field name
+    password1: '',
+    password2: '',
   });
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      setToken(storedToken);
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  const signup = async (e) => {
+  const signUp = async (e) => {
     if (e) {
       e.preventDefault();
     }
     try {
-      // Check if the password and confirmPassword match
-      if (userData.password1 !== userData.password2) { // Corrected state field name
-        alert("Passwords do not match");
-        return;
-      }
-
-      // Remove confirmPassword from the data before sending it to the server
-      const { password2, ...userDataWithoutConfirmPassword } = userData; // Corrected state field name
-
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', userDataWithoutConfirmPassword);
-      setIsLoggedIn(true); // Update authentication state
-      setToken(response.data.token); // Set the token here
-      localStorage.setItem('authToken', response.data.token); // Store token in localStorage
-      navigate('/booking', { replace: true });
+      const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', userData);
+      setFlashMessage({ message: `Welcome ${userData.username} !`, type: 'success' });
+      setToken(response.data.key); // Set the token with the provided function
     } catch (error) {
-      alert("Sign-up failed, please try again");
+      alert(`Oops something went wrong but we are working on it`);
     }
   };
 
   const handleSignupSubmit = (event) => {
     event.preventDefault();
-    signup();
+    signUp();
   };
 
   const handleSignupChange = (e) => {
@@ -60,33 +48,8 @@ export default function Signup({ setToken }) {
 
   return (
     <div className="signup-form" style={{ backgroundColor: '#121661', height: '100vh', color: 'white' }}>
-      <h3 style={{ height: '15vh'}}>Please sign up to continue</h3>
+      <h3 style={{ height: '15vh' }}>Please sign up to continue</h3>
       <form className="col-md-3 col-lg-4 col-sm-10 col-xm-12" onSubmit={handleSignupSubmit}>
-        <div className="form-group">
-          <label className="mt-4" htmlFor="first_name">First Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="first_name"
-            name="first_name"
-            value={userData.first_name}
-            placeholder="Enter first name"
-            onChange={handleSignupChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="mt-4" htmlFor="last_name">Last Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="last_name"
-            name="last_name"
-            value={userData.last_name}
-            placeholder="Enter last name"
-            onChange={handleSignupChange}
-          />
-        </div>
 
         <div className="form-group">
           <label className="mt-4" htmlFor="username">Username</label>
@@ -120,9 +83,9 @@ export default function Signup({ setToken }) {
             type="password"
             placeholder="Enter password"
             className="form-control"
-            id="password"
-            name="password1" // Corrected state field name
-            value={userData.password1} // Corrected state field name
+            id="password1"
+            name="password1"
+            value={userData.password1}
             onChange={handleSignupChange}
           />
         </div>
@@ -133,9 +96,9 @@ export default function Signup({ setToken }) {
             type="password"
             placeholder="Confirm password"
             className="form-control"
-            id="confirmPassword"
-            name="password2" // Corrected state field name
-            value={userData.password2} // Corrected state field name
+            id="password2"
+            name="password2"
+            value={userData.password2}
             onChange={handleSignupChange}
           />
         </div>
@@ -148,6 +111,12 @@ export default function Signup({ setToken }) {
           Sign Up
         </button>
       </form>
+
+      {flashMessage && (
+        <div className="flash-message" style={{ backgroundColor: '#121661', fontWeight: 'normal' }}>
+          {flashMessage.message}
+        </div>
+      )}
     </div>
   )
 }
