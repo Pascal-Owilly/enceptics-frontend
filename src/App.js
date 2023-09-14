@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
@@ -19,6 +19,10 @@ import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { Outlet } from "react-router-dom";
+import Cookies from 'js-cookie';
+
+
 import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
@@ -29,6 +33,21 @@ function App() {
 
   // const [token,setToken] = useState(null);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  const checkAuthToken = () => {
+    const authToken = Cookies.get('authToken');
+    if (!authToken || authToken === 'undefined') {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
+  };
+  
+
+useEffect(() => {
+  checkAuthToken();
+}, [isLoggedIn]);
   return (  
    
     <Router>
@@ -42,18 +61,14 @@ function App() {
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          {/* <Route path="/blogs" element={<ManageBlog />} /> */}
 
           <Route path="/blog" element={ <BlogList />} />
           <Route path="/post/:id" element={< BlogDetail />} />
           <Route path="/create" element={< BlogForm />} />
           <Route path="/edit/:id" element={ <BlogForm />} />
 
-          <Route path="/profile" element={<Profile />} />
-          {/* <Route path="/booknew" element={<BookNew />} /> */}
-          {/* <Route path="/manageblog" element={<ManageBlog/>} /> */}
-          {/* <Route path="/vehicleTracker" element={<VehicleTracker/>} /> */}
-          <Route path="/booking" element={<BookingPage />} >
+          <Route path="/profile" element={isLoggedIn && <Profile />} />
+          <Route path="/booking" element={isLoggedIn && <BookingPage />} >
           </Route>
           <Route path="/description" element={<Description />} />
           <Route path="/currencyconverter" element={<CurrencyConverter />} />

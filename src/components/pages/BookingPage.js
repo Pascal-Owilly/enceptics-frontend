@@ -92,13 +92,13 @@ const Booking = () => {
 
   const [token,setToken] = useState();
 
-  if(!token){
-    return <Login setToken={setToken} />
-  }
-  else{
+  // if(!token){
+  //   return <Login setToken={setToken} />
+  // }
+  // else{
     
-    navigate('/booking', {replace: true})
-  }
+  //   navigate('/booking', {replace: true})
+  // }
 
   return (
     <>
