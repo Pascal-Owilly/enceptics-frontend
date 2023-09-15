@@ -196,6 +196,7 @@ const handleRegistrationChange = (e) => {
     fontWeight:'500',
 
   };
+  
 
   return (
 
@@ -311,16 +312,7 @@ const handleRegistrationChange = (e) => {
               </li>
 
               <li>
-              <div>
-                  <li className="nav-item mx-2"
-                    style={{backgroundColor:'transparent', width: '45px', height:'45px', borderRadius: '100%' }}
-                  >
-                  <a className="nav-link text-white" href="/profile">
-                    <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%'}}/>
-                   {profile.current_city} 
-                   </a>
-                   </li> 
-                  </div> 
+
               </li>
 
 
@@ -336,9 +328,7 @@ const handleRegistrationChange = (e) => {
             >
               Sign Up 
             </button>
-
-           
-              
+            
             <button
               type="button"
               className="btn btn-sm m-1 what-card"
@@ -353,9 +343,16 @@ const handleRegistrationChange = (e) => {
       {isLoggedIn && ( 
             
                 <>
-
-
-
+              <div>
+                  <li className="nav-item mx-2"
+                    style={{backgroundColor:'transparent', width: '45px', height:'45px', borderRadius: '100%' }}
+                  >
+                  <a className="nav-link text-white" href="/profile">
+                    <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%'}}/>
+                   {profile.current_city} 
+                   </a>
+                   </li> 
+                  </div> 
 
                 <button
                                 type="button"

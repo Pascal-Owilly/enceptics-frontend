@@ -26,28 +26,11 @@ import Cookies from 'js-cookie';
 import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
-import SignUp from './components/pages/authenticate/SignUp';
 import { AuthProvider } from "../src/components/pages/authenticate/AuthContext";
+import PrivateRoute from './components/pages/authenticate/PrivateRoute';
 
 function App() {
 
-  const [token, setToken] = useState(null);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  const checkAuthToken = () => {
-    const authToken = Cookies.get('authToken');
-    if (!authToken || authToken === 'undefined') {
-      setIsLoggedIn(false);
-    } else {
-      setIsLoggedIn(true);
-    }
-  };
-  
-
-useEffect(() => {
-  checkAuthToken();
-}, [isLoggedIn]);
   return (  
    
     <Router>
@@ -60,16 +43,20 @@ useEffect(() => {
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp setToken={setToken} />} />
 
           <Route path="/blog" element={ <BlogList />} />
           <Route path="/post/:id" element={< BlogDetail />} />
           <Route path="/create" element={< BlogForm />} />
           <Route path="/edit/:id" element={ <BlogForm />} />
 
-          <Route path="/profile" element={isLoggedIn && <Profile />} />
-          <Route path="/booking" element={isLoggedIn && <BookingPage />} >
+            <Route exact path='/' element={<PrivateRoute/>}>
+            <Route exact path='/profile/*' element={<Profile/>}/>
+          </Route> 
+          <Route exact path='/' element={<PrivateRoute/>}>
+            <Route exact path='/booking' element={<BookingPage/>}/>
           </Route>
+          {/* <PrivateRoute path="/booking" component={BookingPage} /> */}
+          {/* <PrivateRoute path="/profile" component={Profile} /> */}
           <Route path="/description" element={<Description />} />
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
         </Routes>
