@@ -31,7 +31,7 @@ const Profile = () => {
         },
       });
       const userProfile = response.data;
-      console.log('User Profile Data:', userProfile.profile_pic);
+      console.log('User Profile Data:', userProfile);
       setProfile(userProfile);
     } catch (error) {
       console.error('Error fetching user profile:', error);

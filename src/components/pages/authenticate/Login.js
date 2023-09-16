@@ -14,7 +14,7 @@ function Login() {
   useEffect(() => {
     // Check if the user is already authenticated using the token in cookies
     if (isAuthenticated()) {
-      navigate('/');
+      navigate('/profile');
     }
   }, []); // Run this effect only once, similar to componentDidMount
 
