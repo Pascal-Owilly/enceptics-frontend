@@ -26,7 +26,7 @@ import Cookies from 'js-cookie';
 import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
-import { AuthProvider } from "../src/components/pages/authenticate/AuthContext";
+// import { AuthProvider } from "../src/components/pages/authenticate/AuthContext";
 import PrivateRoute from './components/pages/authenticate/PrivateRoute';
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
   return (  
    
     <Router>
-          <AuthProvider>
+          {/* <AuthProvider> */}
 
       <div className='wrapper'>
         <NavigationBar />
@@ -55,15 +55,15 @@ function App() {
           <Route exact path='/' element={<PrivateRoute/>}>
             <Route exact path='/booking' element={<BookingPage/>}/>
           </Route>
-          {/* <PrivateRoute path="/booking" component={BookingPage} /> */}
-          {/* <PrivateRoute path="/profile" component={Profile} /> */}
+          {/* <PrivateRoute path="/booking" component={BookingPage} />
+          <PrivateRoute path="/profile" component={Profile} /> */}
           <Route path="/description" element={<Description />} />
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
         </Routes>
         <Footer />  
       </div>
       
-      </AuthProvider>
+      {/* </AuthProvider> */}
     </Router>
    
   );

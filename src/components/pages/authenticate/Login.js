@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { login, isAuthenticated } from './authService'; // Adjust the path to authService.js as needed
+import { login, isAuthenticated, setAuthTokenCookie } from './authService'; // Adjust the path to authService.js as needed
 import Cookies from 'js-cookie';
 
 function Login() {
@@ -12,47 +12,37 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if the user is already authenticated using the token in cookies
     if (isAuthenticated()) {
-      navigate('/profile');
+      console.log('welcome to enc')
+      console.log('You are authenticated with', setAuthTokenCookie);
+
+      navigate('/');
     }
-  }, []); // Run this effect only once, similar to componentDidMount
+  }, []);
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
 
+  const handleLoginSubmit = async () => {
     try {
       const authToken = await login(loginData.username, loginData.password);
-
-      if (authToken) {
-        // Check if there's a stored intended destination
-        const intendedDestination = Cookies.get('intendedDestination');
-        if (intendedDestination) {
-          // Redirect to the intended destination
-          navigate(intendedDestination);
-          // Clear the stored intended destination
-          Cookies.remove('intendedDestination');
-        }
-        else {
-          // If no intended destination, you can redirect to a default page (e.g., home)
-          navigate('/');
-        }
-        console.log('You are authenticated');
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        console.error('Login failed');
-      }
+      console.log('You are authenticated with', authToken);
+      
+      // Redirect or perform any other action upon successful login
+      alert('logged in')
     } catch (error) {
       console.error('Login failed:', error);
     }
   };
+  
+
+
+  // const handleLogoutSubmit = () => {
+  //   authService.logout(); // Use AuthService to log out
+  //   navigate('/login');
+  // };
 
   const containerStyle = {
     display: 'flex',

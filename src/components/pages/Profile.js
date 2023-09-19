@@ -7,22 +7,18 @@ import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg
 import { Card } from 'react-bootstrap';
 import natpark from '../../images/undraw_trip_re_f724.svg';
 import { useNavigate } from 'react-router-dom';
-import img from '../../images/about.svg'
+import img from '../../images/about.svg';
 
-import { useParams } from 'react-router-dom';
-
-import { useAuth } from './authenticate/AuthContext'; // Import the useAuth hook
+import { login, isAuthenticated, logout } from './authenticate/authService'; // Make sure to use the correct path
 
 const Profile = () => {
-  const { authToken, logout } = useAuth(); // Access the authentication status and logout function
+  const authToken = isAuthenticated(); // Use AuthService to check if the user is authenticated
+
   const [profile, setProfile] = useState({});
   const [editingProfile, setEditingProfile] = useState(false);
   const [editedProfile, setEditedProfile] = useState({});
   const navigate = useNavigate();
-  
-  // Use the useParams hook to get the user ID from the URL
-  // const { id } = useParams();
-  
+
   const fetchProfile = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
@@ -37,12 +33,12 @@ const Profile = () => {
       console.error('Error fetching user profile:', error);
     }
   };
-  
 
   useEffect(() => {
-    if (!authToken) {
+    if (!isAuthenticated) {
       // If not authenticated, navigate to the login page
       navigate('/login');
+      console.log(profile)
     } else {
       fetchProfile();
     }
@@ -69,39 +65,36 @@ const Profile = () => {
   return (
     <>
       <div style={{ backgroundColor: '#121661', height: '100vh' }}>
-      <div className="container bootstra snippets bootdey">
-        <div className="row" style={{ backgroundColor: '#121661' }}>
-          <div className="profile-nav col-md-3" style={{ marginTop: '15vh', backgroundColor: 'rgb(18, 187, 18)' }}>
-            <div className="panel" style={{ backgroundColor: '#121661' }}>
-              <div className="user-heading round">
-              <div className="user-heading round">
-              <div>
-                <img src={profile.profile_pic} alt="Pic" style={{ width: '100px', height: '100px' }} />
-                <h2>{profile.user}</h2>
-                <p>Current City: {profile.current_city}</p>
-                <p>Bio: {profile.bio}</p>
-              </div>
+        <div className="container bootstra snippets bootdey">
+          <div className="row" style={{ backgroundColor: '#121661' }}>
+            <div className="profile-nav col-md-3" style={{ marginTop: '15vh', backgroundColor: 'rgb(18, 187, 18)' }}>
+              <div className="panel" style={{ backgroundColor: '#121661' }}>
+                <div className="user-heading round">
+                  <div className="user-heading round">
+                    <div>
+                      <img src={profile.profile_pic} alt="Pic" style={{ width: '100px', height: '100px' }} />
+                      <h2>{profile.user}</h2>
+                      <p>Current City: {profile.current_city}</p>
+                      <p>Bio: {profile.bio}</p>
+                    </div>
+                  </div>
+                </div>
 
+                <ul className="nav nav-pills nav-stacked">
+                  <li className="active"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-user"></i> Profile</a></li>
+                  <li><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-calendar"></i> Recent Activity <span className="label label-warning pull-right r-activity">9</span></a></li>
+                  <li><a href="#" onClick={() => console.log('/edit-profile')}> <i className="fa fa-edit"></i> Edit profile</a></li>
+                </ul>
               </div>
-
-              </div>
-
-              <ul className="nav nav-pills nav-stacked">
-                <li className="active"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-user"></i> Profile</a></li>
-                <li><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-calendar"></i> Recent Activity <span className="label label-warning pull-right r-activity">9</span></a></li>
-                <li><a href="#" onClick={() => console.log('/edit-profile')}> <i className="fa fa-edit"></i> Edit profile</a></li>
-              </ul>
             </div>
-          </div>
-          <div className="profile-info col-md-9 text-center" style={{ marginTop: '12vh', color:'#d9d9d9' }}>
-            <div className="panel">
-          <p>What's your favourite quite?</p>         
-   
+            <div className="profile-info col-md-9 text-center" style={{ marginTop: '12vh', color: '#d9d9d9' }}>
+              <div className="panel">
+                <p>What's your favorite quote?</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

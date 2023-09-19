@@ -29,7 +29,7 @@ useEffect(() => {
   if (flashMessage) {
     const timer = setTimeout(() => {
       setFlashMessage(null); // Remove the flash message after 2 seconds
-    }, 3000); // 2 seconds in milliseconds
+    }, 4000); 
 
     return () => clearTimeout(timer);
   }
@@ -62,10 +62,7 @@ const login = async (e) => {
 
     setIsLoggedIn(true);
 
-    // Store the token in a cookie with an expiration date (e.g., 1 day)
     Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });    
-    console.log('Token is', JSON.stringify(response.data))
-    console.log(authToken)
 
     setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' });
     closeModal();
@@ -92,6 +89,7 @@ const fetchProfile = async () => {
         },
       });
       setProfile(response.data);
+      console.log(response.data)
     } 
     
     else {
@@ -212,7 +210,7 @@ const handleRegistrationChange = (e) => {
             <sub className="brand-text">nceptics</sub>
           </a>
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
