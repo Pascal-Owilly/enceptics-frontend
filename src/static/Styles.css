@@ -127,11 +127,7 @@
     padding: 3px;
     align-items: center;
   }
-  
-  body.modal-open {
-    filter: blur(5px);
-    /* background-color: rgb(0, 0, 0, 0.5); */
-  }
+ 
   
   .cancel-btn {
     position: absolute;
@@ -327,15 +323,29 @@
     #6d6d6d, 0 0 6px ;
       transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
   padding: 10px 10px 10px 10px;
-  cursor: pointer;
+
+
+}
+.places-cards{
+  font-family: 'Nunito', sans-serif;
+  padding: 2px;
+  box-shadow: 0 6px 10px 
+  #6d6d6d, 0 0 6px ;
+    transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+padding: 10px 10px 10px 10px;
+
 
 }
 
 .what-card:hover{
     transform: scale(1.02);
- box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+ box-shadow: 0 10px 20px rgba(243, 241, 241, 0.12), 0 4px 8px rgba(238, 227, 227, 0.06);
 }
 
+.places-cards:hover{
+  transform: scale(1.01);
+box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
 @media(max-width: 990px){
     .what-card{
       margin: 20px;
@@ -356,6 +366,12 @@
   button:hover {
     background-color: #121661;
     color: #fff;
+  }
+
+  body, html, div, h1, h2, h3, p, ul, ol, li, form, fieldset, input, button {
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
  
   

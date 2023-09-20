@@ -1,190 +1,226 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Container, Row, Col, Image, Card, Button } from "react-bootstrap";
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Container, Row, Col, Card } from "react-bootstrap";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { Modal } from "react-bootstrap";
 import './Places.css';
-import horse from '../../images/horse.jpg';
-import house2 from '../../images/house2.jpg';
-import natpark from '../../images/natpark.jpg';
-import beach from '../../images/beach.jpg';
-import malindi from '../../images/malindi.jpg';
-import mombasa from '../../images/mombasa.jpg';
 
-const Hero = () => {
-const [destination, setDestination] = useState([])
+const Destination = () => {
+  const [destinations, setDestinations] = useState([]);
+  const [newDestination, setNewDestination] = useState({
+    name: '',
+    description: '',
+    cover_image: null,
+    place_slug: '',
+  });
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [destinationToUpdate, setDestinationToUpdate] = useState(null);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setDestinationToUpdate(null); // Reset the destination to update
+  };
 
   useEffect(() => {
-    let mounted = true;
+    fetchDestinations();
+  }, []);
 
-    // Axios request
-    axios.get('http://127.0.0.1:8000/api/auth/get_place_list/') 
+  const fetchDestinations = () => {
+    axios.get('http://127.0.0.1:8000/profile/places/')
       .then(response => {
-        if (mounted) {
-          setDestination(response.data);
-        }
+        setDestinations(response.data);
       })
       .catch(error => {
         console.error(error);
       });
+  }
 
-    return () => (mounted = false);
-  }, []);
-
-  const trending = [
-    mombasa,
-    beach,
-    malindi,
-  ]
-
-  const teamMembers = [
-    {
-      name: "	Mombasa",
-      position: "Beautiful beaches of Linkoni",
-      //   contribution: "One of the top rated destinations with 4.5 stars",
-      more: "",
-      link: "#",
-      image: mombasa,
-    },
-
-    {
-      name: "Ngong hills",
-      position: "The great forest of Ngong hills full of horses",
-      //   contribution: "Enjoy endless rides anytime",
-      more: "",
-      link: "#",
-      image: horse,
-    },
-
-    {
-      name: "Malindi",
-      position: "The cool breeze of Malindi never disapoints",
-      //   contribution: "Make your vacation memorable in this magical place",
-      more: "",
-      link: "#",
-      image: malindi,
-    },
-  ]
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const slideshowContainerRef = useRef(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide === teamMembers.length - 1 ? 0 : prevSlide + 1));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleDotClick = (index, e) => {
-    e.preventDefault();
-    const lastIndex = teamMembers.length - 1;
-    const currentSlide = index === lastIndex ? 0 : index;
-    setCurrentSlide(currentSlide);
+  const handleNewDestinationChange = (event) => {
+    const { name, value, files } = event.target;
+    
+    if (name === 'cover_image') {
+      // Handle file input separately
+      setNewDestination((prevData) => ({
+        ...prevData,
+        [name]: files[0], // Use the selected file
+      }));
+    } else {
+      // Handle other input fields
+      setNewDestination((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
+  
+
+  const createNewDestination = () => {
+  const formData = new FormData();
+  formData.append('name', newDestination.name);
+  formData.append('description', newDestination.description);
+  formData.append('place_slug', newDestination.place_slug);
+  formData.append('cover_image', newDestination.cover_image);
+
+
+  axios.post('http://127.0.0.1:8000/profile/places/', formData)
+    .then(response => {
+      setDestinations([response.data, ...destinations]);
+      setNewDestination({
+        name: '',
+        description: '',
+        place_slug: '',
+        cover_image: null,
+      });
+      closeModal();
+      console.log("image is", response.data.cover_image);
+    })
+    .catch(error => {
+      console.error(error);
+      console.log('Not successful');
+    });
+};
+
+  const openUpdateModal = (destination) => {
+    setDestinationToUpdate(destination);
+    setNewDestination({
+      name: destination.name,
+      description: destination.description,
+      place_slug: destination.place_slug,
+      cover_image: destination.cover_image,
+    });
+    openModal();
+  };
+
+  const handleUpdate = () => {
+    const updatedData = {
+      name: newDestination.name,
+      description: newDestination.description,
+      description: newDestination.place_slug,
+      destination: newDestination.cover_image,
+    };
+
+    axios.put(`http://127.0.0.1:8000/profile/places/${destinationToUpdate.id}/`, updatedData)
+      .then(response => {
+        closeModal();
+        fetchDestinations(); // Fetch the updated list of destinations
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const deleteDestination = (id) => {
+    axios.delete(`http://127.0.0.1:8000/profile/places/${id}/`)
+      .then(response => {
+        fetchDestinations(); // Fetch the updated list of destinations
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
   return (
     <>
-      <Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
-        <Row className="places" >
-          <div className=" text-white">
-            <div>
-              <h1 className="text-left mb-5" style={{ color: '#d9d9d9', marginTop: '15vh' }}>
-                Explore Your country
-              </h1>
-            </div>
-            <div>
-              Add destination
-            </div>
-          </div>
-
-          <Col md={3} className='' style={{ marginTop: '0' }}>
-            {destination.map((destination)=>
-            
-            <Card key={destination.id} className="places-cards" style={{ backgroundColor: '#ffffff', width: '100%' }}>
-              <Card.Img src={destination.cover_image} style={{ width: '100%', height: '195px' }} />
-              <Card.Body style={{ color: 'black' }}>
-                <h5 className="mt-2" style={{ color: 'green', fontWeight: 500 }}>
-                  {destination.name}
-                </h5>
-
-              <p style={{ fontSize: '12px', width: '100%' }}> 
-              {destination.description}
-              {destination.price}
-              {destination.visited}
-              </p>
-              </Card.Body>
-              <Card.Footer>
-                <a href="/description">
-                  <button className="btn btn-sm"
-                    style={{ 
-                      backgroundColor: '#121661', 
-                      color: 'white', 
-                      padding: '0.3rem',
-                      borderRadius: '30px 0 30px 30px', 
-                      border: 'none', 
-                      width: '100px', 
-                      fontSize: '11px', 
-                      fontWeight: 'bold' 
-                      }}>
-                      Explore
-                  </button>
-                </a>
-              </Card.Footer>
-            </Card>
-             )}
-          </Col>
-          <Col md={3} 
-          className='' 
-          style={{ color: '#ffffff' }} >
-            <div className="">
-              {/* START TRENDING SLIDE SHOW */}
-              <Container fluid style={{ height: 'auto', width: 'auto', overflow: 'hidden', padding: 0 }} className="team-title slideshow-container">
-                <div style={{ textAlign: 'center', marginTop: '' }} >
-                  <h4 style={{ fontWeight: 'bold' }}>Trending</h4>
-                  <hr />
-                  <div className="slideshow">
-                    <div ref={slideshowContainerRef} className="slideshow__wrapper">
-                      {teamMembers.map((member, index) => (
-                        <div
-                          key={index}
-                          className={`slideshow__slide ${index === currentSlide ? "active" : ""
-                            }`}
-                          style={{
-                            transform: `translateX(-${currentSlide * 100}%)`,
-                          }}
-                        >
-                          <img
-                            className="slideshow__image"
-                            src={member.image}
-                            alt={member.name}
-                          />
-                          <div className="slideshow__info" style={{ color: 'goldenrod' }}>
-                            <h2 className="slideshow__name">{member.name}</h2>
-                            <p style={{ color: '#fff', fontSize: '12px' }} className="slideshow__position">{member.position}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="slideshow__dots">
-                      {teamMembers.map((member, index) => (
-                        <span
-                          key={index}
-                          className={`slideshow__dot ${index === currentSlide ? "active" : ""}`}
-                          type="button"
-                          tabIndex="-1"
-                          onClick={(e) => handleDotClick(index, e)}
-                        ></span>
-                      ))}
-                    </div>
+<Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
+      <div className="mt-5">
+        <button className="mb-4 mt-5 p-1 what-card" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
+          <FaPlus /> Add New Destination
+        </button>
+      </div>
+      <div className="places-cards-container">
+        <div className="places-cards-grid">
+          {destinations.map((destination) => (
+            <div key={destination.id}>
+              <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%'}}>
+                <Card.Img src={destination.cover_image} style={{ width: '100%' }} />
+                <Card.Body style={{ color: 'black' }}>
+                  <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
+                    {destination.name}
+                  </h5>
+                  <p style={{ color: '#fff', fontWeight: 500 }}>{destination.description}</p>
+                  <p style={{ fontSize: '12px', width: '100%', color:'white' }}>
+                    {destination.price}
+                  </p>
+                </Card.Body>
+                <Card.Footer>
+                <button className="btn btn-outline-secondary text-dark" style={{width:'100%',backgroundColor:'rgb(18, 187, 18)', fontWeight:'bold'}}>See description</button>
+                    <hr className="text-white" />
+                  <div className="d-flex">
+                    <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
+                      <FaEdit /> Edit
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button className="btn btn-sm btn-outline-danger" onClick={() => deleteDestination(destination.id)}>
+                      <FaTrash /> Delete
+                    </button>
                   </div>
-                </div>
-              </Container>
-              {/* END TRENDING */}
+                </Card.Footer>
+              </Card>
             </div>
-          </Col>
-        </Row>
+          ))}
+        </div>
+      </div>
+        <Modal show={modalIsOpen} onHide={closeModal} centered style={{ zIndex: 9999, color: '#fff' }}>
+          <Modal.Header closeButton style={{ backgroundColor: '#121661', color: '#fff' }}>
+            <Modal.Title className="text-center text-white">{destinationToUpdate ? 'Update Destination' : 'Add New Destination'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className=" text-secondary" style={{ height: '350px', backgroundColor: '#121661' }}>
+            <form className="text-white">
+
+            <input
+              className="bg-white text-primary p-1"
+              style={{ border: '1px solid #121661', width: '70%' }}
+              type="file"
+              name='cover_image'
+              onChange={handleNewDestinationChange}
+            />
+
+
+            <input
+                className="bg-white text-primary p-1"
+                style={{ border: '1px solid #121661', width: '70%' }}
+                type="text"
+                name='place_slug'
+                value={newDestination.place_slug}
+                onChange={handleNewDestinationChange}
+              />
+
+              <input
+                className="bg-white text-primary p-1"
+                style={{ border: '1px solid #121661', width: '70%' }}
+                type="text"
+                name='name'
+                placeholder="Example, Salar De Uyuni"
+                value={newDestination.name}
+                onChange={handleNewDestinationChange}
+              />
+
+              <input
+                className="bg-white text-primary p-1"
+                style={{ border: '1px solid #121661', width: '70%' }}
+                type="text"
+                name='description'
+                placeholder="Welcome to Salar de uyuni"
+                value={newDestination.description}
+                onChange={handleNewDestinationChange}
+              />
+            </form>
+          </Modal.Body>
+          <Modal.Footer style={{ backgroundColor: '#121661', color: '#d9d9d9' }}>
+            <button className="btn btn-outline-primary" style={{ fontWeight: 'bold' }} onClick={destinationToUpdate ? handleUpdate : createNewDestination}>
+              {destinationToUpdate ? 'Update' : 'Submit'}
+            </button>
+          </Modal.Footer>
+        </Modal>
       </Container>
+  
     </>
   );
 };
 
-export default Hero;
+export default Destination;

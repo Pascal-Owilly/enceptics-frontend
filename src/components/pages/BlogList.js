@@ -24,7 +24,7 @@ function BlogList() {
     axios.get('http://127.0.0.1:8000/api/blogposts/')
       .then(response => {
         setPosts(response.data);
-        // Fetch profile pictures for each post
+        // Fetch profile   pictures for each post
         response.data.forEach(post => {
           axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`)
             .then(profileResponse => {

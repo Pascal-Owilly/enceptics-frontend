@@ -1,19 +1,20 @@
-/* .places-cards{
-    width: 100%;
-    font-family: 'Nunito', sans-serif;
-    padding: 2px;
-    border-radius: 0;
-    box-shadow: 
-    rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
-      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
-  padding: 5px 5px 1px 6px;
-  cursor: pointer;
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+/* Default grid settings for larger screens */
+.places-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 cards in each column by default */
+  gap: 20px; /* Adjust the gap as needed */
 }
 
+/* Media query for medium-sized screens (e.g., tablets) */
+@media (max-width: 992px) {
+  .places-cards-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards in each column for medium-sized screens */
+  }
+}
 
-  
-  
-  
-   */
+/* Media query for smaller screens (e.g., phones) */
+@media (max-width: 768px) {
+  .places-cards-grid {
+    grid-template-columns: repeat(1, 1fr); /* 1 card per column for smaller screens */
+  }
+}

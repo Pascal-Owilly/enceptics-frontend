@@ -74,7 +74,7 @@ const Profile = () => {
                     <div>
                       <img src={profile.profile_pic} alt="Pic" style={{ width: '100px', height: '100px' }} />
                       <h2>{profile.user}</h2>
-                      <p>Current City: {profile.current_city}</p>
+                      <p>Current City:    {profile.current_city}</p>
                       <p>Bio: {profile.bio}</p>
                     </div>
                   </div>
