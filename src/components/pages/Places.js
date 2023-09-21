@@ -11,7 +11,7 @@ const Destination = () => {
     name: '',
     description: '',
     cover_image: null,
-    place_slug: '',
+    price: 0,
   });
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -63,7 +63,7 @@ const Destination = () => {
   const formData = new FormData();
   formData.append('name', newDestination.name);
   formData.append('description', newDestination.description);
-  formData.append('place_slug', newDestination.place_slug);
+  formData.append('price', newDestination.price);
   formData.append('cover_image', newDestination.cover_image);
 
 
@@ -73,11 +73,10 @@ const Destination = () => {
       setNewDestination({
         name: '',
         description: '',
-        place_slug: '',
+        price: 0,
         cover_image: null,
       });
       closeModal();
-      console.log("image is", response.data.cover_image);
     })
     .catch(error => {
       console.error(error);
@@ -90,29 +89,34 @@ const Destination = () => {
     setNewDestination({
       name: destination.name,
       description: destination.description,
-      place_slug: destination.place_slug,
+      price: destination.price,
       cover_image: destination.cover_image,
     });
     openModal();
   };
 
-  const handleUpdate = () => {
-    const updatedData = {
-      name: newDestination.name,
-      description: newDestination.description,
-      description: newDestination.place_slug,
-      destination: newDestination.cover_image,
-    };
-
-    axios.put(`http://127.0.0.1:8000/profile/places/${destinationToUpdate.id}/`, updatedData)
-      .then(response => {
-        closeModal();
-        fetchDestinations(); // Fetch the updated list of destinations
-      })
-      .catch(error => {
-        console.error(error);
-      });
+const handleUpdate = () => {
+  const updatedData = {
+    name: newDestination.name,
+    description: newDestination.description,
+    price: newDestination.price,
+    cover_image: newDestination.cover_image,
   };
+
+  axios
+    .put(`http://127.0.0.1:8000/profile/places/${destinationToUpdate.id}/`, updatedData)
+    .then((response) => {
+      closeModal();
+      fetchDestinations(); // Fetch the updated list of destinations
+    })
+    .catch((error) => {
+      console.error("Update error:", error);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+      }
+    });
+};
+
 
   const deleteDestination = (id) => {
     axios.delete(`http://127.0.0.1:8000/profile/places/${id}/`)
@@ -136,15 +140,15 @@ const Destination = () => {
         <div className="places-cards-grid">
           {destinations.map((destination) => (
             <div key={destination.id}>
-              <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%'}}>
-                <Card.Img src={destination.cover_image} style={{ width: '100%' }} />
+              <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'450px'}}>
+                <Card.Img src={destination.cover_image} style={{ width: '100%', height:'210px' }} />
                 <Card.Body style={{ color: 'black' }}>
                   <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
                     {destination.name}
                   </h5>
-                  <p style={{ color: '#fff', fontWeight: 500 }}>{destination.description}</p>
-                  <p style={{ fontSize: '12px', width: '100%', color:'white' }}>
-                    {destination.price}
+                  <p style={{ color: '#fff', fontWeight: 500,width:'100%' }}>{destination.description}</p>
+                  <p className="what-card-price btn btn-sm " style={{ fontSize: '13px', color:'goldenrod', float:'right', fontWeight:'bold' }}>
+                   Ksh {destination.price}
                   </p>
                 </Card.Body>
                 <Card.Footer>
@@ -171,44 +175,52 @@ const Destination = () => {
           </Modal.Header>
           <Modal.Body className=" text-secondary" style={{ height: '350px', backgroundColor: '#121661' }}>
             <form className="text-white">
-
+<p style={{ fontSize:'15px'}}>Upload cover image</p>
+<p>
             <input
-              className="bg-white text-primary p-1"
-              style={{ border: '1px solid #121661', width: '70%' }}
+              className="bg-white p-1"
+              style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
               type="file"
               name='cover_image'
               onChange={handleNewDestinationChange}
             />
+</p>
+              <p style={{fontSize:'15px'}}>Enter name of destination</p>
 
-
-            <input
-                className="bg-white text-primary p-1"
-                style={{ border: '1px solid #121661', width: '70%' }}
-                type="text"
-                name='place_slug'
-                value={newDestination.place_slug}
-                onChange={handleNewDestinationChange}
-              />
-
+<p >
               <input
-                className="bg-white text-primary p-1"
-                style={{ border: '1px solid #121661', width: '70%' }}
+                className="bg-white  p-1"
+                style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
                 type="text"
                 name='name'
                 placeholder="Example, Salar De Uyuni"
                 value={newDestination.name}
                 onChange={handleNewDestinationChange}
               />
-
+</p>
+<p style={{fontSize:'15px'}}>Enter description</p>
+<p>
               <input
-                className="bg-white text-primary p-1"
-                style={{ border: '1px solid #121661', width: '70%' }}
+                className="bg-white p-1"
+                style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
                 type="text"
                 name='description'
                 placeholder="Welcome to Salar de uyuni"
                 value={newDestination.description}
                 onChange={handleNewDestinationChange}
               />
+              </p>
+<p style={{fontSize:'15px'}}>Price for  this destination</p>
+        <p>   <input
+                className="bg-white p-1"
+                style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
+                type="text"
+                name='price'
+                value={newDestination.price}
+                onChange={handleNewDestinationChange}
+              />
+              </p>
+
             </form>
           </Modal.Body>
           <Modal.Footer style={{ backgroundColor: '#121661', color: '#d9d9d9' }}>
