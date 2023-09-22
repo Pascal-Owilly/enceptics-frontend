@@ -18,6 +18,7 @@ import Home from './components/pages/Home';
 import Login from './components/pages/authenticate/Login';
 import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
+import PlaceInfo from './components/pages/PlaceInfo';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { Outlet } from "react-router-dom";
@@ -60,6 +61,7 @@ function App() {
           <PrivateRoute path="/profile" component={Profile} /> */}
           <Route path="/description" element={<Description />} />
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
+          <Route path="/place-info/:id" element={<PlaceInfo />} /> {/* Route for PlaceInfo */}
         </Routes>
         <Footer />  
       </div>
