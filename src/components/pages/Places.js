@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Card } from "react-bootstrap";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { Modal } from "react-bootstrap";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import './Places.css';
-import PlaceInfo from "./PlaceInfo"; // Import the PlaceInfo component
+import PlaceInfo from "./PlaceInfo";
 
 const Destination = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const [destinations, setDestinations] = useState([]);
   const [newDestination, setNewDestination] = useState({
@@ -24,15 +24,19 @@ const Destination = () => {
   const [selectedDestination, setSelectedDestination] = useState(null);
   const [selectedDestinationInfo, setSelectedDestinationInfo] = useState({});
   const [placeInfo, setPlaceInfo] = useState(null);
-  const [showPlaceInfo, setShowPlaceInfo] = useState(false); // Define showPlaceInfo state
+  const [showPlaceInfo, setShowPlaceInfo] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPlaceInfo = (destinationId) => {
-    axios.get(`http://127.0.0.1:8000/profile/place-info/${destinationId}/`)
+    axios.get(`http://127.0.0.1:8000/api/place-info/${destinationId}/`)
       .then(response => {
         setPlaceInfo(response.data);
+        setIsLoading(false);
       })
       .catch(error => {
         console.error(error);
+        setIsLoading(false);
       });
   };
 
@@ -56,12 +60,14 @@ const Destination = () => {
   }, []);
 
   const fetchDestinations = () => {
-    axios.get('http://127.0.0.1:8000/profile/places/')
+    axios.get('http://127.0.0.1:8000/api/places/')
       .then(response => {
         setDestinations(response.data);
+        setIsLoading(false);
       })
       .catch(error => {
         console.error(error);
+        setIsLoading(false);
       });
   }
 
@@ -88,7 +94,7 @@ const Destination = () => {
     formData.append('price', newDestination.price);
     formData.append('cover_image', newDestination.cover_image);
 
-    axios.post('http://127.0.0.1:8000/profile/places/', formData)
+    axios.post('http://127.0.0.1:8000/api/places/', formData)
       .then(response => {
         setDestinations([response.data, ...destinations]);
         setNewDestination({
@@ -125,7 +131,7 @@ const Destination = () => {
     };
 
     axios
-      .put(`http://127.0.0.1:8000/profile/places/${destinationToUpdate.id}/`, updatedData)
+      .put(`http://127.0.0.1:8000/api/places/${destinationToUpdate.id}/`, updatedData)
       .then((response) => {
         closeModal();
         fetchDestinations();
@@ -139,14 +145,14 @@ const Destination = () => {
   };
 
   const deleteDestination = (id) => {
-    axios.delete(`http://127.0.0.1:8000/profile/places/${id}/`)
+    axios.delete(`http://127.0.0.1:8000/api/places/${id}/`)
       .then(response => {
         fetchDestinations();
       })
       .catch(error => {
         console.error(error);
       });
-  }
+  };
 
   return (
     <>
@@ -156,53 +162,58 @@ const Destination = () => {
             <FaPlus /> Add New Destination
           </button>
         </div>
-        <div className="places-cards-container">
-          <div className="places-cards-grid">
-            {destinations.map((destination) => (
-              <div key={destination.id}>
-                <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'450px'}}>
-                  <Card.Img src={destination.cover_image} style={{ width: '100%', height:'210px' }} />
-                  <Card.Body style={{ color: 'black' }}>
-                    <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
-                      {destination.name}
-                    </h5>
-                    <p style={{ color: '#fff', fontWeight: 500,width:'100%' }}>{destination.description}</p>
-                    <p className="what-card-price btn btn-sm " style={{ fontSize: '13px', color:'goldenrod', float:'right', fontWeight:'bold' }}>
-                     Ksh {destination.price}
-                    </p>
-                  </Card.Body>
-                  <Card.Footer>
-                    <button
-                      className="btn btn-outline-secondary text-dark"
-                      style={{ width: '100%', backgroundColor: 'rgb(18, 187, 18)', fontWeight: 'bold' }}
-                      onClick={() => handleSeeDescriptionClick(destination)}
-                    >
-                      See description
-                    </button> 
-
-                    <hr className="text-white" />
-                    <div className="d-flex">
-                      <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
-                        <FaEdit /> Edit
-                      </button>
-                      &nbsp;&nbsp;&nbsp;
-                      <button className="btn btn-sm btn-outline-danger" onClick={() => deleteDestination(destination.id)}>
-                        <FaTrash /> Delete
-                      </button>
-                    </div>
-                  </Card.Footer>
-                </Card>
-              </div>
-            ))}
+        {isLoading ? ( 
+          <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Loading...</p>
+          ) : destinations.length === 0 ? (
+          <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Nothing here yet</p>
+        ) : (
+          <div className="places-cards-container">
+            <div className="places-cards-grid">
+              {destinations.map((destination) => (
+                <div key={destination.id}>
+                  <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'450px'}}>
+                    <Card.Img src={destination.cover_image} style={{ width: '100%', height:'210px' }} />
+                    <Card.Body style={{ color: 'black' }}>
+                      <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
+                        {destination.name}
+                      </h5>
+                      <p style={{ color: '#fff', fontWeight: 500,width:'100%' }}>{destination.description}</p>
+                      <p className="what-card-price btn btn-sm " style={{ fontSize: '13px', color:'goldenrod', float:'right', fontWeight:'bold' }}>
+                        Ksh {destination.price}
+                      </p>
+                    </Card.Body>
+                    <Card.Footer>
+                      <button
+                        className="btn btn-outline-secondary text-dark"
+                        style={{ width: '100%', backgroundColor: 'rgb(18, 187, 18)', fontWeight: 'bold' }}
+                        onClick={() => handleSeeDescriptionClick(destination)}
+                      >
+                        See description
+                      </button> 
+                      <hr className="text-white" />
+                      <div className="d-flex">
+                        <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
+                          <FaEdit /> Edit
+                        </button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button className="btn btn-sm btn-outline-danger" onClick={() => deleteDestination(destination.id)}>
+                          <FaTrash /> Delete
+                        </button>
+                      </div>
+                    </Card.Footer>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <Modal show={modalIsOpen} onHide={closeModal} centered style={{ zIndex: 9999, color: '#fff' }}>
-          <Modal.Header closeButton style={{ backgroundColor: '#121661', color: '#fff' }}>
-            <Modal.Title className="text-center text-white">{destinationToUpdate ? 'Update Destination' : 'Add New Destination'}</Modal.Title>
+        )}
+        <Modal show={modalIsOpen} onHide={closeModal} centered style={{ zIndex: 9999, color: '#fff', backgroundColor:'rgb(0,  0, 0, 0.7)'}}>
+          <Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', color: '#fff', borderRadius:'30px' }}>
+            <Modal.Title className="text-center mx-2 text-white">{destinationToUpdate ? 'Update Destination' : 'Add New Destination'}</Modal.Title>
           </Modal.Header>
-          <Modal.Body className=" text-secondary" style={{ height: '350px', backgroundColor: '#121661' }}>
-            <form className="text-white">
-              <p style={{ fontSize:'15px'}}>Upload cover image</p>
+          <Modal.Body className=" text-secondary m-2" style={{ height: '350px', backgroundColor: '#121661',borderRadius:'10px' }}>
+            <form className="text-white text-center"  style={{borderRadius:'20px' }}>
+              <p style={{ fontSize:'18px'}}>Upload cover image</p>
               <p>
                 <input
                   className="bg-white p-1"
@@ -212,7 +223,7 @@ const Destination = () => {
                   onChange={handleNewDestinationChange}
                 />
               </p>
-              <p style={{fontSize:'15px'}}>Enter name of destination</p>
+              <p style={{fontSize:'18px'}}>Enter name of destination</p>
               <p>
                 <input
                   className="bg-white  p-1"
@@ -224,7 +235,7 @@ const Destination = () => {
                   onChange={handleNewDestinationChange}
                 />
               </p>
-              <p style={{fontSize:'15px'}}>Enter description</p>
+              <p style={{fontSize:'18px'}}>Enter description</p>
               <p>
                 <input
                   className="bg-white p-1"
@@ -236,7 +247,7 @@ const Destination = () => {
                   onChange={handleNewDestinationChange}
                 />
               </p>
-              <p style={{fontSize:'15px'}}>Price for  this destination</p>
+              <p style={{fontSize:'18px'}}>Price for  this destination</p>
               <p>
                 <input
                   className="bg-white p-1"
@@ -249,8 +260,8 @@ const Destination = () => {
               </p>
             </form>
           </Modal.Body>
-          <Modal.Footer style={{ backgroundColor: '#121661', color: '#d9d9d9' }}>
-            <button className="btn btn-outline-primary" style={{ fontWeight: 'bold' }} onClick={destinationToUpdate ? handleUpdate : createNewDestination}>
+          <Modal.Footer className="m-1" style={{ backgroundColor: '#121661', color: '#d9d9d9', borderRadius:'10px' }}>
+            <button className="btn btn-outline-primary" style={{ fontWeight: 'bold', width:'100%' }} onClick={destinationToUpdate ? handleUpdate : createNewDestination}>
               {destinationToUpdate ? 'Update' : 'Submit'}
             </button>
           </Modal.Footer>
