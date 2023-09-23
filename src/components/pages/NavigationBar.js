@@ -364,7 +364,7 @@ const handleRegistrationChange = (e) => {
                                 </>
                               )} 
       {showModal && (
-          <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh' }}>
+          <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh', backgroundColor:'rgb(0, 0, 0, 0.8)' }}>
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">

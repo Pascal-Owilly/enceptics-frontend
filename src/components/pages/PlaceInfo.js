@@ -46,21 +46,30 @@ const PlaceInfo = () => {
             <div className="row">
               <p mt-5></p>
               <h2 style={{marginTop:'12vh'}}>{placeName}</h2>
-              <div className="col-md-7">
+              <div className="col-md-8">
                 <hr />
-                <p style={{ fontSize: "14px", color: "#d9d9d9" }}>{placeInfo.weather_forecast}</p>
-                <hr />
+             
 
-                <Carousel>
+                <Carousel style={{width:'100%'}} fade={false} controls={true} indicators={true} interval={3000} keyboard={false}>
                   <Carousel.Item>
-                    <img src={placeInfo.pictures} alt="img" style={{ width: "100%", maxHeight: "100vh", borderRadius: '10px' }} />
+                    <img className="mb-5" src={placeInfo.pictures} alt="img" style={{ width: "100%"}} />
+                    <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.5)'}}>
+                    <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}}>{placeInfo.weather_forecast}   </p>
+                  </Carousel.Caption>
                   </Carousel.Item>
+                  <Carousel.Item>
+                    <img className="mb-5" src={placeInfo.pictures} alt="img" style={{ width: "100%", borderRadius: '10px' }} />
+                    <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)'}}>
+                    <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}}>{placeInfo.weather_forecast}   </p>
+                  </Carousel.Caption>
+                  </Carousel.Item>
+
                   {/* Add more Carousel.Items if needed */}
                 </Carousel>
               </div>
-              <div className="col-md-5 text-center mb-4">
+              <div className="col-md-3 text-center mb-4">
                 <h5 className="text-secondary mb-3 text-center">3 Day Weather Forecast for {placeName}</h5>
-                <table className="table table-bordered table-hover text-primary" style={{width:'99%', backgroundColor:'#d9d9d9', color:'blue'}}>
+                <table className="table table-bordered table-hover" style={{width:'48%'}}>
                   <thead>
                     <tr>
                       <th></th>
