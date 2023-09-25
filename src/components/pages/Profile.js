@@ -8,11 +8,13 @@ import { Card } from 'react-bootstrap';
 import natpark from '../../images/undraw_trip_re_f724.svg';
 import { useNavigate } from 'react-router-dom';
 import img from '../../images/about.svg';
+import Cookies from 'js-cookie';
+
 
 import { login, isAuthenticated, logout } from './authenticate/authService'; // Make sure to use the correct path
 
 const Profile = () => {
-  const authToken = isAuthenticated(); // Use AuthService to check if the user is authenticated
+  const authToken = Cookies.get('authToken'); // Use AuthService to check if the user is authenticated
 
   const [profile, setProfile] = useState({});
   const [editingProfile, setEditingProfile] = useState(false);
@@ -35,7 +37,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authToken) {
       // If not authenticated, navigate to the login page
       navigate('/login');
       console.log(profile)

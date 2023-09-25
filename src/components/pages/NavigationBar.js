@@ -195,14 +195,12 @@ const handleRegistrationChange = (e) => {
 
   };
   
-
   return (
-
 <>
 <nav
         className="navbar navbar-expand-lg what-card"
         variant="fixed"
-        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', top: 0 }}
+        style={{ backgroundColor: '#121661', position: '', zIndex: '2', width:'auto', top: 0 }}
       >
         <div className="container-fluid">
           <a className="navbar-brand text-white mx-2" href="/">

@@ -163,7 +163,7 @@ const Destination = () => {
           </button>
         </div>
         {isLoading ? ( 
-          <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Loading...</p>
+          <p style={{color:'#f9f9f9', fontSize:'18px', textAlign:'center', marginTop:''}}>Loading...</p>
           ) : destinations.length === 0 ? (
           <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Nothing here yet</p>
         ) : (

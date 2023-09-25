@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { FaArrowRight } from "react-icons/fa";
 import { Carousel } from 'react-bootstrap';
@@ -77,7 +77,8 @@ const PlaceInfo = () => {
                       <th>Afternoon (°C)</th>
                       <th>Evening  (°C)</th>
                       <th>Night  (°C)</th>
-                      <th>Humidity</th>
+                      <th>Mid  (°C)</th>
+
                     </tr>
                   </thead>
                   <tbody>
@@ -88,6 +89,7 @@ const PlaceInfo = () => {
                       <td>20°C Rainy</td>
                       <td>15°C Windy</td>
                       <td>65% Clear</td>
+
                     </tr>
                     <tr>
                       <td>Tuesday</td>
@@ -96,6 +98,7 @@ const PlaceInfo = () => {
                       <td>20°C Rainy</td>
                       <td>15°C Windy</td>
                       <td>65% Clear</td>
+
                     </tr>
                     <tr>
                       <td>Wednesday</td>
@@ -108,6 +111,8 @@ const PlaceInfo = () => {
                      </tbody>
                 </table>
                 <hr />
+
+                <Link to='/booking'>
                 <button
                   className="what-card-price btn mt-5 btn-sm"
                   style={{
@@ -120,11 +125,22 @@ const PlaceInfo = () => {
                 >
                   Proceed to booking &nbsp;&nbsp; <FaArrowRight />
                 </button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
-      ) : (
+      ) : placeInfo === null ? (
+        <p 
+        style={{
+          display: "flex",
+          alignItems: "center",
+          height: "50vh",
+          justifyContent: "space-around",
+          color: "white",
+          fontSize: "22px",
+        }}>Nothing here yet</p>
+        ) : (
         <p
           style={{
             display: "flex",

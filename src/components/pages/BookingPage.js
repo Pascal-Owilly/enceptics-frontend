@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import '../../static/Homepage.css';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-import Login from './authenticate/Login';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 const Booking = () => {
@@ -14,11 +12,61 @@ const Booking = () => {
     checkoutDate: '',
     phoneNumber: '',
     email: '',
-    room: '',
-  });
+    room: '',  });
 
+  const [user, setUser] = useState(null); // Store the authenticated user
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [showModal, setShowModal] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user is authenticated
+    const authToken = Cookies.get('authToken'); // You can adjust this to your authentication setup
+    if (authToken) {
+      // Fetch user information based on the token or your authentication mechanism
+      axios
+        .get('http://127.0.0.1:8000/api/auth/user/', {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        })
+        .then((response) => {
+          setUser(response.data);
+          alert('Hello', JSON.stringify(response.data.username));
+
+        })
+        .catch((error) => {
+          // Handle authentication error, e.g., token expired
+          alert('Authentication failed:', error);
+        });
+    } else {
+      // Redirect unauthenticated users to the login page
+      navigate('/login'); // Replace with your login route
+    }
+  }, [navigate]);
+
+  const handleBookingSubmit = (e) => {
+    e.preventDefault();
+    if (user) {
+      // Associate the booking with the authenticated user
+      const bookingDataWithUser = {
+        ...bookingData,
+        userId: user.id, // Adjust this based on your user data structure
+      };
+
+      // Make the booking API call with the user association
+      axios
+        .post('http://127.0.0.1:8000/api/bookings', bookingDataWithUser)
+        .then((response) => {
+          alert('Booking successful! Have a nice travel!');
+        })
+        .catch((error) => {
+          alert("Oops! Booking didn't work");
+          console.error('Booking failed:', error);
+        });
+    }
+  };
 
   const handleBookingChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -77,45 +125,31 @@ const Booking = () => {
   const checkDestination = async () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/auth/paypal/capture/order', bookingData);
-      alert('Booking successful! Have a nice travel!');
+      console.log('Booking successful! Have a nice travel!');
     } catch (error) {
-      alert("Oops! Booking didn't work");
+      console.log("Oops! Booking didn't work");
     }
   };
 
-  const handleBookingSubmit = (e) => {
-    e.preventDefault();
-    checkDestination();
-  };
-
-  const navigate = useNavigate();
-
-  const [token,setToken] = useState();
-
-  // if(!token){
-  //   return <Login setToken={setToken} />
-  // }
-  // else{
-    
-  //   navigate('/booking', {replace: true})
-  // }
 
   return (
     <>
-      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '100vh', color: 'white', margin:'auto' }}>
+      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto' }}>
         <br />
         <div className='container mt-5 m-auto' >
-          <h1 className='text-center'>Booking </h1>
+          <h2 style={{marginTop:'10vh'}} className=''>Booking for  </h2>
           <hr style={{ color: 'white', height: '2rem' }} />
-          <div className='row' style={{boxShadow:'2px 2px 0 2px solid white'}}>
-            <div className='col-md-3'></div>
-            <div className='col-md-3 mt-2'>
-              <h5 className='mt-1'>Number of people</h5>
+          <div className='row what-card-price m-auto' style={{width:'90%'}}>
+            <div className='col-md-6 mt-2'>
+              <h3 className='mt-1' style={{color:'goldenrod'}}>Number of people</h3>
+              <hr />
               <p>
-                <label htmlFor="numPeople">Fill below:</label>
+              <label className="mt-1 mb-2 text-center" style={{fontSize:'16px', color:'#d9d9d9'}} htmlFor="date">Number of people</label>
               </p>
               <p>
                 <input
+                className='p-1 mx-3'
+                 style={{fontSize:'12px', backgroundColor:'#d9d9d9'}}
                   type="number"
                   id="numPeople"
                   name="numPeople"
@@ -131,8 +165,20 @@ const Booking = () => {
                     checked={bookingData.isBookingVehicle}
                     onChange={handleBookingChange}
                     disabled
-                  />{' '}
+                  />
                   Book Vehicle
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="isBookingVehicle"
+                    checked={bookingData.isBookingVehicle}
+                    onChange={handleBookingChange}
+                    disabled
+                  />
+                  Book Hotel
                 </label>
               </div>
               <div>
@@ -143,8 +189,8 @@ const Booking = () => {
                     checked={bookingData.isBookingPlace}
                     onChange={handleBookingChange}
                     disabled
-                  />{' '}
-                  Book Place
+                  />
+                  Book Excursion
                 </label>
               </div>
               {/* <button type="submit" onClick={handleCheckDestinationSubmit}>
@@ -152,12 +198,14 @@ const Booking = () => {
               </button> */}
             </div>
 
-            <div className='col-md-3 text-white'>
-              <h5 className='mt-2'>Booking details</h5>
+            <div className='col-md-6 text-white'>
+              <h3 className='' style={{color:'goldenrod'}}>Booking details</h3>
+              <hr />
               <form onSubmit={handleBookingSubmit}>
                 <div className="form-group">
-                  <label className="mt-1 " htmlFor="date">Check-in Date</label>
+                  <label className="mt-1 mb-2" style={{fontSize:'16px', color:'#d9d9d9'}} htmlFor="date">Check-in Date</label>
                   <input
+                  style={{fontSize:'12px', backgroundColor:'#d9d9d9'}}
                     type='datetime-local'
                     className="form-control"
                     id="checkingDate"
@@ -169,8 +217,9 @@ const Booking = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="mt-1" htmlFor="date">Checkout Date</label>
+                <label className="mt-1 mb-2" style={{fontSize:'16px', color:'#d9d9d9'}} htmlFor="date">Check-out Date</label>
                   <input
+                    style={{fontSize:'12px', backgroundColor:'#d9d9d9'}}
                     type="datetime-local"
                     className="form-control "
                     id="checkoutDate"
@@ -182,8 +231,9 @@ const Booking = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="mt-1 " htmlFor="email">Email</label>
+                  <label className="mt-1 mb-2" style={{fontSize:'16px', color: '#d9d9d9'}} htmlFor="email">Email</label>
                   <input
+                    style={{fontSize:'12px', backgroundColor:'#d9d9d9'}}
                     type="email"
                     className="form-control "
                     id="email"
@@ -195,8 +245,9 @@ const Booking = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="mt-1 " htmlFor="number">Phone</label>
+                  <label className="mt-1 mb-2" style={{fontSize:'16px', color: '#d9d9d9'}} htmlFor="number">Phone</label>
                   <input
+                    style={{fontSize:'12px', backgroundColor:'#d9d9d9'}}
                     type="number"
                     placeholder="Enter Phone Number"
                     className="form-control"
@@ -224,44 +275,45 @@ const Booking = () => {
             </div> */}
 
             <div className='row m-auto'>
-              <div className='col-md-12 text-center mt-5' style={{ margin: 'auto' }}>
+              <div className='col-md-12 text-center' style={{ margin: 'auto' }}>
                 <button
                   onClick={handleCheckDestinationSubmit}
                   type="submit"
-                  className="btn btn-lg text-center mt-3"
-                  style={{ backgroundColor: 'green', color: '#fff', width: '300px', margin: 'auto' }}
+                  className="btn what-card-price mb-2 btn-lg mt-4"
+                  style={{ backgroundColor: '#121661', color: 'goldenrod', width: '100%', margin: 'auto' }}
                 >
-                  Book this destination
+                  Proceed to checkout
                 </button>
               </div>
             </div>
 
             {showModal && (
-              <div className="modal" style={{ display: 'block' }}>
+              <div className="modal" style={{ display: 'block', backgroundColor:'rgb(0, 0, 0, 0.7)' }}>
                 <div className="modal-dialog">
-                  <div className="modal-content">
+                  <div className="modal-content" style={{backgroundColor:'rgb(18, 187,18)', width:'350px'}}>
                     <div className="modal-header">
-                      <h5 className="modal-title text-primary">Payment Details</h5>
+                      <h4 className="modal-title" style={{color:'#d9d9d9'}}>Payment Details</h4>
                       <button type="button" className="close" onClick={closeModal}>
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <div className="modal-body">
-                      <h4 className='text-dark'>Payment Amount: ${paymentAmount.toFixed(2)}</h4>
+                    <div className="modal-body" style={{backgroundColor:'rgb(18, 187,18)', height:'350px', width:'300px', marginTop:'40px'}}>
+                      <h4 className='text-dark mb-2'>Payment Amount: ${paymentAmount.toFixed(2)}</h4>
                       <form onSubmit={handlePaymentSubmit}>
                         <div className="form-group">
                           <label className='text-dark m-1' htmlFor="cardNumber">Card Number</label>
-                          <input type="text" id="cardNumber" required />
+                          <input type="text" id="cardNumber" style={{border:'none'}} required />
                         </div>
                         <div className="form-group mt-3">
                           <label className='text-dark m-1' htmlFor="expiryDate">Expiry Date</label>
-                          <input type="text" id="expiryDate" required />
+                          <input type="text" id="expiryDate" style={{border:'none'}} required />
                         </div>
                         <div className="form-group mt-3">
                           <label className='text-dark m-1' htmlFor="cvv">CVV</label>
-                          <input type="text" id="cvv" required />
+                          <input type="text" id="cvv" style={{border:'none'}} required />
                         </div>
-                        <button className='mt-3 text-center' type="submit">Pay Now</button>
+                        <hr />
+                        <button className='mt-3 what-card text-center mx-3' style={{backgroundColor: '#121661', color:'white', padding:'5px', width:'100%', borderRadius:'10px'}} type="submit">Pay Now</button>
                       </form>
                     </div>
                   </div>

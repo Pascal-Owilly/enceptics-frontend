@@ -7,6 +7,7 @@ import bonfire from '../../videos/waterfall.mp4';
 import waterfall from '../../videos/bonfire.mp4';
 import { Dropdown } from 'react-bootstrap';
 import heroimg from '../../images/heroimg.png'
+
 const VideoCarousel = () => {
 
   

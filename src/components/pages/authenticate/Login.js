@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { login, isAuthenticated, setAuthTokenCookie } from './authService'; // Adjust the path to authService.js as needed
-import Cookies from 'js-cookie';
+// LoginTest.js
 
-function Login() {
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import authService from './authService'; // Import the authService
+
+const LoginTest = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({
     username: '',
     password: '',
@@ -11,97 +15,93 @@ function Login() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAuthenticated()) {
-      console.log('welcome to enc')
-      console.log('You are authenticated with', setAuthTokenCookie);
+  const login = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    try {
+      const authToken = await authService.login(loginData);
+      setIsLoggedIn(true);
+      Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });
 
-      navigate('/');
+      window.location.reload();
+      // Redirect to another page after successful login if needed
+      navigate('/'); // Replace '/dashboard' with your desired route
+    } catch (error) {
+      // Handle login error
+      console.error('Login failed:', error);
+    }
+  };
+
+  useEffect(() => {
+    const storedToken = Cookies.get('authToken');
+    if (storedToken) {
+      setIsLoggedIn(true);
     }
   }, []);
+
+  useEffect(() => {
+    const storedToken = Cookies.get('authToken');
+    if (storedToken) {
+      setIsLoggedIn(true);
+      // Redirect to another page if the user is already logged in
+      navigate('/'); // Replace '/dashboard' with your desired route
+    }
+  }, []);
+
+  const handleLoginSubmit = (event) => {
+    event.preventDefault();
+    login();
+  };
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-
-  const handleLoginSubmit = async () => {
-    try {
-      const authToken = await login(loginData.username, loginData.password);
-      console.log('You are authenticated with', authToken);
-      
-      // Redirect or perform any other action upon successful login
-      alert('logged in')
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  };
-  
-
-
-  // const handleLogoutSubmit = () => {
-  //   authService.logout(); // Use AuthService to log out
-  //   navigate('/login');
-  // };
-
-  const containerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#121661',
-  };
-
-  const forgottenPasswordStyle = {
-    marginTop: '10px',
-    textAlign: 'center',
-  };
-
-  const handleLinkClick = (path) => {
-    // Store the intended destination in cookies
-    Cookies.set('intendedDestination', path);
-  };
-
   return (
-    <div style={containerStyle}>
-      <div className='what-card mt-4 p-2' style={{ width: '350px', height: '400px' }}>
-        <h2 className='text-white' style={{ textAlign: 'center' }}>Login</h2>
-        <p></p>
-        <form className='p-4' onSubmit={handleLoginSubmit}>
-          <p className='text-white'>Username</p>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={loginData.username}
-            onChange={handleLoginChange}
-            style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
-          />
-          <p className='text-white'>Password</p>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={loginData.password}
-            onChange={handleLoginChange}
-            style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
-          />
-          <p></p>
-          <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: 'rgb(18, 187, 18)', color: 'white', border: 'none', borderRadius: '25px' }}>
-            Log In
-          </button>
-        </form>
-        <div style={forgottenPasswordStyle}>
-          <Link to="/forgot-password">Forgotten Password?</Link>
-        </div>
-        {/* Add links that set the intended destination */}
-        <div style={forgottenPasswordStyle}>
-          <Link to="/profile" onClick={() => handleLinkClick('/profile')}>Profile</Link>
-          <Link to="/settings" onClick={() => handleLinkClick('/settings')}>Settings</Link>
-        </div>
-      </div>
+    <div style={{ minHeight: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '' }}>
+      <form className='what-card ' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '70vh', backgroundColor: '#121661' }}>
+        <h3 className='text-center text-white'>Login</h3>
+        <hr style={{ color: '#d9d9d9' }} />
+        <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
+     <p>
+     <label className="mt-4" htmlFor="username">Username</label>
+     </p> 
+      <input
+        type="text"
+        className="form-control"
+        id="username"
+        name="username"
+        value={loginData.username}
+        placeholder="Enter username"
+        onChange={handleLoginChange}
+      />
+    </div>
+
+    <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
+      <p>
+      <label className="mt-4" htmlFor="password">Password</label>
+      </p>
+      <input
+        type="password"
+        placeholder="Enter password"
+        className="form-control "
+        id="password"
+        name="password"
+        value={loginData.password}
+        onChange={handleLoginChange}
+      />
+    </div> 
+    <button
+      type="submit"
+      className="btn btn-outline-secondary text-center mt-5 what-card-price btn-sm mt-4"
+      style={{ backgroundColor: '#000092', borderColor: '#000092', width:'200px', margin:'auto', float:'right' }}
+    >
+      Login
+    </button>
+          </form>
     </div>
   );
-}
+};
 
-export default Login;
+export default LoginTest;
