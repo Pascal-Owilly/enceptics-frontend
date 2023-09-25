@@ -21,7 +21,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
-
+import PlaceInfoTest from './components/pages/placeinfotest/PlaceInfoTest';
 function App() {
 
   return (  
@@ -40,7 +40,10 @@ function App() {
           <Route exact path='/profile/*' element={<Profile/>}/>
           <Route exact path='/booking' element={<BookingPage/>}/>
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
-          <Route path="/place-info/:id" element={<PlaceInfo />} />          
+          <Route path="/place-info/:id" element={<PlaceInfo />} />  
+
+          <Route path="/placeinfo" element={<PlaceInfoTest />} />          
+        
         </Routes>
         <Footer />  
       </div>

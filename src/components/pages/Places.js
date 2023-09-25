@@ -18,6 +18,13 @@ const Destination = () => {
     price: 0,
   });
 
+  const [destinationInfo, setDestinationInfo] = useState({
+    pictures: null,
+    weather_forecast: '',
+    videos: null,
+    destination: 0,
+  });
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [destinationToUpdate, setDestinationToUpdate] = useState(null);
 
@@ -71,9 +78,49 @@ const Destination = () => {
       });
   }
 
+  const createNewDestination = () => {
+    const formData = new FormData();
+    formData.append('name', newDestination.name);
+    formData.append('description', newDestination.description);
+    formData.append('price', newDestination.price);
+    formData.append('cover_image', newDestination.cover_image);
+  
+    axios.post('http://127.0.0.1:8000/api/places/', formData)
+      .then(response => {
+        // Update destinations with the new destination
+        setDestinations([response.data, ...destinations]);
+        closeModal();
+  
+        // Now, call createDestinationInfo with the newly created destination's ID
+        createDestinationInfo(response.data.id);
+      })
+      .catch(error => {
+        console.error(error);
+        console.log('Not successful');
+      });
+  };
+  
+  const handleDestinationInfoChange = (event) => {
+    const { name, value, files } = event.target;
+  
+    // Create a copy of the existing destinationInfo object
+    const updatedDestinationInfo = { ...destinationInfo };
+  
+    if (name === 'pictures' || name === 'videos') {
+      // Handle file inputs (pictures and videos)
+      updatedDestinationInfo[name] = files[0];
+    } else {
+      // Handle other input fields
+      updatedDestinationInfo[name] = value;
+    }
+  
+    // Update the destinationInfo state with the modified object
+    setDestinationInfo(updatedDestinationInfo);
+  };
+  
   const handleNewDestinationChange = (event) => {
     const { name, value, files } = event.target;
-    
+  
     if (name === 'cover_image') {
       setNewDestination((prevData) => ({
         ...prevData,
@@ -86,30 +133,45 @@ const Destination = () => {
       }));
     }
   };
+  
 
-  const createNewDestination = () => {
-    const formData = new FormData();
-    formData.append('name', newDestination.name);
-    formData.append('description', newDestination.description);
-    formData.append('price', newDestination.price);
-    formData.append('cover_image', newDestination.cover_image);
-
-    axios.post('http://127.0.0.1:8000/api/places/', formData)
+  const createDestinationInfo = (destinationId) => {
+    const placeInfoData = new FormData();
+    placeInfoData.append('pictures', destinationInfo.pictures);
+    placeInfoData.append('weather_forecast', destinationInfo.weather_forecast);
+    placeInfoData.append('videos', destinationInfo.videos);
+    placeInfoData.append('destination', destinationInfo.destination);
+  
+    axios.post('http://127.0.0.1:8000/api/place-info/', placeInfoData)
       .then(response => {
-        setDestinations([response.data, ...destinations]);
-        setNewDestination({
-          name: '',
-          description: '',
-          price: 0,
-          cover_image: null,
+        setDestinationInfo({
+          pictures: null,
+          weather_forecast: '',
+          videos: null,
+          destination: 0,
         });
         closeModal();
+        console.log('Information added successfully');
       })
       .catch(error => {
         console.error(error);
-        console.log('Not successful');
+      
+        // Debugging statements
+        console.log('typeof error:', typeof error);
+        console.log('error instanceof Error:', error instanceof Error);
+        console.log('error.response:', error.response);
+      
+        if (error.response) {
+          console.log('Error response data:', error.response.data);
+        }
+        console.log('Error adding Place Info. Please check your data and try again.');
       });
+      
   };
+  
+  
+  
+
 
   const openUpdateModal = (destination) => {
     setDestinationToUpdate(destination);
@@ -163,7 +225,7 @@ const Destination = () => {
           </button>
         </div>
         {isLoading ? ( 
-          <p style={{color:'#f9f9f9', fontSize:'18px', textAlign:'center', marginTop:''}}>Loading...</p>
+          <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Loading...</p>
           ) : destinations.length === 0 ? (
           <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Nothing here yet</p>
         ) : (
@@ -207,60 +269,145 @@ const Destination = () => {
             </div>
           </div>
         )}
-        <Modal show={modalIsOpen} onHide={closeModal} centered style={{ zIndex: 9999, color: '#fff', backgroundColor:'rgb(0,  0, 0, 0.7)'}}>
-          <Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', color: '#fff', borderRadius:'30px' }}>
-            <Modal.Title className="text-center mx-2 text-white">{destinationToUpdate ? 'Update Destination' : 'Add New Destination'}</Modal.Title>
+        <Modal 
+          show={modalIsOpen}
+          onHide={closeModal}
+          centered
+          style={{
+            zIndex: 9999,
+            // color: '#fff',
+            backgroundColor: 'rgb(0, 0, 0, 0.7)',
+            width: '100%',   
+            height: '100%',  
+            margin: '0',     
+          }}  
+        >
+          <Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', borderRadius:'10px' }}>
+            <Modal.Title className="text-center  ">
+             <h3 className="text-secondary" style={{color:''}}>{destinationToUpdate ? 'Update Destination' : 'Add New Destination'}</h3> 
+              </Modal.Title>
           </Modal.Header>
-          <Modal.Body className=" text-secondary m-2" style={{ height: '350px', backgroundColor: '#121661',borderRadius:'10px' }}>
-            <form className="text-white text-center"  style={{borderRadius:'20px' }}>
-              <p style={{ fontSize:'18px'}}>Upload cover image</p>
+ 
+          <Modal.Body className=" text-secondary m-1" style={{ height: '100%', width:'auto', backgroundColor: '#121661', borderRadius:'10px' }}>
+            <div className="container">
+              <div className="row">
+              <p>Includes place description and more information about that place</p>
+          <hr />
+              <div className='col-md-6'>
+
+                <p style={{ fontSize:'18px'}}>Upload cover image</p>
+              
+              <input
+                className="bg-white"
+                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
+                type="file"
+                name='cover_image'
+                onChange={handleNewDestinationChange}
+              />
+           
+            <p style={{fontSize:'18px'}}>Name of destination</p>
+            <p>
+              <input
+                className="bg-white "
+                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
+                type="text"
+                name='name'
+                placeholder="Example, Salar De Uyuni"
+                value={newDestination.name}
+                onChange={handleNewDestinationChange}
+              />
+            </p>
+            <p style={{fontSize:'18px'}}>Short description</p>
+            <p>
+              <input
+                className="bg-white"
+                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
+                type="text"
+                name='description'
+                placeholder="Welcome to Salar de uyuni"
+                value={newDestination.description}
+                onChange={handleNewDestinationChange}
+              />
+            </p>
+            <p style={{fontSize:'18px'}}>Price for this destination</p>
+            <p>
+              <input
+                className="bg-white"
+                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
+                type="text"
+                name='price'
+                value={newDestination.price}
+                onChange={handleNewDestinationChange}
+              />
+            </p>
+            </div>
+   
+            <div className="col-md-6">
+              {/* Second column inputs (pictures, weather_forecast, videos) */}
+              <p>Upload Pictures</p>
               <p>
                 <input
-                  className="bg-white p-1"
-                  style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
+                  className="bg-white"
+                  style={{
+                    border: '1px solid #121661',
+                    width: '100%',
+                    color: 'rgb(18, 187, 87)',
+                  }}
                   type="file"
-                  name='cover_image'
+                  name="pictures"
                   onChange={handleNewDestinationChange}
                 />
               </p>
-              <p style={{fontSize:'18px'}}>Enter name of destination</p>
+              <p>Enter Weather Forecast</p>
               <p>
                 <input
-                  className="bg-white  p-1"
-                  style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
+                  className="bg-white"
+                  style={{
+                    border: '1px solid #121661',
+                    width: '100%',
+                    color: 'rgb(18, 187, 87)',
+                  }}
                   type="text"
-                  name='name'
-                  placeholder="Example, Salar De Uyuni"
-                  value={newDestination.name}
-                  onChange={handleNewDestinationChange}
+                  name="weather_forecast"
+                  placeholder="Weather Forecast"
+                  value={destinationInfo.weather_forecast}
+                  onChange={(e) => setDestinationInfo({ ...destinationInfo, weather_forecast: e.target.value })}
                 />
               </p>
-              <p style={{fontSize:'18px'}}>Enter description</p>
+              <p>Upload Videos</p>
               <p>
                 <input
-                  className="bg-white p-1"
-                  style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
-                  type="text"
-                  name='description'
-                  placeholder="Welcome to Salar de uyuni"
-                  value={newDestination.description}
+                  className="bg-white"
+                  style={{
+                    border: '1px solid #121661',
+                    width: '100%',
+                    color: 'rgb(18, 187, 87)',
+                  }}
+                  type="file"
+                  name="videos"
                   onChange={handleNewDestinationChange}
                 />
               </p>
-              <p style={{fontSize:'18px'}}>Price for  this destination</p>
+              <p>Destination id</p>
               <p>
                 <input
-                  className="bg-white p-1"
-                  style={{ border: '1px solid #121661', width: '70%', color:'rgb(18, 187, 87)' }}
-                  type="text"
-                  name='price'
-                  value={newDestination.price}
+                  className="bg-white"
+                  style={{
+                    border: '1px solid #121661',
+                    width: '100%',
+                    color: 'rgb(18, 187, 87)',
+                  }}
+                  type="test"
+                  name="destination"
                   onChange={handleNewDestinationChange}
                 />
               </p>
-            </form>
-          </Modal.Body>
-          <Modal.Footer className="m-1" style={{ backgroundColor: '#121661', color: '#d9d9d9', borderRadius:'10px' }}>
+            </div>
+          </div>
+        </div>
+      </Modal.Body>
+
+      <Modal.Footer className="m-1" style={{ backgroundColor: '#121661', color: '#d9d9d9', borderRadius:'10px' }}>
             <button className="btn btn-outline-primary" style={{ fontWeight: 'bold', width:'100%' }} onClick={destinationToUpdate ? handleUpdate : createNewDestination}>
               {destinationToUpdate ? 'Update' : 'Submit'}
             </button>
