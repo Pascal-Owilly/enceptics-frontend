@@ -66,37 +66,47 @@ const Profile = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: '#121661', height: '100vh' }}>
-        <div className="container bootstra snippets bootdey">
-          <div className="row" style={{ backgroundColor: '#121661' }}>
-            <div className="profile-nav col-md-3" style={{ marginTop: '15vh', backgroundColor: 'rgb(18, 187, 18)' }}>
-              <div className="panel" style={{ backgroundColor: '#121661' }}>
-                <div className="user-heading round">
-                  <div className="user-heading round">
-                    <div>
-                      <img src={profile.profile_pic} alt="Pic" style={{ width: '100px', height: '100px' }} />
-                      <h2>{profile.user}</h2>
-                      <p>Current City:    {profile.current_city}</p>
-                      <p>Bio: {profile.bio}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <ul className="nav nav-pills nav-stacked">
-                  <li className="active"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-user"></i> Profile</a></li>
-                  <li><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-calendar"></i> Recent Activity <span className="label label-warning pull-right r-activity">9</span></a></li>
-                  <li><a href="#" onClick={() => console.log('/edit-profile')}> <i className="fa fa-edit"></i> Edit profile</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className="profile-info col-md-9 text-center" style={{ marginTop: '12vh', color: '#d9d9d9' }}>
-              <div className="panel">
-                <p>What's your favorite quote?</p>
-              </div>
-            </div>
+   <div style={{ backgroundColor: '#121661', height: '100vh' }}>
+  <div className="container bootstra snippets bootdey">
+    <div className="row" style={{ backgroundColor: '#121661' }}>
+      {/* Left Column - User Details */}
+      <div className="profile-nav col-md-3" style={{ marginTop: '15vh', backgroundColor: 'rgb(18, 187, 18)' }}>
+        <div className="panel" style={{ backgroundColor: '#121661' }}>
+          <div className="user-heading round">
+            <img src={profile.profile_pic} alt="Pic" style={{ width: '100px', height: '100px' }} />
+            <h2>{profile.user}</h2>
           </div>
+
+          {/* Navigation Links */}
+          <ul className="nav nav-pills nav-stacked">
+            <li className="active"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-user"></i> Profile</a></li>
+            <li><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-calendar"></i> Recent Activity <span className="label label-warning pull-right r-activity">9</span></a></li>
+            <li><a href="#" onClick={() => console.log('/edit-profile')}> <i className="fa fa-edit"></i> Edit profile</a></li>
+          </ul>
         </div>
       </div>
+
+      {/* Right Column - User Info */}
+      <div className="profile-info col-md-9" style={{ marginTop: '12vh', color: '#d9d9d9' }}>
+        {/* User Bio */}
+        <div className="panel" style={{ backgroundColor: '#121661' }}>
+          <h3>Bio</h3>
+          <p>{profile.bio}</p>
+        </div>
+
+        {/* Current City */}
+        <div className="panel" style={{ backgroundColor: '#121661' }}>
+          <h3>Current City</h3>
+          <p>{profile.current_city}</p>
+        </div>
+
+        {/* Additional Profile Information */}
+
+      </div>
+    </div>
+  </div>
+</div>
+
     </>
   );
 };

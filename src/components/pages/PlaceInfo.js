@@ -45,7 +45,7 @@ const PlaceInfo = () => {
           <div className="container-fluid" style={{ marginTop: "", color: "yellow" }}>
             <div className="row">
               <p mt-5></p>
-              <h2 style={{marginTop:'12vh'}}>{placeName}</h2>
+              <h2 style={{marginTop:'vh'}}>{placeName}</h2>
               <div className="col-md-8">
                 <hr />
              
@@ -54,11 +54,9 @@ const PlaceInfo = () => {
                   <Carousel.Item>
                     <img className="mb-5" src={placeInfo.pictures} alt="img" style={{ width: "100%"}} />
                     <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.5)'}}>
-                    <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}}>{placeInfo.weather_forecast}   </p>
                   </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
-                    <img className="mb-5" src={placeInfo.pictures} alt="img" style={{ width: "100%", borderRadius: '10px' }} />
                     <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)'}}>
                     <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}}>{placeInfo.weather_forecast}   </p>
                   </Carousel.Caption>

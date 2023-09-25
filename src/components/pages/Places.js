@@ -18,13 +18,6 @@ const Destination = () => {
     price: 0,
   });
 
-  const [destinationInfo, setDestinationInfo] = useState({
-    pictures: null,
-    weather_forecast: '',
-    videos: null,
-    destination: 0,
-  });
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [destinationToUpdate, setDestinationToUpdate] = useState(null);
 
@@ -89,33 +82,14 @@ const Destination = () => {
       .then(response => {
         // Update destinations with the new destination
         setDestinations([response.data, ...destinations]);
+        navigate('/info')
         closeModal();
-  
-        // Now, call createDestinationInfo with the newly created destination's ID
-        createDestinationInfo(response.data.id);
+        window.location.reload();
       })
       .catch(error => {
         console.error(error);
         console.log('Not successful');
       });
-  };
-  
-  const handleDestinationInfoChange = (event) => {
-    const { name, value, files } = event.target;
-  
-    // Create a copy of the existing destinationInfo object
-    const updatedDestinationInfo = { ...destinationInfo };
-  
-    if (name === 'pictures' || name === 'videos') {
-      // Handle file inputs (pictures and videos)
-      updatedDestinationInfo[name] = files[0];
-    } else {
-      // Handle other input fields
-      updatedDestinationInfo[name] = value;
-    }
-  
-    // Update the destinationInfo state with the modified object
-    setDestinationInfo(updatedDestinationInfo);
   };
   
   const handleNewDestinationChange = (event) => {
@@ -134,45 +108,6 @@ const Destination = () => {
     }
   };
   
-
-  const createDestinationInfo = (destinationId) => {
-    const placeInfoData = new FormData();
-    placeInfoData.append('pictures', destinationInfo.pictures);
-    placeInfoData.append('weather_forecast', destinationInfo.weather_forecast);
-    placeInfoData.append('videos', destinationInfo.videos);
-    placeInfoData.append('destination', destinationInfo.destination);
-  
-    axios.post('http://127.0.0.1:8000/api/place-info/', placeInfoData)
-      .then(response => {
-        setDestinationInfo({
-          pictures: null,
-          weather_forecast: '',
-          videos: null,
-          destination: 0,
-        });
-        closeModal();
-        console.log('Information added successfully');
-      })
-      .catch(error => {
-        console.error(error);
-      
-        // Debugging statements
-        console.log('typeof error:', typeof error);
-        console.log('error instanceof Error:', error instanceof Error);
-        console.log('error.response:', error.response);
-      
-        if (error.response) {
-          console.log('Error response data:', error.response.data);
-        }
-        console.log('Error adding Place Info. Please check your data and try again.');
-      });
-      
-  };
-  
-  
-  
-
-
   const openUpdateModal = (destination) => {
     setDestinationToUpdate(destination);
     setNewDestination({
@@ -233,7 +168,7 @@ const Destination = () => {
             <div className="places-cards-grid">
               {destinations.map((destination) => (
                 <div key={destination.id}>
-                  <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'450px'}}>
+                  <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'470px'}}>
                     <Card.Img src={destination.cover_image} style={{ width: '100%', height:'210px' }} />
                     <Card.Body style={{ color: 'black' }}>
                       <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
@@ -246,7 +181,7 @@ const Destination = () => {
                     </Card.Body>
                     <Card.Footer>
                       <button
-                        className="btn btn-outline-secondary text-dark"
+                        className="btn btn-outline-secondary btn-sm text-dark"
                         style={{ width: '100%', backgroundColor: 'rgb(18, 187, 18)', fontWeight: 'bold' }}
                         onClick={() => handleSeeDescriptionClick(destination)}
                       >
@@ -292,8 +227,8 @@ const Destination = () => {
             <div className="container">
               <div className="row">
               <p>Includes place description and more information about that place</p>
-          <hr />
-              <div className='col-md-6'>
+         
+              <div className='col-md-8 m-auto'>
 
                 <p style={{ fontSize:'18px'}}>Upload cover image</p>
               
@@ -342,67 +277,7 @@ const Destination = () => {
             </p>
             </div>
    
-            <div className="col-md-6">
-              {/* Second column inputs (pictures, weather_forecast, videos) */}
-              <p>Upload Pictures</p>
-              <p>
-                <input
-                  className="bg-white"
-                  style={{
-                    border: '1px solid #121661',
-                    width: '100%',
-                    color: 'rgb(18, 187, 87)',
-                  }}
-                  type="file"
-                  name="pictures"
-                  onChange={handleNewDestinationChange}
-                />
-              </p>
-              <p>Enter Weather Forecast</p>
-              <p>
-                <input
-                  className="bg-white"
-                  style={{
-                    border: '1px solid #121661',
-                    width: '100%',
-                    color: 'rgb(18, 187, 87)',
-                  }}
-                  type="text"
-                  name="weather_forecast"
-                  placeholder="Weather Forecast"
-                  value={destinationInfo.weather_forecast}
-                  onChange={(e) => setDestinationInfo({ ...destinationInfo, weather_forecast: e.target.value })}
-                />
-              </p>
-              <p>Upload Videos</p>
-              <p>
-                <input
-                  className="bg-white"
-                  style={{
-                    border: '1px solid #121661',
-                    width: '100%',
-                    color: 'rgb(18, 187, 87)',
-                  }}
-                  type="file"
-                  name="videos"
-                  onChange={handleNewDestinationChange}
-                />
-              </p>
-              <p>Destination id</p>
-              <p>
-                <input
-                  className="bg-white"
-                  style={{
-                    border: '1px solid #121661',
-                    width: '100%',
-                    color: 'rgb(18, 187, 87)',
-                  }}
-                  type="test"
-                  name="destination"
-                  onChange={handleNewDestinationChange}
-                />
-              </p>
-            </div>
+  
           </div>
         </div>
       </Modal.Body>

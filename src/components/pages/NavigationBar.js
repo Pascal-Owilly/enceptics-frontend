@@ -364,14 +364,14 @@ const handleRegistrationChange = (e) => {
       {showModal && (
           <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh', backgroundColor:'rgb(0, 0, 0, 0.8)' }}>
             <div className="modal-dialog">
-              <div className="modal-content">
+              <div className="modal-content what-card-price text-secondary" style={{background:'#121661', width:'400px'}}>
                 <div className="modal-header">
-                  <h5 className="modal-title">{isSignUpModal ? 'Sign Up' : 'Login'}</h5>
-                  <button style={{backgroundColor:'green', border:'none', color:'white', width:'40px', borderRadius:'4px'}} type="button" className="close" onClick={closeModal}>
-                    <span aria-hidden="true">&times;</span>
+                  <h5 className="modal-title text-secondary">{isSignUpModal ? 'Sign Up' : 'Login'}</h5>
+                  <button style={{backgroundColor:'', border:'none', color:'white', width:'40px', borderRadius:'4px'}} type="button" className="close" onClick={closeModal}>
+                    <span className='text-dark' aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div className="modal-body">
+                <div className="modal-body ">
                   {isSignUpModal ? (
                     <form onSubmit={handleRegistrationSubmit}>
                       <div className="form-group">
@@ -465,7 +465,7 @@ const handleRegistrationChange = (e) => {
                       <button
                         type="submit"
                         className="btn btn-primary btn-sm mt-4"
-                        style={{ backgroundColor: '#000092', borderColor: '#000092', width:'100%' }}
+                        style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%' }}
                       >
                         Login
                       </button>
@@ -482,7 +482,7 @@ const handleRegistrationChange = (e) => {
       </nav>
 
       {flashMessage && (
-        <div className="flash-message" style={{backgroundColor:'#121661',  fontWeight:'normal'}}>
+        <div className="flash-message text-secondary" style={{backgroundColor:'transparent',  fontWeight:'normal'}}>
           {flashMessage.message}
         </div>
     )}
