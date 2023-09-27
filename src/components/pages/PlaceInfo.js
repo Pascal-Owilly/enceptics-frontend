@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { FaArrowRight } from "react-icons/fa";
 import { Carousel } from 'react-bootstrap';
 
-const PlaceInfo = () => {
-  const { id } = useParams();
-const navigate = useNavigate();
+const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => {  const { id } = useParams();
+  const navigate = useNavigate();
   const [placeInfo, setPlaceInfo] = useState(null);
   const [placeName, setPlaceName] = useState(""); 
+  const [ price, setPrice ] = useState(0);
+  const location = useLocation(); // Get the location object
+  // const { placeBookingData } = location.state || {}; // Access the bookingData from location state
+
 
   useEffect(() => {
     fetchPlaceInfo(id);
@@ -20,6 +23,7 @@ const navigate = useNavigate();
       .then((response) => {
         setPlaceInfo(response.data);
         fetchPlaceName(response.data.id); 
+
       })
       .catch((error) => {
         console.error(error);
@@ -32,16 +36,19 @@ const navigate = useNavigate();
         .get(`http://127.0.0.1:8000/api/places/${placeId}/`) // Assuming this is the endpoint to fetch place details
         .then((response) => {
           setPlaceName(response.data.name);
+          setPrice(response.data.price);
+
         })
         .catch((error) => {
           console.error(error);
         });
     };
 
-      // Function to navigate to the booking page
-  const handleProceedToBooking = () => {
-    navigate(`/booking?placeName=${placeName}`);
-  };
+      // Function to navigate to the booking page with booking data
+      const handleProceedToBooking = () => {
+        navigate(`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`);
+      };
+      
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#121661" }}>
@@ -49,8 +56,9 @@ const navigate = useNavigate();
         <div>
           <div className="container-fluid" style={{ marginTop: "", color: "yellow" }}>
             <div className="row">
-              <p mt-5></p>
-              <h2 style={{marginTop:'vh'}}>{placeName}</h2>
+            
+              <h2 className="mt-4" style={{marginTop:'vh'}}>{placeName}</h2>
+
               <div className="col-md-8">
                 <hr />
              
@@ -63,9 +71,20 @@ const navigate = useNavigate();
                   </Carousel.Item>
                   <Carousel.Item>
                     <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)'}}>
-                    <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}}>{placeInfo.weather_forecast}   </p>
+                    <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}} >{placeInfo.weather_forecast}</p>
                   </Carousel.Caption>
                   </Carousel.Item>
+                  <Carousel.Item>
+                <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)'}}>
+                <video width="640" height="360" controls>
+                  <source src={placeInfo.videos} type="video/mp4" />
+                  <source src={placeInfo.videos}  type="video/webm" />
+                  <source src={placeInfo.videos}  type="video/ogg" />
+                  Your browser does not support the video tag.
+              </video>               
+            </Carousel.Caption>
+                </Carousel.Item>
+    
 
                   {/* Add more Carousel.Items if needed */}
                 </Carousel>
@@ -106,8 +125,7 @@ const navigate = useNavigate();
                 </table>
                 <hr />
 
-                <Link to={`/booking?placeName=${encodeURIComponent(placeName)}`}>
-                    <button
+                <Link to={`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`}>                    <button
                       className="what-card-price btn mt-5 btn-sm"
                       style={{
                         fontSize: "18px",

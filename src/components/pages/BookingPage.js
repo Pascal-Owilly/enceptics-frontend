@@ -8,6 +8,10 @@ const Booking = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const placeName = searchParams.get("placeName");
+  const price = searchParams.get("price");
+  const { state } = location;
+
+  const placeBookingData = state ? state.bookingData : null;
 
   const [bookingData, setBookingData] = useState({
     numPeople: 1,
@@ -65,8 +69,9 @@ const Booking = () => {
       const orderPlace = {
         ...orderData,
         userId: user.id, // Adjust this based on your user data structure
+        price: price,   // Include the price here
       };
-
+  
       // Make the booking API call with the user association
       axios
         .post('http://127.0.0.1:8000/api/order-place/', orderPlace)
@@ -79,6 +84,7 @@ const Booking = () => {
         });
     }
   };
+  
 
 
   const handleOrderChange = (e) => {
@@ -164,10 +170,10 @@ const Booking = () => {
         <br />
         <div className='container m-auto'>
           <div className='row what-card-price m-auto' style={{width:'90%'}}>
-          <h3 className='text-secondary' style={{marginTop:'1vh', width:'90%'}}>Booking for {placeName} </h3>
+          <h3 className='text-secondary' style={{marginTop:'1vh', width:'90%'}}>{placeBookingData} </h3>
           <hr style={{ color: 'white', height: '0rem' }} />
             <div className='col-md-6 mt-2'>
-              <h3 className='mt-1' style={{color:'goldenrod'}}>Number of people</h3>
+              <h4 className='mt-1' style={{color:'goldenrod'}} price={price}>Visite {placeName} for only Ksh {price}</h4>
               <hr />
               <p>
               <label className="mt-1 mb-2 text-center" style={{fontSize:'16px', color:'#d9d9d9'}} htmlFor="date">Number of people</label>
@@ -314,8 +320,10 @@ const Booking = () => {
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <div className="modal-body" style={{backgroundColor:'rgb(18, 187,18)', height:'350px', width:'300px', marginTop:'40px'}}>
-                      <h4 className='text-dark mb-2'>Payment Amount: ${paymentAmount.toFixed(2)}</h4>
+                    <div className="modal-body" style={{backgroundColor:'rgb(18, 187,18)', height:'350px', width:'300px', marginTop:'10px'}}>
+                     
+                      <h5 className='text-dark mb-2'>Payment Amount: <br /> Ksh {price}</h5>
+                      <hr />
                       <form onSubmit={handlePaymentSubmit}>
                         <div className="form-group">
                           <label className='text-dark m-1' htmlFor="cardNumber">Card Number</label>

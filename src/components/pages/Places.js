@@ -28,6 +28,10 @@ const Destination = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [price, setPrice] = useState(0); // Initialize with an appropriate default value
+const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with an appropriate default value
+
+
   const fetchPlaceInfo = (destinationId) => {
     axios.get(`http://127.0.0.1:8000/api/place-info/${destinationId}/`)
       .then(response => {
@@ -43,8 +47,21 @@ const Destination = () => {
   const handleSeeDescriptionClick = (destination) => {
     fetchPlaceInfo(destination.id);
     setSelectedDestination(destination);
-    navigate(`/place-info/${destination.id}`); 
+  
+    // Store the booking data in state, including price
+    const placeBookingData = {
+      placeName: destination.name,
+      price: destination.price, // Include the price in the booking data
+      // Add other relevant booking data here
+    };
+  
+    navigate(`/place-info/${destination.id}`, {
+      state: { placeBookingData }, // Pass the bookingData as state
+    });
   };
+  
+  
+  
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -289,13 +306,18 @@ const Destination = () => {
           </Modal.Footer>
         </Modal>
         {showPlaceInfo && selectedDestination && (
-          <div>
-            <PlaceInfo destinationId={selectedDestination.id} />
-            <button className="btn btn-outline-secondary text-dark" onClick={() => setSelectedDestination(null)}>
-              Back to Destinations
-            </button>
-          </div>
-        )}
+  <div>
+    <PlaceInfo
+      destinationId={selectedDestination.id}
+      price={price} // Pass the price as a prop
+      placeBookingData={placeBookingData} // Pass the bookingData as a prop
+      selectedDestination={selectedDestination}
+    />
+    <button className="btn btn-outline-secondary text-dark" onClick={() => setSelectedDestination(null)}>
+      Back to Destinations
+    </button>
+  </div>
+)}
       </Container>
     </>
   );
