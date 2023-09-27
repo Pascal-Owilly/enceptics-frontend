@@ -90,13 +90,13 @@ const Profile = () => {
       <div className="profile-info col-md-9" style={{ marginTop: '12vh', color: '#d9d9d9' }}>
         {/* User Bio */}
         <div className="panel" style={{ backgroundColor: '#121661' }}>
-          <h3>Bio</h3>
+          <h4 className='text-secondary'>Bio</h4>
           <p>{profile.bio}</p>
         </div>
 
         {/* Current City */}
         <div className="panel" style={{ backgroundColor: '#121661' }}>
-          <h3>Current City</h3>
+          <h4 className='text-secondary'>Current City</h4>
           <p>{profile.current_city}</p>
         </div>
 

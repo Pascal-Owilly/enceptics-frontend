@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Booking = () => {
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const placeName = searchParams.get("placeName");
+
   const [bookingData, setBookingData] = useState({
     numPeople: 1,
     isBookingVehicle: true,
@@ -12,7 +17,14 @@ const Booking = () => {
     checkoutDate: '',
     phoneNumber: '',
     email: '',
-    room: '',  });
+    room: '', 
+   });
+
+  const [orderData, setOrderData] = useState({
+    "is_completed": false,
+    "user": null,
+    "place": null
+   })
 
   const [user, setUser] = useState(null); // Store the authenticated user
   const [paymentAmount, setPaymentAmount] = useState(0);
@@ -33,12 +45,12 @@ const Booking = () => {
         })
         .then((response) => {
           setUser(response.data);
-          alert('Hello', JSON.stringify(response.data.username));
+          console.log('You are authenticated as', response.data);
 
         })
         .catch((error) => {
           // Handle authentication error, e.g., token expired
-          alert('Authentication failed:', error);
+          console.log('Authentication failed:', error);
         });
     } else {
       // Redirect unauthenticated users to the login page
@@ -50,14 +62,14 @@ const Booking = () => {
     e.preventDefault();
     if (user) {
       // Associate the booking with the authenticated user
-      const bookingDataWithUser = {
-        ...bookingData,
+      const orderPlace = {
+        ...orderData,
         userId: user.id, // Adjust this based on your user data structure
       };
 
       // Make the booking API call with the user association
       axios
-        .post('http://127.0.0.1:8000/api/bookings', bookingDataWithUser)
+        .post('http://127.0.0.1:8000/api/order-place/', orderPlace)
         .then((response) => {
           alert('Booking successful! Have a nice travel!');
         })
@@ -65,6 +77,20 @@ const Booking = () => {
           alert("Oops! Booking didn't work");
           console.error('Booking failed:', error);
         });
+    }
+  };
+
+
+  const handleOrderChange = (e) => {
+    const { name, value, checked, type } = e.target;
+
+    if (type === 'number') {
+      setOrderData({ ...orderData, [name]: parseInt(value) });
+    } else if (type === 'checkbox') {
+      e.target.disabled = false;
+      setBookingData({ ...bookingData, [name]: checked });
+    } else {
+      setBookingData({ ...bookingData, [name]: value });
     }
   };
 
@@ -114,7 +140,7 @@ const Booking = () => {
 
       window.location.href = approvalUrl;
     } catch (error) {
-      alert("Oops! Payment didn't work");
+      console.log("Oops! Payment didn't work");
     }
   };
 
@@ -136,17 +162,17 @@ const Booking = () => {
     <>
       <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto' }}>
         <br />
-        <div className='container mt-5 m-auto' >
-          <h2 style={{marginTop:'10vh'}} className=''>Booking for  </h2>
-          <hr style={{ color: 'white', height: '2rem' }} />
+        <div className='container m-auto'>
           <div className='row what-card-price m-auto' style={{width:'90%'}}>
+          <h3 className='text-secondary' style={{marginTop:'1vh', width:'90%'}}>Booking for {placeName} </h3>
+          <hr style={{ color: 'white', height: '0rem' }} />
             <div className='col-md-6 mt-2'>
               <h3 className='mt-1' style={{color:'goldenrod'}}>Number of people</h3>
               <hr />
               <p>
               <label className="mt-1 mb-2 text-center" style={{fontSize:'16px', color:'#d9d9d9'}} htmlFor="date">Number of people</label>
               </p>
-              <p>
+              <p> 
                 <input
                 className='p-1 mx-3'
                  style={{fontSize:'12px', backgroundColor:'#d9d9d9'}}
@@ -159,6 +185,7 @@ const Booking = () => {
               </p>
               <div>
                 <label>
+                Book Vehicle
                   <input
                     type="checkbox"
                     name="isBookingVehicle"
@@ -166,31 +193,21 @@ const Booking = () => {
                     onChange={handleBookingChange}
                     disabled
                   />
-                  Book Vehicle
+                  
                 </label>
               </div>
               <div>
                 <label>
+                Book Hotel
                   <input
                     type="checkbox"
                     name="isBookingVehicle"
                     checked={bookingData.isBookingVehicle}
                     onChange={handleBookingChange}
+                    value='booked'
                     disabled
                   />
-                  Book Hotel
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="isBookingPlace"
-                    checked={bookingData.isBookingPlace}
-                    onChange={handleBookingChange}
-                    disabled
-                  />
-                  Book Excursion
+                 
                 </label>
               </div>
               {/* <button type="submit" onClick={handleCheckDestinationSubmit}>

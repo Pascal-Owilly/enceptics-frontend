@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaArrowRight } from "react-icons/fa";
 import { Carousel } from 'react-bootstrap';
 
 const PlaceInfo = () => {
   const { id } = useParams();
-
+const navigate = useNavigate();
   const [placeInfo, setPlaceInfo] = useState(null);
   const [placeName, setPlaceName] = useState(""); 
 
@@ -19,7 +19,7 @@ const PlaceInfo = () => {
       .get(`http://127.0.0.1:8000/api/place-info/${id}/`)
       .then((response) => {
         setPlaceInfo(response.data);
-        fetchPlaceName(response.data.id); // Fetch the place name based on place_id
+        fetchPlaceName(response.data.id); 
       })
       .catch((error) => {
         console.error(error);
@@ -37,6 +37,11 @@ const PlaceInfo = () => {
           console.error(error);
         });
     };
+
+      // Function to navigate to the booking page
+  const handleProceedToBooking = () => {
+    navigate(`/booking?placeName=${placeName}`);
+  };
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#121661" }}>
@@ -66,7 +71,7 @@ const PlaceInfo = () => {
                 </Carousel>
               </div>
               <div className="col-md-3 text-center mb-4">
-                <h5 className="text-secondary mb-3 text-center">3 Day Weather Forecast for {placeName}</h5>
+                <h5 className="text-secondary mb-3 text-center">2 Day Weather Forecast for {placeName}</h5>
                 <table className="table table-bordered table-hover" style={{width:'48%'}}>
                   <thead>
                     <tr>
@@ -75,7 +80,7 @@ const PlaceInfo = () => {
                       <th>Afternoon (°C)</th>
                       <th>Evening  (°C)</th>
                       <th>Night  (°C)</th>
-                      <th>Mid  (°C)</th>
+                   
 
                     </tr>
                   </thead>
@@ -86,7 +91,6 @@ const PlaceInfo = () => {
                       <td>22°C Cloudy</td>
                       <td>20°C Rainy</td>
                       <td>15°C Windy</td>
-                      <td>65% Clear</td>
 
                     </tr>
                     <tr>
@@ -95,35 +99,27 @@ const PlaceInfo = () => {
                       <td>22°C Cloudy</td>
                       <td>20°C Rainy</td>
                       <td>15°C Windy</td>
-                      <td>65% Clear</td>
 
                     </tr>
-                    <tr>
-                      <td>Wednesday</td>
-                      <td>18°C Sunny</td>
-                      <td>22°C Cloudy</td>
-                      <td>20°C Rainy</td>
-                      <td>15°C Windy</td>
-                      <td>65% Clear</td>
-                    </tr>
+
                      </tbody>
                 </table>
                 <hr />
 
-                <Link to='/booking'>
-                <button
-                  className="what-card-price btn mt-5 btn-sm"
-                  style={{
-                    fontSize: "18px",
-                    color: "goldenrod",
-                    fontWeight: "bold",
-                    width: "auto",
-                    textAlign: 'left',
-                  }}
-                >
-                  Proceed to booking &nbsp;&nbsp; <FaArrowRight />
-                </button>
-                </Link>
+                <Link to={`/booking?placeName=${encodeURIComponent(placeName)}`}>
+                    <button
+                      className="what-card-price btn mt-5 btn-sm"
+                      style={{
+                        fontSize: "18px",
+                        color: "goldenrod",
+                        fontWeight: "bold",
+                        width: "auto",
+                        textAlign: 'left',
+                      }}
+                    >
+                      Proceed to booking &nbsp;&nbsp; <FaArrowRight />
+                    </button>
+                  </Link>
               </div>
             </div>
           </div>

@@ -66,6 +66,8 @@ const login = async (e) => {
 
     setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' });
     closeModal();
+    window.location.reload()
+
   } catch (error) {
     setFlashMessage({ message: "That didn't go well!", type: 'error' });
   }
@@ -123,6 +125,9 @@ const signUp = async (e) => {
     const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', registrationData);
     setFlashMessage({ message: `Welcome ${registrationData.username} !`, type: 'success' }); // Set flash message
     closeModal();
+    navigate('/login')
+
+    window.location.reload()
   } catch (error) {
     alert(`Oops something went wrong but we are working on it`);
   }
@@ -145,6 +150,7 @@ const logout = async () => {
     // Remove the authToken cookie
     Cookies.remove('authToken', { sameSite: 'None', secure: true });
     setFlashMessage({ message: 'You have successfully logged out', type: 'success' });
+    window.location.reload()
   } catch (error) {
     setFlashMessage({ message: 'Failed to logout', type: 'error' });
   }
