@@ -20,8 +20,41 @@ function BlogList() {
   const [selectedImage, setSelectedImage] = useState(null); // State variable for the selected image
   const [imagePreview, setImagePreview] = useState(null); // State variable for image preview
   const [profilePics, setProfilePics] = useState({}); // State variable to store profile pictures
+  const [user, setUser] = useState(null);
 
   const authToken = Cookies.get('authToken');
+
+    // Conditionally fetch user data if authToken is available
+    useEffect(() => {
+      if (authToken) {
+        axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        })
+          .then(response => {
+            const userData = response.data;
+            setUser(userData);
+          })
+          .catch(error => {
+            console.error('Error fetching user data:', error);
+          });
+      }
+    }, [authToken]); // Include authToken as a dependency of useEffect
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
+      });
+      const userData = response.data;
+      setUser(userData);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/blogposts/', {
@@ -146,19 +179,19 @@ function BlogList() {
           <div className="row">
           {posts.map(post => (
             
-            <div className="card blog-post-card " style={{ margin: '5px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-            <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
-              <div className="d-flex align-items-center">
-                <img src={profilePics[post.author]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
-                <div className="author-info">
-                  <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}</h5>
-                  <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
-                    <span className="text-success">Followed by {post.followers} users</span> • {formatTimeDifference(post.created_at)}
-                  </p>
-                </div>
-              </div>
-              <button className="btn btn-outline-success btn-sm follow-button"><i className="fa fa-user-plus"></i> Follow</button>
-            </div>
+            <div className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',width:'87%' }}>
+              <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
+                    <div className="d-flex align-items-center">
+                      <img src={profilePics[post.author]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                      <div className="author-info">
+                      <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}</h5>
+                        <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
+                          <span className="text-success">Followed by {post.followers} users</span> • {formatTimeDifference(post.created_at)}
+                        </p>
+                      </div>
+                    </div>
+                    <button className="btn btn-outline-success btn-sm follow-button"><i className="fa fa-user-plus"></i> Follow</button>
+                  </div>
             {post.image && (
               <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
             )}
@@ -172,7 +205,7 @@ function BlogList() {
                   <button className="btn btn-outline-primary btn-sm like-button"><i className="fa fa-thumbs-up"></i> Like</button> &nbsp; &nbsp;
                   <button className="btn btn-outline-secondary btn-sm comment-button"><i className="fa fa-comment"></i> Comment</button>
                 </div>
-                <div className="post-stats" style={{ fontSize: '14px', color: '#666' }}>
+                <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
                   <span className="like-count">24 Likes</span>&nbsp;
                   <span className="comment-count">12 Comments</span>
                 </div>

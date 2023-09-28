@@ -264,11 +264,11 @@ const handleRegistrationChange = (e) => {
                     // onSubmit={handleSubmit}
                     >
                     <input
-                      placeholder='Search...'
+                      placeholder='Search in places...'
                       type="text"
                       // value={query}
                       // onChange={(event) => setQuery(event.target.value)}
-                      style={{width:'150px', height:'28px', padding:'10px',backgroundColor:'#d9d9d9'
+                      style={{width:'150px', height:'28px', padding:'10px',backgroundColor:'#121661', border:'1px solid #a9a9a9'
                     }}
                     />
                       <button
