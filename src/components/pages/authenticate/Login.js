@@ -47,7 +47,7 @@ const LoginTest = () => {
     if (storedToken) {
       setIsLoggedIn(true);
       // Redirect to another page if the user is already logged in
-      navigate('/'); // Replace '/dashboard' with your desired route
+      navigate('/profile'); // Replace '/dashboard' with your desired route
     }
   }, []);
 

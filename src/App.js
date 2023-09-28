@@ -15,6 +15,7 @@ import Aboutus from '../src/components/pages/Aboutus';
 import NavigationBar from './components/pages/NavigationBar';
 import Home from './components/pages/Home';
 import Login from './components/pages/authenticate/Login';
+import SignUp from './components/pages/authenticate/SignUp';
 import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -22,6 +23,9 @@ import BlogList from './components/pages/BlogList';
 import BlogDetail from './components/pages/BlogDetail';
 import BlogForm from './components/pages/BlogForm';
 import AddPlaceInfo from './components/pages/placeinfotest/AddPlaceInfo';
+
+import BookingExample from './components/pages/BookingExample';
+
 function App() {
 
   return (  
@@ -33,6 +37,8 @@ function App() {
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />          
+
           <Route path="/blog" element={ <BlogList />} />
           <Route path="/post/:id" element={< BlogDetail />} />
           <Route path="/create" element={< BlogForm />} />
@@ -41,9 +47,10 @@ function App() {
           <Route exact path='/booking' element={<BookingPage/>}/>
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
           <Route path="/place-info/:id" element={<PlaceInfo />} />  
-
           <Route path="/info" element={<AddPlaceInfo />} />          
         
+          <Route path="/bookingexample" element={<BookingExample />} />          
+
         </Routes>
         <Footer />  
       </div>

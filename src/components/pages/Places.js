@@ -44,21 +44,40 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       });
   };
 
+  // const handleSeeDescriptionClick = (destination) => {
+  //   fetchPlaceInfo(destination.id);
+  //   setSelectedDestination(destination);
+  
+  //   // Store the booking data in state, including price
+  //   const placeBookingData = {
+  //     placeName: destination.name,
+  //     price: destination.price, // Include the price in the booking data
+  //     // Add other relevant booking data here
+  //   };
+  
+  //   navigate(`/place-info/${destination.id}`, {
+  //     state: { placeBookingData }, // Pass the bookingData as state
+  //   });
+  // };
+
   const handleSeeDescriptionClick = (destination) => {
     fetchPlaceInfo(destination.id);
     setSelectedDestination(destination);
   
-    // Store the booking data in state, including price
+    // Store the booking data in state, including price and place name
     const placeBookingData = {
       placeName: destination.name,
-      price: destination.price, // Include the price in the booking data
+      price: destination.price,
       // Add other relevant booking data here
     };
+  
+    setPlaceBookingData(placeBookingData); // Set the booking data in state
   
     navigate(`/place-info/${destination.id}`, {
       state: { placeBookingData }, // Pass the bookingData as state
     });
   };
+  
   
   
   

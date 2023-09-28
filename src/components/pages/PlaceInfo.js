@@ -91,7 +91,7 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
               </div>
               <div className="col-md-3 text-center mb-4">
                 <h5 className="text-secondary mb-3 text-center">2 Day Weather Forecast for {placeName}</h5>
-                <table className="table table-bordered table-hover" style={{width:'48%'}}>
+                <table className="table table-bordered table-hover" style={{}}>
                   <thead>
                     <tr>
                       <th></th>
@@ -142,7 +142,7 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
             </div>
           </div>
         </div>
-      ) : placeInfo === null ? (
+      ) : placeInfo === 0 ? (
         <p 
         style={{
           display: "flex",

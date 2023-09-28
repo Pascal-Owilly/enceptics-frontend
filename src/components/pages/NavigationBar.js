@@ -37,6 +37,8 @@ useEffect(() => {
 
 
 const [registrationData, setRegistrationData] = useState({
+  first_name: '',
+  last_name: '',
   username: '',
   email: '',
   password1: '',
@@ -380,6 +382,30 @@ const handleRegistrationChange = (e) => {
                 <div className="modal-body ">
                   {isSignUpModal ? (
                     <form onSubmit={handleRegistrationSubmit}>
+                          <div className="form-group">
+                                    <label htmlFor="first_name">First Name</label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="first_name"
+                                      name="first_name"
+                                      value={registrationData.first_name}
+                                      onChange={handleRegistrationChange}
+                                      required
+                                    />
+                                  </div>
+                                  <div className="form-group">
+                                    <label htmlFor="last_name">Last Name</label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id="last_name"
+                                      name="last_name"
+                                      value={registrationData.last_name}
+                                      onChange={handleRegistrationChange}
+                                      required
+                                    />
+                                  </div>
                       <div className="form-group">
                         <label className="mt-4" htmlFor="username">Username</label>
                         <input
