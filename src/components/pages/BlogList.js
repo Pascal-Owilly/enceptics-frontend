@@ -10,6 +10,7 @@ import placeholderImage2 from '../../images/house2.jpg';
 import placeholderImage3 from '../../images/house3.jpg';
 // import Slider from 'react-slick'; 
 import { Carousel } from 'react-bootstrap';
+import Cookies from 'js-cookie'; // Import the Cookies library
 
 
 
@@ -20,13 +21,23 @@ function BlogList() {
   const [imagePreview, setImagePreview] = useState(null); // State variable for image preview
   const [profilePics, setProfilePics] = useState({}); // State variable to store profile pictures
 
+  const authToken = Cookies.get('authToken');
+
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/blogposts/')
+    axios.get('http://127.0.0.1:8000/api/blogposts/', {
+      headers: {
+        Authorization: `Token ${authToken}`, // Include the authToken in the request headers
+      },
+    })
       .then(response => {
         setPosts(response.data);
-        // Fetch profile   pictures for each post
+        // Fetch profile pictures for each post
         response.data.forEach(post => {
-          axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`)
+          axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`, {
+            headers: {
+              Authorization: `Token ${authToken}`, // Include the authToken in the request headers
+            },
+          })
             .then(profileResponse => {
               setProfilePics(prevProfilePics => ({
                 ...prevProfilePics,
@@ -38,7 +49,8 @@ function BlogList() {
             });
         });
       })
-  }, []);
+  }, [authToken]); // Include authToken as a dependency of useEffect
+
 
   const deletePost = (id) => {
     axios.delete(`http://127.0.0.1:8000/api/blogposts/${id}/`)
@@ -92,105 +104,128 @@ function BlogList() {
 
 
   return (
-    <div style={{backgroundColor:'rgb(18, 187, 18)'}}>
+    <div style={{backgroundColor:'#121661', color:'white'}}>
     <div className="container" style={{ minHeight: '100vh' }}>
-      <h1 className="" style={{fontFamily:'cursive'}}> <br /><br /> Travellers Blog</h1>
-      <div className="row mt-5">
+      <br />
+      <h1 className="text-secondary" style={{fontFamily:'cursive'}}>Travellers Blog</h1>
+      <hr />
+      <div className="row ">
       {/* <div className="col-md-1"></div> */}
-        <div className="col-md-7">
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control m-1"
-              placeholder="Share your experience ..."
-              value={newPostContent}
-              onChange={handleNewPostContentChange}
-              style =  {{backgroundColor:'#d9d9d9', border:'none', borderRadius:'10px 0 10px 0'}}
-            />
-
-            <input
-              type="file"
-              accept="image/*"
-              className="p-1 m-1"
-              onChange={handleImageChange}
-              style =  {{ borderRadius:'10px 0 10px 0'}}
-            />
+        <div className="col-md-6">
+          <div className="input-group blogpost-input mb-3">
+          <input
+          
+            type="text"
+            className="form-control m-1 custom-blog-placeholder text-secondary" /* Add the custom-placeholder class here */
+            placeholder="Share your experience ..."
+            value={newPostContent}
+            onChange={handleNewPostContentChange}
+            style={{ backgroundColor: '#121661', border: '1px solid #d9d9d9', borderRadius: '30px', '::placeholder': { color: 'white' }}}
+          />
+              <label className="custom-file-upload m-2 what-card" style={{borderRadius:'100%', backgroundColor:'#A9A9A9', color:'#121661', fontWeight:'bold'}}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="p-1 btn-sm m-1"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }} // Hide the default file input
+                />
+                <span className="custom-button p-1 mx-1 " style={{ fontSize: '9px', color:'#121661' }}>Upload <br /> image</span>
+              </label>
 
             <div className="input-group-append">
               <button className="btn btn-outline-secondary m-1" type="button" onClick={createNewPost}>Post</button>
             </div>
           </div>
+          <hr />
           {imagePreview && (
-            <div className="mb-3">
+            <div className="mb-3 mt-1">
               <img src={imagePreview} alt="Image Preview" style={{ maxWidth: '100%' }} />
             </div>
           )}
           <div className="row">
           {posts.map(post => (
-              <div className="col-md-12 mb-3" key={post.id}>
-                <div className="card what-card text-white" style={{ backgroundColor: '#121661', borderRadius: '10px 0 10px 0' }}>
-                  <div className="card-header">
-                    <img src={profilePics[post.author]} alt="img" style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
-                    <span className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</span>  &nbsp;
-                    <button className="btn btn-outline-success btn-sm ms-2"><i className="fa fa-user-plus"></i> Follow</button>
-                    <p style={{ fontSize: '12px', color: 'rgb(87, 187, 87)', fontWeight: 'bold' }} className="mb-0 ms-5">{formatTimeDifference(post.created_at)}</p>
-                  </div>
-                  <div className="card-body">
-                    <p className="card-text ">{post.content}</p>
-                  </div>
-                  {post.image && (
-                    <img src={post.image} alt="vera" className="card-img-top" style={{ width: '100%', objectFit: 'cover' }} />
-                  )}
-
-                  <div className="card-footer text-muted">
-                    <div className="d-flex justify-content-between">
-                      <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm"><i className="fa fa-trash"></i></button>
-                      <div>
-                        <button className="btn btn-outline-primary btn-sm me-2"><i className="fa fa-thumbs-up"></i> Like</button>
-                        <button className="btn btn-outline-secondary btn-sm"><i className="fa fa-comment"></i> Comment</button>
-                      </div>
-                    </div>
-                  </div>
+            
+            <div className="card blog-post-card " style={{ margin: '5px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
+            <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
+              <div className="d-flex align-items-center">
+                <img src={profilePics[post.author]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                <div className="author-info">
+                  <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}</h5>
+                  <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
+                    <span className="text-success">Followed by {post.followers} users</span> • {formatTimeDifference(post.created_at)}
+                  </p>
                 </div>
               </div>
+              <button className="btn btn-outline-success btn-sm follow-button"><i className="fa fa-user-plus"></i> Follow</button>
+            </div>
+            {post.image && (
+              <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
+            )}
+            <div className="card-body">
+              <p className="card-text post-content" style={{ fontSize: '16px', lineHeight: '1.5' }}>{post.content}</p>
+            </div>
+            <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
+              <div className="d-flex justify-content-between">
+                <div>
+                  {/* <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm delete-button"><i className="fa fa-trash"></i> Delete</button>&nbsp; */}
+                  <button className="btn btn-outline-primary btn-sm like-button"><i className="fa fa-thumbs-up"></i> Like</button> &nbsp; &nbsp;
+                  <button className="btn btn-outline-secondary btn-sm comment-button"><i className="fa fa-comment"></i> Comment</button>
+                </div>
+                <div className="post-stats" style={{ fontSize: '14px', color: '#666' }}>
+                  <span className="like-count">24 Likes</span>&nbsp;
+                  <span className="comment-count">12 Comments</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
            ))}
           </div>
         </div>
-        <div className='col-md-4 text-right'>
-  <h4 className='text-center mt-5' style={{fontFamily:'cursive', fontWeight:'bold'}}>Top chats</h4>
- 
-          <Carousel className="fixed-carousel mt-3 ms-4"
 
-          style={{
-            height:'150px',
-            outline:'1px solid #198754',
-            padding:'1.2rem',
-            borderRadius:'0 20px 0 0',
-            
-          }}
-          
-          >
-            <Carousel.Item>
-            <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-            <span className='text-success' style={{fontWeight:'bolder'}}>Veronica Ouma</span>
-            <p className='ms-5'>I once tried biolminiscence it's amazing</p>
-            </Carousel.Item>
-            <Carousel.Item>
-              <div className="mb-3">
-              <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-            <span className='text-success' style={{fontWeight:'bolder'}}>Pascal Owilly</span>
-            <p className='ms-5'>I have walked around the world but I have never seen a plce like Salar de Uyuni</p>
-              </div>
-            </Carousel.Item>
-            <Carousel.Item>
-              <div className="mb-3">
-              <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-            <span className='text-success' style={{fontWeight:'bolder'}}>Leon Okoo</span>
-            <p className='ms-5'>Enceptics is amazing from start to finish</p>
-              </div>
-            </Carousel.Item>
-          </Carousel>
+<div className="col-md-4 text-right">
+  <h4 className="text-center mt-5" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Top chats</h4>
+
+  <Carousel
+    className="fixed-carousel mt-3 mx-5"
+    style={{
+      height: '200px',
+      outline: '1px solid #198754',
+      padding: '1rem',
+      borderRadius: '10px',
+    }}
+  >
+    <Carousel.Item>
+      <div className="d-flex align-items-center">
+        <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+        <div>
+          <span className='text-success' style={{ fontWeight: 'bolder' }}>Veronica Ouma</span>
+          <p className=''>I once tried bioluminescence; it's amazing</p>
         </div>
+      </div>
+    </Carousel.Item>
+    <Carousel.Item>
+      <div className="d-flex align-items-center">
+        <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+        <div>
+          <span className='text-success' style={{ fontWeight: 'bolder' }}>Pascal Owilly</span>
+          <p className=''>I have walked around the world but I have never seen a place like Salar de Uyuni</p>
+        </div>
+      </div>
+    </Carousel.Item>
+    <Carousel.Item>
+      <div className="d-flex align-items-center">
+        <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+        <div>
+          <span className='text-success' style={{ fontWeight: 'bolder' }}>Leon Okoo</span>
+          <p className=''>Enceptics is amazing from start to finish</p>
+        </div>
+      </div>
+    </Carousel.Item>
+  </Carousel>
+</div>
+
          
       </div>
     </div>

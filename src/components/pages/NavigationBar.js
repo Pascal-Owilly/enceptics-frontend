@@ -51,6 +51,8 @@ const [loginData, setLoginData] = useState({
 });
 
 const [profile, setProfile] = useState([]);
+const [user, setUser] = useState(null);
+const authToken = Cookies.get('authToken');
 
 
 const login = async (e) => {
@@ -81,26 +83,34 @@ useEffect(() => {
     setIsLoggedIn(true);
   }
   fetchProfile();
+  fetchUserData()
 }, []);
+
+const fetchUserData = async () => {
+  try {
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    });
+    const userData = response.data;
+    setUser(userData);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+};
 
 const fetchProfile = async () => {
   try {
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      const response = await axios.get('http://127.0.0.1:8000/api/profile/', {
-        headers: {
-          Authorization: `Token ${storedToken}`,
-        },
-      });
-      setProfile(response.data);
-      console.log(response.data)
-    } 
-    
-    else {
-      navigate('/login');
-    }
+    const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    });
+    const userProfile = response.data;
+    setProfile(userProfile);
   } catch (error) {
-    console.error('Error fetching profile info:', error);
+    console.error('Error fetching user profile:', error);
   }
 };
 
@@ -206,7 +216,7 @@ const handleRegistrationChange = (e) => {
   return (
 <>
 <nav
-        className="navbar navbar-expand-lg what-card"
+        className="navbar navbar-expand-lg what-card-price"
         variant="fixed"
         style={{ backgroundColor: '#121661', position: '', zIndex: '2', width:'auto', top: 0 }}
       >
@@ -248,24 +258,6 @@ const handleRegistrationChange = (e) => {
                 
               </li>
 
-
-
-              {/* <li>
-              <Dropdown className='btn-sm'
-                style={{marginRight:'1rem'}}
-              >
-                <Dropdown.Toggle variant="dark" id="dropdownMenu " style={{marginRight:'', backgroundColor:'transparent', border:'none'}}> 
-                  Categories
-              </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#">Staycation</Dropdown.Item>
-                  <Dropdown.Item href="#">Camping</Dropdown.Item>
-                  <Dropdown.Item href="#">Sight Seeing</Dropdown.Item>
-                  <Dropdown.Item href="#">Sports</Dropdown.Item>
-                  <Dropdown.Item href="#">Beach</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-                </li> */}
                 <li className="nav-item">
                 <a className="nav-link text-white" href="#">
                     <form className='search-form align-right' 
@@ -348,12 +340,11 @@ const handleRegistrationChange = (e) => {
             
                 <>
               <div>
-                  <li className="nav-item mx-2"
-                    style={{backgroundColor:'transparent', width: '45px', height:'45px', borderRadius: '100%' }}
+                  <li  className="nav-item mx-2"
+                    style={{backgroundColor:'transparent', width: '45px', height:'45px', borderRadius: '100%', listStyleType:'none' }}
                   >
                   <a className="nav-link text-white" href="/profile">
                     <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%'}}/>
-                   {profile.current_city} 
                    </a>
                    </li> 
                   </div> 

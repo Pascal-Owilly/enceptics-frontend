@@ -328,11 +328,15 @@
     font-family: 'Nunito', sans-serif;
     padding: 2px;
     box-shadow: 0 6px 10px 
-    goldenrod, 0 0 6px ;
+    #A9A9A9, 0 0 6px ;
       transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
   padding: 10px 10px 10px 10px;
-color: rgb(255, 255, 0);
+color: #A9A9A9;
+}
 
+.blogpost-input input::placeholder {
+  color: #A9A9A9 !important; /* Placeholder text color */
+  font-style: italic; /* Italicize the placeholder text */
 }
 
 /* .what-card-price:hover{
@@ -618,5 +622,38 @@ box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
   display: none;
 }
 
+/* Blog file input */
+.custom-file-upload {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  /* background-color: #121661; */
+  border: 1px solid #d9d9d9;
+  border-radius: 30px;
+  color: #d9d9d9;
+  padding: auto;
+  padding: 1px;
+  border-radius: 100%;
+
+}
+
+.custom-button {
+  display: inline-block;
+  /* padding: 5px 15px; */
+  height: 30px;
+  /* background-color: #a9a9a9; */
+  border: none;
+  color: #d9d9d9;
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+/* You can add hover and active states for interactivity */
+
+
+
+/* end blog */
 
 /* END BLOG CAROUSEL ITEM */
+
