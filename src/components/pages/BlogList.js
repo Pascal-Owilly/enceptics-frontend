@@ -8,81 +8,71 @@ import natpark from '../../images/natpark.jpg';
 import placeholderImage1 from '../../images/house1.jpg';
 import placeholderImage2 from '../../images/house2.jpg';
 import placeholderImage3 from '../../images/house3.jpg';
-// import Slider from 'react-slick'; 
 import { Carousel } from 'react-bootstrap';
-import Cookies from 'js-cookie'; // Import the Cookies library
-
-
+import Cookies from 'js-cookie';
 
 function BlogList() {
   const [posts, setPosts] = useState([]);
   const [newPostContent, setNewPostContent] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null); // State variable for the selected image
-  const [imagePreview, setImagePreview] = useState(null); // State variable for image preview
-  const [profilePics, setProfilePics] = useState({}); // State variable to store profile pictures
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [profilePics, setProfilePics] = useState({});
   const [user, setUser] = useState(null);
 
   const authToken = Cookies.get('authToken');
 
-    // Conditionally fetch user data if authToken is available
-    useEffect(() => {
-      if (authToken) {
-        axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
+  useEffect(() => {
+    if (authToken) {
+      // Fetch user data
+      axios
+        .get(`http://127.0.0.1:8000/api/auth/user/`, {
           headers: {
             Authorization: `Token ${authToken}`,
           },
         })
-          .then(response => {
-            const userData = response.data;
-            setUser(userData);
-          })
-          .catch(error => {
-            console.error('Error fetching user data:', error);
-          });
-      }
-    }, [authToken]); // Include authToken as a dependency of useEffect
+        .then((response) => {
+          const userData = response.data;
+          setUser(userData);
 
-  const fetchUserData = async () => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
-        headers: {
-          Authorization: `Token ${authToken}`,
-        },
-      });
-      const userData = response.data;
-      setUser(userData);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/blogposts/', {
-      headers: {
-        Authorization: `Token ${authToken}`, // Include the authToken in the request headers
-      },
-    })
-      .then(response => {
-        setPosts(response.data);
-        // Fetch profile pictures for each post
-        response.data.forEach(post => {
-          axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`, {
-            headers: {
-              Authorization: `Token ${authToken}`, // Include the authToken in the request headers
-            },
-          })
-            .then(profileResponse => {
-              setProfilePics(prevProfilePics => ({
-                ...prevProfilePics,
-                [post.author]: profileResponse.data.profile_pic
-              }));
+          // Now that authToken is available, fetch posts and profile pics
+          axios
+            .get('http://127.0.0.1:8000/api/blogposts/', {
+              headers: {
+                Authorization: `Token ${authToken}`,
+              },
             })
-            .catch(error => {
-              console.error(error);
+            .then((response) => {
+              setPosts(response.data);
+
+              // Fetch profile pictures for each post
+              response.data.forEach((post) => {
+                axios
+                  .get(`http://127.0.0.1:8000/profile/profile/${post.author}/`, {
+                    headers: {
+                      Authorization: `Token ${authToken}`,
+                    },
+                  })
+                  .then((profileResponse) => {
+                    setProfilePics((prevProfilePics) => ({
+                      ...prevProfilePics,
+                      [post.author]: profileResponse.data.profile_pic,
+                    }));
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  });
+              });
+            })
+            .catch((error) => {
+              console.error('Error fetching posts:', error);
             });
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
         });
-      })
-  }, [authToken]); // Include authToken as a dependency of useEffect
+    }
+  }, [authToken]);
+  
 
 
   const deletePost = (id) => {
@@ -112,24 +102,52 @@ function BlogList() {
     }
   };
 
+
+
   const createNewPost = () => {
+    if (!user) {
+      console.log('Unauthorised', user); // Handle the case where the user is not authenticated
+      return;
+    }
+  
     const formData = new FormData();
     formData.append('content', newPostContent);
     if (selectedImage) {
       formData.append('image', selectedImage);
     }
-
-    axios.post('http://127.0.0.1:8000/api/blogposts/', formData)
+  
+    // Set the 'author' field to the user's ID
+    formData.append('author', user.pk); // Assuming 'user.pk' contains the user's ID
+  
+    // Log the formData object to check its contents
+    console.log('formData:', formData);
+  
+    // Ensure you send 'author' as a parameter
+    const config = {
+      headers: {
+        Authorization: `Token ${authToken}`, // Include the authToken in the request headers
+      },
+    };
+  
+    axios.post('http://127.0.0.1:8000/api/blogposts/', formData, config)
       .then(response => {
         setPosts([response.data, ...posts]);
         setNewPostContent('');
         setSelectedImage(null);
         setImagePreview(null);
+        alert('Blog post created successfully!');
       })
       .catch(error => {
-        console.error(error);
+        console.log('Error creating blog post for user', user.last_name, error.response.data);
       });
   };
+  
+  
+  
+
+
+
+  
 
   const formatTimeDifference = (timestamp) => {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
@@ -159,11 +177,11 @@ function BlogList() {
                 <input
                   type="file"
                   accept="image/*"
-                  className="p-1 btn-sm m-1"
+                  className=" btn-sm m-1"
                   onChange={handleImageChange}
                   style={{ display: 'none' }} // Hide the default file input
                 />
-                <span className="custom-button p-1 mx-1 " style={{ fontSize: '9px', color:'#121661' }}>Upload <br /> image</span>
+                <span className="custom-button  mx-1 " style={{ fontSize: '9px', color:'#121661' }}><span className='mt-2' style={{borderRadius:'100%', width:'10%'}}>Upload </span><br /> image</span>
               </label>
 
             <div className="input-group-append">
@@ -178,11 +196,10 @@ function BlogList() {
           )}
           <div className="row">
           {posts.map(post => (
-            
-            <div className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',width:'87%' }}>
+            <div className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', boxShadow: '',width:'87%' }}>
               <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
                     <div className="d-flex align-items-center">
-                      <img src={profilePics[post.author]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                      <img src={profilePics[post.author.user]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                       <div className="author-info">
                       <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}</h5>
                         <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>

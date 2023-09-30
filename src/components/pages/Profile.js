@@ -37,7 +37,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
+      const response = await axios.get(`http://127.0.0.1:8000/profile/profile/`, {
         headers: {
           Authorization: `Token ${authToken}`,
         },
@@ -75,11 +75,12 @@ const Profile = () => {
     }
   };
 
+
   return (
     <>  
       <div style={{ backgroundColor: '#121661', height: '100vh' }}>
         {user && Object.keys(profile).length > 0 ? (
-          <div className="container bootstra snippets bootdey">
+          <div className="container bootstrap snippets bootdey">
             <div className="row" style={{ backgroundColor: '#121661', marginTop: '' }}>
               <div className='col-md-3'>
                 <h5 className='text-white mt-5' style={{ textTransform: 'capitalize' }}>{user.username}'s Profile</h5>
@@ -97,9 +98,10 @@ const Profile = () => {
 <div className="panel p-3 what-card-price" style={{ border:' 1px solid #d9d9d9', borderRadius:'12px'  }}>
   <div className="user-heading round">
     <img
+    
       src={profile.profile_pic} // Use the profile picture from the profile endpoint
       alt="Pic"
-      style={{ width: '100%', height: 'auto' }}
+      style={{ width: '10%', height: 'auto' }}
     />
    
   </div>

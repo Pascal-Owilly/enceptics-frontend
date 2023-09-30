@@ -7,6 +7,7 @@ import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdChatboxes } from 'react-icons/io';
 
+
 // import { useAuth } from "../pages/authenticate/AuthContext";
 import { useNavigate } from 'react-router-dom';
 
@@ -272,20 +273,20 @@ const handleRegistrationChange = (e) => {
                     }}
                     />
                       <button
-                        className='search-btn d-inline p-1 what-card'
+                        className='search-btn d-inline p-1'
                         style={{
                           borderRadius: '0 25px 25px 25px',
-                          width: '55px',
+                          width: '30px',
                           // marginLeft: '-3.1rem',
                           fontSize: '11px',
                           height:'25px',
-                          fontWeight:'bold',
+                          fontWeight:'500',
                           border:'none'
                         }}
                         type="submit"
                       >
                         {/* <FaSearch /> */}
-                        Search
+                        <FaSearch />
                       </button>
                     </form>
                 </a>
@@ -345,6 +346,8 @@ const handleRegistrationChange = (e) => {
                   >
                   <a className="nav-link text-white" href="/profile">
                     <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%'}}/>
+                    <p> {profile.user}</p>
+
                    </a>
                    </li> 
                   </div> 
