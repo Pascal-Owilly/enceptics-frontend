@@ -6,6 +6,7 @@ import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdChatboxes } from 'react-icons/io';
+import SearchBar from './SearchBar';
 
 
 // import { useAuth } from "../pages/authenticate/AuthContext";
@@ -23,6 +24,10 @@ function FlashMessage({ message, type }) {
 function NavigationBar() {
   
 const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
+
+// const handleInputChange = (event) => {
+//   setSearchTerm(event.target.value);
+// };
 
 const navigate = useNavigate()
 
@@ -258,6 +263,11 @@ const handleRegistrationChange = (e) => {
                 </a>
                 
               </li>
+              <li>
+
+{/* <SearchBar /> */}
+
+              </li>   
 
                 <li className="nav-item">
                 <a className="nav-link text-white" href="#">
@@ -339,18 +349,23 @@ const handleRegistrationChange = (e) => {
 
       {isLoggedIn && ( 
             
-                <>
-              <div>
-                  <li  className="nav-item mx-2"
-                    style={{backgroundColor:'transparent', width: '45px', height:'45px', borderRadius: '100%', listStyleType:'none' }}
-                  >
-                  <a className="nav-link text-white" href="/profile">
-                    <img src={profile.profile_pic} style={{width:'40px',height:'40px', borderRadius:'100%'}}/>
-                    <p> {profile.user}</p>
+<>
+<div>
+{user && (
+  <li className="nav-item mx-2" style={{ backgroundColor: 'transparent', width: '45px', height: '45px', borderRadius: '100%', listStyleType: 'none' }}>
+    <a className="nav-link text-white" href="/profile">
+      {profile && profile.profile_pic ? (
+        <img src={profile.profile_pic} style={{ width: '40px', height: '40px', borderRadius: '100%' }} alt="" />
+      ) : (
+        <span></span>
+      )}
+      <span>{profile && user.username}</span>
+    </a>
+  </li>
+)}
 
-                   </a>
-                   </li> 
-                  </div> 
+</div>
+
 
                 <button
                                 type="button"

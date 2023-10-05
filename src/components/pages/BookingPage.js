@@ -2,25 +2,39 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSearch } from './SearchContext';
 
 const Booking = () => {
+  const { searchTerm } = useSearch();
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const placeName = searchParams.get("placeName");
   const price = searchParams.get("price");
   const { state } = location;
 
+  const [hasKids, setHasKids] = useState(false); // New state for checking if customer has kids
+  const [numKids, setNumKids] = useState(0); // New state for specifying the number of kids
+  const [numAdults, setNumAdults] = useState(1); // New state for specifying the number of adults
+  const [extraCharges, setExtraCharges] = useState(0); // State to store extra charges
+  const [checkinTime, setCheckinTime] = useState(''); // Separate state for checkinTime
+  const [checkoutTime, setCheckoutTime] = useState(''); // Separate state for checkoutTime
+
+  // Price per kid and adult
+  const pricePerKid = 1000;
+  const pricePerAdult = 3000;
+
   const [users, setUsers] = useState([]);
   const [places, setPlaces] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [bookingData, setBookingData] = useState({
-    user: null,
-    place: null,
-    checkin_date: null,
-    checkout_date: null,
-    phone: '',
-    email: '',
-  });
+    const [bookingData, setBookingData] = useState({
+      user: null,
+      place: null,
+      checkin_date: null,
+      checkout_date: null,
+      phone: '',
+      email: '',
+    });
 
   const [placeData, setPlaceData] = useState({
     placeName: '',
@@ -31,8 +45,6 @@ const Booking = () => {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
-  const [checkinTime, setCheckinTime] = useState('');
-  const [checkoutTime, setCheckoutTime] = useState('');
 
   const navigate = useNavigate();
 
@@ -77,20 +89,42 @@ const Booking = () => {
       }
     } else {
       // Redirect unauthenticated users to the login page
-      navigate('/login');
+      navigate('/login-booking');
     }
   }, [navigate, state]);
 
   const handleBookingChange = (e) => {
     const { name, value, checked, type } = e.target;
+
+      // Calculate extra charges for kids and adults
+      const kidsCharges = numKids * pricePerKid;
+      const adultsCharges = (numAdults - 1) * pricePerAdult; // Subtract 1 for the first adult (included in the base price)
+      const totalExtraCharges = kidsCharges + adultsCharges;
+  
+      setExtraCharges(totalExtraCharges);
+  
+
     if (type === 'number') {
       setBookingData({ ...bookingData, [name]: parseInt(value) });
     } else if (type === 'checkbox') {
-      e.target.disabled = false;
-      setBookingData({ ...bookingData, [name]: checked });
+      if (name === 'hasKids') {
+        setHasKids(checked);
+      } else {
+        e.target.disabled = false;
+        setBookingData({ ...bookingData, [name]: checked });
+        if (name === 'moreAdults') {
+          setNumAdults(checked ? numAdults + 1 : numAdults - 1);
+        }
+      }
     } else {
       if (name === 'checkinTime') {
         setCheckinTime(value);
+        // Automatically calculate the "To" date as 2 days after the "From" date
+        const fromDate = new Date(value);
+        fromDate.setDate(fromDate.getDate() + 2);
+        const toDateString = fromDate.toISOString().split('T')[0];
+        setBookingData({ ...bookingData, [name]: value, checkoutTime: toDateString }); // Update checkoutTime in bookingData
+        setCheckoutTime(toDateString); // Update the checkoutTime state
       } else if (name === 'checkoutTime') {
         setCheckoutTime(value);
       } else {
@@ -114,20 +148,20 @@ const Booking = () => {
       axios.post('http://127.0.0.1:8000/api/book-place/', orderPlace)
       .then((response) => {
         // Handle success
-        alert('Booking successful! ' + user.username + ' destination is ' + placeName);
+        console.log('Booking successful! ' + user.username + ' destination is ' + placeName);
       })
       .catch((error) => {
         // Handle errors
         if (error.response) {
           // The request was made, and the server responded with a status code
-          alert('Server responded with status code:', JSON.stringify(error.response.status));
-          alert('Error response data:', error.response.data);
+          console.log('Server responded with status code:', JSON.stringify(error.response.status));
+          console.log('Error response data:', error.response.data);
         } else if (error.request) {
           // The request was made, but no response was received
-          alert('Request was made, but no response received:', error.request);
+          console.log('Request was made, but no response received:', error.request);
         } else {
           // Something else happened while setting up the request
-          alert('Error while setting up the request:', error.message);
+          console.log('Error while setting up the request:', error.message);
         }
         // Additional error handling can be done here
       });
@@ -147,7 +181,7 @@ const Booking = () => {
       // Reload the page
       window.location.reload();
     } catch (error) {
-      alert("Oops! Booking didn't work");
+      console.log("Oops! Booking didn't work", error.response.error);
     }
   };
   
@@ -204,53 +238,136 @@ const Booking = () => {
       <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto' }}>
         <br />
         <div className='container m-auto'>
-          <div className='row what-card-price m-auto' style={{width:'90%'}}>
-          <h3 className='text-secondary' style={{marginTop:'1vh', width:'90%'}}>
-          <p className='mt-1' style={{color:'goldenrod'}} price={price}>Booking for {placeName}</p>
+          <div className='row'>
 
-             </h3>
+          <div className='col-md-3'>
+
+          </div>
+          <div className='col-md-6'>
+          <div className='row what-card-price m-auto' style={{width:'100%', borderRadius:'10px'}}>
+          <div className='col-md-6'>
+{/* Content for the second column */}
+<h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName}</h5>
+  </div>
+  <div className='col-md-1'>
+  
+     </div>
+  <div className='col-md-5'>
+    {/* Content for the third column */}
+   <p  className='mt-1' style={{ color: '#d9d9d9' }}>Price for 2: <span className='' style={{color:'goldenrod', fontWeight:'bold'}}> &nbsp; Ksh {price}</span></p>
+  </div>
           <hr style={{ color: 'white', height: '0rem' }} />
-            <div className='col-md-6 mt-2'>
-              <p className='mt-1' style={{color:'goldenrod'}} price={price}>Visite {placeName} for only Ksh {price}</p>
-              <hr />
+          <div className='col-md-6 mt-2 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
+
+
+  <div className="form-group">
+    <label>
+      Do you have kids?
+      <input
+      className='bg-secondary'
+        type="checkbox"
+        name="hasKids"
+        checked={hasKids}
+        onChange={(e) => setHasKids(e.target.checked)}
+      />
+    </label>
+  </div>
+  {hasKids && (
+    <div className="form-group mt-2">
+<label>How many Kids?
+        <input
+        className='mx-2'
+          type="number"
+          name="numKids"
+          value={numKids}
+          onChange={(e) => setNumKids(parseInt(e.target.value))}
+          min="0"
+          style={{ width: '100px' }}
+        />
+        </label>
+     
+    </div>
+  )}
+  <div className="form-group mt-2">
+    <label>
+     Add more people
+      <input
+       className='bg-secondary'
+        type="checkbox"
+        name="moreAdults"
+        checked={bookingData.moreAdults}
+        onChange={(e) => {
+          e.target.disabled = false;
+          setBookingData({ ...bookingData, moreAdults: e.target.checked });
+          setNumAdults(e.target.checked ? numAdults + 1 : numAdults - 1);
+        }}
+      />
+    </label>
+  </div>
+  {bookingData.moreAdults && (
+    <div className="form-group mt-2">
+      <label>
+        How many additional adults? 
+        <br />
+        &nbsp; 
+        <input
+          type="number"
+          name="numAdditionalAdults"
+          value={numAdults - 1}
+          onChange={(e) => setNumAdults(parseInt(e.target.value) + 1)}
+          min="0"
+          style={{ width: '100px' }}
+        />
+      </label>
+      <hr />
+    </div>
+  )}
+  <div className="form-group mt-2">
+    <label>
+      Extra Charges :
+      <span style={{ color: 'goldenrod', fontWeight: 'bold' }}> Ksh {extraCharges}</span>
+    </label>
+  </div>
+  {/* <button type="submit" className="btn btn-primary">Book Now</button> */}
+</div>
+
+
+            <div className='col-md-5 text-white m-auto'>
+
+              <div className="form-group ">
+              <label htmlFor="date" className='text-secondary'>Pick-up date *</label>
             
-             
-            </div>
-
-            <div className='col-md-6 text-white'>
-              <h3 className='' style={{color:'goldenrod'}}>Booking details</h3>
-              <hr />
-
-              <div className="form-group">
-                <label htmlFor="checkin_date">Check-in Date*</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="checkin_date"
-                  name="checkin_date"
-                  value={bookingData.checkin_date}
-                  onChange={handleBookingChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="checkout_date">Checkout Date*</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="checkout_date"
-                  name="checkout_date"
-                  value={bookingData.checkout_date}
-                  onChange={handleBookingChange}
-                  required
-                />
-              </div>
+            <input
+              type="date"
+              style={{border:'none'}}
+              className="form-control bg-secondary"
+              name="checkinTime"
+              value={checkinTime}
+              onChange={handleBookingChange}
+              required
+            />
+        </div>
+        <div className="form-group" >
+        <label htmlFor="date" className='text-secondary'>Ending on</label>
+            <input
+              style={{border:'none'}}
+              type="date"
+              className="form-control bg-secondary"
+              name="checkoutTime"
+              value={checkoutTime}
+              onChange={handleBookingChange}
+              readOnly
+              required
+            />
+        
+        </div>
                
               <div className="form-group">
-                <label htmlFor="phone">Phone*</label>
+                <label htmlFor="phone" className='text-secondary'>Phone*</label>
                 <input
+                  style={{border:'none'}}
                   type="tel"
-                  className="form-control"
+                  className="form-control bg-secondary"
                   id="phone"
                   name="phone"
                   value={bookingData.phone}
@@ -258,11 +375,12 @@ const Booking = () => {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group text-secondary ">
                 <label htmlFor="email">Email*</label>
                 <input
+                  style={{border:'none'}}
                   type="email"
-                  className="form-control"
+                  className="form-control bg-secondary"
                   id="email"
                   name="email"
                   value={bookingData.email}
@@ -271,10 +389,12 @@ const Booking = () => {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group text-secondary">
                 <label htmlFor="user">User*</label>
                 <select
-                  className="form-control"
+                 style={{border:'none'}}
+
+                  className="form-control bg-secondary"
                   id="user"
                   name="user"
                   required
@@ -288,9 +408,11 @@ const Booking = () => {
 
 
 <div className="form-group">
-  <label htmlFor="place">Place*</label>
+  <label htmlFor="place" className='text-secondary'>Place*</label>
   <select
-    className="form-control"
+    style={{border:'none'}}
+
+    className="form-control bg-secondary"
     id="place"
     name="place"
     required
@@ -307,7 +429,6 @@ const Booking = () => {
   </select>
 </div>
 
-
                 {/* <button className='mt-3 text-center' type="submit">Book this destination</button> */}
               
             </div>
@@ -316,7 +437,7 @@ const Booking = () => {
               <div className='col-md-12 text-center' style={{ margin: 'auto' }}>
                 <button
                   onClick={handleBookingSubmit}
-                  type="submit"
+                  type="submqqit"
                   className="btn what-card-price mb-2 btn-lg mt-4"
                   style={{ backgroundColor: '#121661', color: 'goldenrod', width: '100%', margin: 'auto' }}
                 >
@@ -324,6 +445,7 @@ const Booking = () => {
                 </button>
               </div>
             </div>
+            
 
             {showModal && (
               <div className="modal" style={{ display: 'block', backgroundColor:'rgb(0, 0, 0, 0.7)' }}>
@@ -361,6 +483,13 @@ const Booking = () => {
               </div>
             )}
           </div>
+            </div>
+            <div className='col-md-3'>
+            
+            </div>
+            </div>
+     
+
         </div>
       </div>
 

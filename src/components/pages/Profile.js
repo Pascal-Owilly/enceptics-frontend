@@ -30,6 +30,7 @@ const Profile = () => {
       });
       const userData = response.data;
       setUser(userData);
+      
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -44,6 +45,8 @@ const Profile = () => {
       });
       const userProfile = response.data;
       setProfile(userProfile);
+      console.log('Profile Picture URL:', userProfile.profile_pic);
+
     } catch (error) {
       console.error('Error fetching user profile:', error);
     }
@@ -53,6 +56,9 @@ const Profile = () => {
     if (authToken) {
       fetchUserData();
       fetchProfile();
+    }
+    else{
+      navigate('/login-booking')
     }
   }, [authToken]);
 
@@ -74,7 +80,6 @@ const Profile = () => {
       console.error('Error saving profile changes:', error);
     }
   };
-
 
   return (
     <>  
@@ -99,9 +104,9 @@ const Profile = () => {
   <div className="user-heading round">
     <img
     
-      src={profile.profile_pic} // Use the profile picture from the profile endpoint
-      alt="Pic"
-      style={{ width: '10%', height: 'auto' }}
+    src={profile.profile_pic} 
+    alt="Pic"
+      style={{}}
     />
    
   </div>
@@ -144,7 +149,7 @@ const Profile = () => {
 </div>
           </div>
         ) : (
-          <p style={{ height: '100vh', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Please login to access your profile...</p>
+          <p style={{ height: '100vh', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Hang tight...</p>
         )}
       </div>
 

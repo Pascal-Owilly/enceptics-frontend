@@ -305,12 +305,12 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
               <input
                 className="bg-white"
                 style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
-                type="text"
+                type="number"
                 name='price'
                 value={newDestination.price}
                 onChange={handleNewDestinationChange}
               />
-            </p>
+            </p>  
             </div>
    
   

@@ -15,6 +15,8 @@ import Aboutus from '../src/components/pages/Aboutus';
 import NavigationBar from './components/pages/NavigationBar';
 import Home from './components/pages/Home';
 import Login from './components/pages/authenticate/Login';
+import LoginBooking from './components/pages/authenticate/LoginBooking';
+
 import SignUp from './components/pages/authenticate/SignUp';
 import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
@@ -25,11 +27,13 @@ import BlogForm from './components/pages/BlogForm';
 import AddPlaceInfo from './components/pages/placeinfotest/AddPlaceInfo';
 
 import BookingExample from './components/pages/BookingExample';
+import { SearchProvider } from './components/pages/SearchContext';
 
 function App() {
-
+  
   return (  
     <Router>
+      <SearchProvider>
       <div className='wrapper'>
         <NavigationBar />
         <Routes>
@@ -37,6 +41,8 @@ function App() {
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login-booking" element={<LoginBooking />} />
+
           <Route path="/signup" element={<SignUp />} />          
 
           <Route path="/blog" element={ <BlogList />} />
@@ -54,6 +60,7 @@ function App() {
         </Routes>
         <Footer />  
       </div>
+      </SearchProvider>
     </Router>
    
   );

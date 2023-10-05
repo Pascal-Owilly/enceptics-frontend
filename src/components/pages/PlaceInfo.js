@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { FaArrowRight } from "react-icons/fa";
-import { Carousel } from 'react-bootstrap';
+import { Carousel, Card } from 'react-bootstrap';
 
 const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => {  const { id } = useParams();
   const navigate = useNavigate();
@@ -60,34 +60,41 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
               <h2 className="mt-4" style={{marginTop:'vh'}}>{placeName}</h2>
 
               <div className="col-md-8">
-                <hr />
+                <hr />  
              
+<Card style={{maxHeight:'450px'}}>
 
-                <Carousel style={{width:'100%'}} fade={false} controls={true} indicators={true} interval={3000} keyboard={false}>
+
+                <Carousel style={{width:'100%', maxHeight:'450px'}} fade={false} controls={true} indicators={true} interval={3000} keyboard={false}>
                   <Carousel.Item>
-                    <img className="mb-5" src={placeInfo.pictures} alt="img" style={{ width: "100%"}} />
-                    <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.5)'}}>
-                  </Carousel.Caption>
+                    <img className="mb-5" src={placeInfo.pictures} alt="img" style={{ width: "100%", maxHeight:'448px'}} />
+                    {/* <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.5)', maxHeight:'450px' }}> */}
+                  {/* </Carousel.Caption> */}
                   </Carousel.Item>
                   <Carousel.Item>
-                    <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)'}}>
-                    <p style={{color:'white', width: "60%", fontSize:'18px', bottom:0, marginRight: '10rem', marginTop:'8rem'}} >{placeInfo.weather_forecast}</p>
+                    <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)', maxHeight:'450px' }}>
+                    <p style={{color:'white', width: "80%", fontSize:'18px', bottom:0, left: 0, top: 0}} >{placeInfo.weather_forecast}</p>
                   </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)'}}>
-                <video width="640" height="360" controls>
+                  </Carousel.Item>  
+                  <Carousel.Item style={{width:'100%'}} >
+                {/* <Carousel.Caption style={{backgroundColor:'rgb(0, 0, 0, 0.7)', maxHeight:'300px'}}> */}
+                <video width="100%" controls style={{top: 0}}>
                   <source src={placeInfo.videos} type="video/mp4" />
                   <source src={placeInfo.videos}  type="video/webm" />
-                  <source src={placeInfo.videos}  type="video/ogg" />
+                  <source src={placeInfo.videos}  type="video/ogg" /> 
+                  <source src={placeInfo.videos}  type="video/mkv" /> 
+                  <source src={placeInfo.videos}  type="video/3gp" /> 
+
+
                   Your browser does not support the video tag.
-              </video>               
-            </Carousel.Caption>
+              </video>                
+              {/* </Carousel.Caption> */}
                 </Carousel.Item>
     
 
                   {/* Add more Carousel.Items if needed */}
                 </Carousel>
+                </Card>
               </div>
               <div className="col-md-3 text-center mb-4">
                 <h5 className="text-secondary mb-3 text-center">2 Day Weather Forecast for {placeName}</h5>
