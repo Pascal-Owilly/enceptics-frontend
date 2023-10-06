@@ -58,7 +58,7 @@ const Profile = () => {
       fetchProfile();
     }
     else{
-      navigate('/login-booking')
+      navigate('/')
     }
   }, [authToken]);
 

@@ -6,6 +6,7 @@ import { Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import './Places.css';
 import PlaceInfo from "./PlaceInfo";
+import Cookies from 'js-cookie';
 
 const Destination = () => {
   const navigate = useNavigate();
@@ -64,18 +65,17 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
     fetchPlaceInfo(destination.id);
     setSelectedDestination(destination);
   
-    // Store the booking data in state, including price and place name
+    // Store the booking data in a cookie, including place name and price
     const placeBookingData = {
       placeName: destination.name,
       price: destination.price,
       // Add other relevant booking data here
     };
   
-    setPlaceBookingData(placeBookingData); // Set the booking data in state
+    // Store the booking data in a cookie
+    Cookies.set('placeBookingData', JSON.stringify(placeBookingData));
   
-    navigate(`/place-info/${destination.id}`, {
-      state: { placeBookingData }, // Pass the bookingData as state
-    });
+    navigate(`/place-info/${destination.id}`);
   };
   
   

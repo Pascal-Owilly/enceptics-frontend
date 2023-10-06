@@ -28,6 +28,7 @@ import AddPlaceInfo from './components/pages/placeinfotest/AddPlaceInfo';
 
 import BookingExample from './components/pages/BookingExample';
 import { SearchProvider } from './components/pages/SearchContext';
+import SearchResults from './components/pages/SearchResults';
 
 function App() {
   
@@ -43,7 +44,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/login-booking" element={<LoginBooking />} />
 
-          <Route path="/signup" element={<SignUp />} />          
+          <Route path="/signup" element={<SignUp />} />   
+
+          <Route path="/search" element={<SearchResults />} />
+       
 
           <Route path="/blog" element={ <BlogList />} />
           <Route path="/post/:id" element={< BlogDetail />} />

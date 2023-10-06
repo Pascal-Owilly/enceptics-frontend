@@ -53,7 +53,6 @@ const LoginTest = () => {
       console.error('Login failed:', error);
     }
   };
-
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -61,8 +60,20 @@ const LoginTest = () => {
       setIsLoggedIn(true);
       Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });
   
-      // Redirect to the booking page after successful login
-      navigate(`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`);
+      // Retrieve the booking data from the cookie
+      const placeBookingDataString = Cookies.get('placeBookingData');
+      if (placeBookingDataString) {
+        const placeBookingData = JSON.parse(placeBookingDataString);
+        const { placeName, price } = placeBookingData;
+        
+        // Navigate to the booking page with the correct values
+        navigate(`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`);
+      } else {
+        // Handle the case when booking data is not available
+        console.error('Booking data not found.');
+      }
+  
+      window.location.reload();
     } catch (error) {
       // Handle login error
       console.error('Login failed:', error);

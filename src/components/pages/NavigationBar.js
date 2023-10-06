@@ -6,11 +6,12 @@ import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdChatboxes } from 'react-icons/io';
-import SearchBar from './SearchBar';
-
-
+import SearchResults from './SearchResults';
+import Places from './Places'; // Import your Places component
+import Blogs from './Blogs'; // Import your Blogs component
 // import { useAuth } from "../pages/authenticate/AuthContext";
 import { useNavigate } from 'react-router-dom';
+
 
 
 function FlashMessage({ message, type }) {
@@ -22,14 +23,27 @@ function FlashMessage({ message, type }) {
 }
 
 function NavigationBar() {
-  
+const navigate = useNavigate()
+
 const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
 
-// const handleInputChange = (event) => {
-//   setSearchTerm(event.target.value);
-// };
+// search
+const [searchQuery, setSearchQuery] = useState("");
 
-const navigate = useNavigate()
+ // Function to handle search input changes
+ const handleSearchInputChange = (e) => {
+  setSearchQuery(e.target.value);
+};
+
+
+  // Function to handle the search button click
+  const handleSearch = () => {
+    console.log("Search Query:", searchQuery);
+    // Check if searchQuery is not empty before navigating
+    if (searchQuery.trim() !== '') {
+      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
 useEffect(() => {
   if (flashMessage) {
@@ -40,6 +54,16 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }
 }, [flashMessage]);
+
+// const search = async () => {
+//   try {
+//     const response = await axios.get(`http://127.0.0.1:8000/api/blogposts/?search=${query}`);
+//     const results = response.data;
+//     setResults(results);
+//   } catch (error) {
+//     console.error('Error searching:', error);
+//   }
+// };
 
 
 const [registrationData, setRegistrationData] = useState({
@@ -270,48 +294,40 @@ const handleRegistrationChange = (e) => {
               </li>   
 
                 <li className="nav-item">
-                <a className="nav-link text-white" href="#">
-                    <form className='search-form align-right' 
-                    // onSubmit={handleSubmit}
-                    >
-                    <input
-                      placeholder='Search in places...'
-                      type="text"
-                      // value={query}
-                      // onChange={(event) => setQuery(event.target.value)}
-                      style={{width:'150px', height:'28px', padding:'10px',backgroundColor:'#121661', border:'1px solid #a9a9a9'
-                    }}
-                    />
-                      <button
-                        className='search-btn d-inline p-1'
-                        style={{
-                          borderRadius: '0 25px 25px 25px',
-                          width: '30px',
-                          // marginLeft: '-3.1rem',
-                          fontSize: '11px',
-                          height:'25px',
-                          fontWeight:'500',
-                          border:'none'
-                        }}
-                        type="submit"
-                      >
-                        {/* <FaSearch /> */}
-                        <FaSearch />
-                      </button>
-                    </form>
-                </a>
-              </li>
-              <li>
-              <a href="/blog">
-              <button className="btn btn-sm mx-4 what-card" 
-                    style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
-                    >
-                      
-                    <IoMdChatboxes style={{fontSize:'19px'}} /> chat
-                      
-                    
-                  </button> </a>
-              </li>
+                {/* <a className="nav-link text-white" href="#"> */}
+      <form className='search-form align-right' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+      <input
+        placeholder='Search in places...'
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchInputChange} // Update the searchQuery state
+        style={{
+          width: '150px',
+          height: '28px',
+          padding: '10px',
+          backgroundColor: '#121661',
+          border: '1px solid #a9a9a9',
+        }}
+      />
+      <button
+        onClick={handleSearch}
+        className='search-btn d-inline p-1'
+        style={{
+          borderRadius: '0 25px 25px 25px',
+          width: '30px',
+          fontSize: '11px',
+          height: '25px',
+          fontWeight: '500',
+          border: 'none',
+        }}
+        type="button" // Use type="button" to prevent form submission
+      >
+        <FaSearch />
+      </button>
+    </form>
+                {/* </a> */}
+              </li> 
+
               <li className="nav-item mx-1">
                 <a className="nav-link" href="/currencyconverter" style={greatvibes}>
                   Convert Currency
@@ -355,16 +371,27 @@ const handleRegistrationChange = (e) => {
   <li className="nav-item mx-2" style={{ backgroundColor: 'transparent', width: '45px', height: '45px', borderRadius: '100%', listStyleType: 'none' }}>
     <a className="nav-link text-white" href="/profile">
       {profile && profile.profile_pic ? (
-        <img src={profile.profile_pic} style={{ width: '40px', height: '40px', borderRadius: '100%' }} alt="" />
+        <img src={profile.profile_pic} style={{ width: '30px', height: '30px', borderRadius: '100%' }} alt="" />
       ) : (
         <span></span>
       )}
-      <span>{profile && user.username}</span>
+      <span style={{fontSize:'14px', fontWeight:'', opacity:'.9', fontFamily:'cursive', letterSpacing:'2px', lineHeight:'5px'}} className='text-white'>{profile && user.username}</span>
     </a>
   </li>
 )}
 
 </div>
+<li>
+              <a href="/blog">
+              <button className="btn btn-sm mx-2 mt-2 what-card" 
+                    style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
+                    >
+                      
+                    <IoMdChatboxes style={{fontSize:'19px'}} /> chat
+                      
+                    
+                  </button> </a>
+              </li>
 
 
                 <button

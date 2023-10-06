@@ -13,6 +13,9 @@ import Cookies from 'js-cookie';
 
 function BlogList() {
   const [posts, setPosts] = useState([]);
+  const [sortedPosts, setSortedPosts] = useState([]);
+
+
   const [newPostContent, setNewPostContent] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -22,7 +25,7 @@ function BlogList() {
   const authToken = Cookies.get('authToken');
   const [selectedPost, setSelectedPost] = useState(null);
   const [showComments, setShowComments] = useState({});
-
+  // const [comments, setComments] = useState([]);
 
 
   useEffect(() => {
@@ -38,13 +41,6 @@ function BlogList() {
           const userData = response.data;
           setUser(userData);
   
-          // // Initialize showComments state
-          // const initialShowComments = {};
-          // userData.forEach((post) => {
-          //   initialShowComments[post.id] = false;
-          // });
-          // setShowComments(initialShowComments);
-  
           // Now that authToken is available, fetch posts and profile pics
           axios
             .get('http://127.0.0.1:8000/api/blogposts/', {
@@ -53,43 +49,44 @@ function BlogList() {
               },
             })
             .then((response) => {
-              setPosts(response.data);
-  
-              // Fetch profile pictures for each post
-              response.data.forEach((post) => {
-                axios
-                  .get(`http://127.0.0.1:8000/profile/profile/${post.author}/`, {
-                    headers: {
-                      Authorization: `Token ${authToken}`,
-                    },
-                  })
-                  .then((profileResponse) => {
-                    setProfilePics((prevProfilePics) => ({
-                      ...prevProfilePics,
-                      [post.author]: profileResponse.data.profile_pic,
-                    }));
-                  })
-                  .catch((error) => {
-                    console.error(error);
-                  });
+              const postsData = response.data;
+              const sortedPostsData = postsData.sort((a, b) => b.likes - a.likes);
 
-                  axios
-                  .get(`http://127.0.0.1:8000/api/likes/?post=${post.id}`, {
-                    headers: {
-                      Authorization: `Token ${authToken}`,
-                    },
-                  })
-                  .then((likesResponse) => {
-                    setLikes((prevLikes) => ({
-                      ...prevLikes,
-                      [post.id]: likesResponse.data.length,
-                    }));
-                  })
-                  .catch((error) => {
-                    console.error(error);
-                  });
-                  
+              // Fetch comments and profile pictures for each post
+              const fetchPostsData = postsData.map((post) => {
+                const fetchComments = axios.get(`http://127.0.0.1:8000/api/comments/?post=${post.id}`, {
+                  headers: {
+                    Authorization: `Token ${authToken}`,
+                  },
+                });
+  
+                const fetchProfilePic = axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`, {
+                  headers: {
+                    Authorization: `Token ${authToken}`,
+                  },
+                });
+  
+                // Combine both promises to fetch comments and profile picture
+                return Promise.all([fetchComments, fetchProfilePic]).then(([commentsResponse, profilePicResponse]) => {
+                  return {
+                    ...post,
+                    comments: commentsResponse.data,
+                    profilePic: profilePicResponse.data.profile_pic,
+                  };
+                });
               });
+  
+              // Use Promise.all to fetch comments, profile pics, and posts data
+              Promise.all(fetchPostsData)
+                .then((postsWithCommentsAndProfilePics) => {
+                  setPosts(postsWithCommentsAndProfilePics);
+                  setSortedPosts(sortedPostsData);
+
+                })
+                .catch((error) => {
+                  console.error('Error fetching comments, profile pics, and posts:', error);
+                  // Handle the error, e.g., show an error message to the user
+                });
             })
             .catch((error) => {
               console.error('Error fetching posts:', error);
@@ -100,8 +97,8 @@ function BlogList() {
         });
     }
   }, [authToken]);
-
-// // Define a separate useEffect to initialize showComments state
+  
+// Define a separate useEffect to initialize showComments state
 // useEffect(() => {
 //   if (posts && posts.length > 0) {
 //     const initialShowComments = {};
@@ -110,9 +107,17 @@ function BlogList() {
 //     });
 //     setShowComments(initialShowComments);
 //   }
-// }, [posts]); // Run this effect whenever the 'posts' state changes
+// }, [posts]);
 
-    
+useEffect(() => {
+  if (posts && posts.length > 0) {
+    const initialShowComments = {};
+    posts.forEach((post) => {
+      initialShowComments[post.id] = false;
+    });
+    setShowComments(initialShowComments);
+  }
+}, [posts]);
 
 
   const deletePost = (id) => {
@@ -191,6 +196,11 @@ const handleCommentTextChange = (event) => {
   setCommentText(event.target.value);
 };
   
+
+const selectPostForComment = (post) => {
+  setSelectedPost(post); // Set the selectedPost state to the post being commented on
+};
+
   
 const createComment = () => {
   if (!user || !selectedPost) {
@@ -200,9 +210,9 @@ const createComment = () => {
 
   // Create a new comment object
   const newComment = {
-    post: selectedPost.id,          // The ID of the post you're commenting on
-    user: user.pk,                 // The ID of the user creating the comment
-    text: commentText,             // The text of the comment
+    post: selectedPost.id, // The ID of the post you're commenting on
+    user: user.pk, // The ID of the user creating the comment
+    text: commentText, // The text of the comment
   };
 
   const config = {
@@ -221,17 +231,24 @@ const createComment = () => {
       updatedPost.comments.push(response.data);
 
       // Update the 'posts' state to reflect the changes
-      const updatedPosts = posts.map((p) => (p.id === updatedPost.id ? updatedPost : p));
+      const updatedPosts = posts.map((p) =>
+        p.id === updatedPost.id ? updatedPost : p
+      );
       setPosts(updatedPosts);
 
       // Clear the comment input field
       setCommentText('');
     })
     .catch((error) => {
-      console.error('Error creating comment:', error.response ? error.response.data : error.message);
+      console.error(
+        'Error creating comment:',
+        error.response ? error.response.data : error.message
+      );
       // Handle the error, e.g., show an error message to the user
     });
 };
+
+
 
 const fetchCommentsForPost = (postId) => {
   if (!authToken || !postId) {
@@ -249,17 +266,17 @@ const fetchCommentsForPost = (postId) => {
     const comments = response.data;
     
     // Update the state with the fetched comments for the specific post
-setPosts(prevPosts => {
-  return prevPosts.map(post => {
-    if (post.id === postId) {
-      return {
-        ...post,
-        comments: [...post.comments, ...comments],
-      };
-    }
-    return post;
-  });
-});
+    setPosts(prevPosts => {
+      return prevPosts.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            comments: [...post.comments, ...comments],
+          };
+        }
+        return post;
+      });
+    });
 
   })
   .catch((error) => {
@@ -269,18 +286,14 @@ setPosts(prevPosts => {
 };
 
 
+
 const toggleComments = (postId) => {
-  setShowComments(prevShowComments => ({
+  setShowComments((prevShowComments) => ({
     ...prevShowComments,
-    [postId]: !prevShowComments[postId], // Toggle the display state for the post
+    [postId]: !prevShowComments[postId], // Toggle the display state for the specific post
   }));
 };
 
-
-  
-const selectPostForComment = (post) => {
-  setSelectedPost(post);
-};
 
 const handleLike = (postId) => {
   if (!authToken || !postId) {
@@ -315,9 +328,6 @@ const handleLike = (postId) => {
 };
 
 
-
-
-  
 
   const formatTimeDifference = (timestamp) => {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
@@ -371,13 +381,17 @@ const handleLike = (postId) => {
     <div className="d-flex align-items-center">
                       <img src={profilePics[post.author.user]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                       <div className="author-info">
-                      <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}</h5>
+                      <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}
+                      &nbsp;&nbsp;
+                      <span className="text-success btn-sm follow-button" style={{fontSize:'12px', cursor:'pointer'}}> • <i className="fa fa-user-plus"></i> Follow</span>
+
+                      </h5>
+
                         <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
-                          <span className="text-success">Followed by {post.followers} users</span> • {formatTimeDifference(post.created_at)}
+                          <span style={{fontSize:'12px'}} className="">{post.followers} </span> &nbsp; {formatTimeDifference(post.created_at)}
                         </p>
                       </div>
                     </div>
-                    <button className="btn btn-outline-success btn-sm follow-button"><i className="fa fa-user-plus"></i> Follow</button>
                   </div>
     {post.image && (
       <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
@@ -385,57 +399,66 @@ const handleLike = (postId) => {
     <div className="card-body">
       <p className="card-text post-content" style={{ fontSize: '16px', lineHeight: '1.5' }}>{post.content}</p>
     </div>
+
     <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
       <div className="d-flex justify-content-between">
         <div>
-          {/* <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm delete-button"><i className="fa fa-trash"></i> Delete</button>&nbsp; */}
-          <button className="btn btn-outline-primary btn-sm like-button" onClick={() => handleLike(post.id)}>
-          <i className="fa fa-thumbs-up"></i> Like
-        </button>          <button className="btn btn-outline-secondary btn-sm comment-button" onClick={() => selectPostForComment(post)}> 
-            <i className="fa fa-comment"></i> Comment
-          </button>        
+       
           </div>
-        <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
-        <span className="like-count">{likes[post.id]} Likes</span>&nbsp;
-          {/* <span className="comment-count" onClick={() => toggleComments(post.id)}>{post.comments.length} Comments</span> */}
-        </div>
-        {showComments[post.id] && post.comments && post.comments.map(comment => (
-        <div key={comment.id}>
-          <p>{comment.user}: {comment.text}</p>
-        </div>
+          <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
+      {/* <span className="like-count">{likes[post.id]} Likes</span>&nbsp; */}
+      {/* <span className="comment-count" onClick={() => toggleComments(post.id)}>
+        {post.comments ? `${post.comments.length} Comments` : '0 Comments'}
+      </span> */}
+
+                {/* <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm delete-button"><i className="fa fa-trash"></i> Delete</button>&nbsp; */}
+                <span style={{fontSize:'12px'}} className="text-primary like-button" onClick={() => handleLike(post.id)}>
+          <i className="fa fa-thumbs-up"></i> 
+          <span className="like-count">{likes[post.id]} Likes</span>&nbsp;
+&nbsp;&nbsp;
+        </span>        
+          <span style={{fontSize:'12px', cursor:'pointer'}}  className=" text-secondary comment-button" onClick={() => selectPostForComment(post)}> 
+            <i className="fa fa-comment"></i> 
+            {post.comments ? `${post.comments.length} Comments` : '0 Comments'}
+
+          </span> 
+    </div>
+    {/* Conditionally render comments based on showComments state */}
+    {showComments[post.id] &&
+      post.comments &&
+      post.comments.length > 0 && (
+        <div>
+          {post.comments.map((comment) => (
+            <div key={comment.id}>
+              <span>{comment.user}: {comment.text}</span>
+            </div>
       ))}
+    </div>
+  )}
+
+
+
       </div>
     </div>
 
     {/* Comment Input Field */}
     {/* Conditionally render the comment input field only if post.comments is available */}
     {selectedPost && selectedPost.id === post.id && (
-      <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
-        <div className="input-group">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Write a comment..."
-            value={commentText}
-            onChange={handleCommentTextChange}
-          />
-          <div className="input-group-append">
-            <button className="btn btn-outline-primary" onClick={createComment}>Submit</button>
-          </div>
-        </div>
+  <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
+    <div className="input-group">
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Write a comment..."
+        value={commentText}
+        onChange={handleCommentTextChange}
+      />
+      <div className="input-group-append">
+        <button className="btn btn-outline-primary" onClick={createComment}>Submit</button>
       </div>
-    )}
-
-{/* Map and display comments only if selectedPost.comments is available */}
-{selectedPost && selectedPost.id === post.id && selectedPost.comments && (
-  selectedPost.comments.map(comment => (
-    <div key={comment.id}>
-      <p>{comment.user}: {comment.text}</p>
     </div>
-  ))
+  </div>
 )}
-
-
   </div>
 ))}
     </div>
@@ -454,33 +477,17 @@ const handleLike = (postId) => {
       borderRadius: '10px',
     }}
   >
-    <Carousel.Item>
-      <div className="d-flex align-items-center">
-        <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-        <div>
-          <span className='text-success' style={{ fontWeight: 'bolder' }}>Veronica Ouma</span>
-          <p className=''>I once tried bioluminescence; it's amazing</p>
-        </div>
-      </div>
-    </Carousel.Item>
-    <Carousel.Item>
-      <div className="d-flex align-items-center">
-        <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-        <div>
-          <span className='text-success' style={{ fontWeight: 'bolder' }}>Pascal Owilly</span>
-          <p className=''>I have walked around the world but I have never seen a place like Salar de Uyuni</p>
-        </div>
-      </div>
-    </Carousel.Item>
-    <Carousel.Item>
-      <div className="d-flex align-items-center">
-        <img src={natpark} alt="Profile Image" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
-        <div>
-          <span className='text-success' style={{ fontWeight: 'bolder' }}>Leon Okoo</span>
-          <p className=''>Enceptics is amazing from start to finish</p>
-        </div>
-      </div>
-    </Carousel.Item>
+              {sortedPosts.map((post) => (
+                <Carousel.Item key={post.id}>
+                  <div className=" ">
+                    {/* Render post content here */}
+                    <p className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</p>
+                    <hr />
+                    <p className=''>{post.content}</p>
+                  </div>
+                </Carousel.Item>
+              ))}
+
   </Carousel>
 </div>
 
