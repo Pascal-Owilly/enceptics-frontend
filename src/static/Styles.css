@@ -666,33 +666,33 @@ box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
 
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-.App {
+/* .App {
 	height: 100vh;
 	width: 100%;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
 	background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
-}
+} */
 
-.heading {
+/* .heading {
 	font-family: 'Pacifico', cursive;
 	font-size: 35px;
-}
+} */
 
-.container {
+/* .container {
 	height: auto;
 	width: 800px;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-}
+} */
 
-input {
+/* input {
 	padding-left: 5px;
 	font-size: 20px;
 	height: 36px;
-}
+} */
 
 .middle,
 .right {
@@ -712,7 +712,7 @@ input {
 	padding-left: 30px;
 }
 
-button {
+/* button {
 	width: 100px;
 	height: 30px;
 	font-weight: bold;
@@ -728,8 +728,8 @@ h3,
 button,
 .switch {
 	color: forestgreen;
-}
+} */
 
-p {
+/* p {
 	font-size: 30px;
-}
+} */

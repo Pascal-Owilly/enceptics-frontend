@@ -12,14 +12,14 @@ function CurrencyConverter() {
 	const [info, setInfo] = useState([]);
 	const [input, setInput] = useState(0);
 	const [from, setFrom] = useState("usd");
-	const [to, setTo] = useState("kes");
+	const [to, setTo] = useState("inr");
 	const [options, setOptions] = useState([]);
 	const [output, setOutput] = useState(0);
 
 	// Calling the api whenever the dependency changes
 	useEffect(() => {
 		Axios.get(
-`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
+			`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
 			.then((res) => {
 				setInfo(res.data[from]);
 			})
@@ -48,7 +48,7 @@ function CurrencyConverter() {
 	return (
 		<div className="App">
 			<div className="heading">
-				<h1>Currency converter</h1>
+				<h1>Convert Currency</h1>
 			</div>
 			<div className="container">
 				<div className="left">

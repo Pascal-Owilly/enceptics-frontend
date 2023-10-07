@@ -192,6 +192,8 @@ const logout = async () => {
     // Remove the authToken cookie
     Cookies.remove('authToken', { sameSite: 'None', secure: true });
     setFlashMessage({ message: 'You have successfully logged out', type: 'success' });
+    navigate('/')
+
     window.location.reload()
   } catch (error) {
     setFlashMessage({ message: 'Failed to logout', type: 'error' });
@@ -375,7 +377,10 @@ const handleRegistrationChange = (e) => {
       ) : (
         <span></span>
       )}
+      <div style={{maxWidth:'30px'}}>
       <span style={{fontSize:'14px', fontWeight:'', opacity:'.9', fontFamily:'cursive', letterSpacing:'2px', lineHeight:'5px'}} className='text-white'>{profile && user.username}</span>
+
+      </div>
     </a>
   </li>
 )}
