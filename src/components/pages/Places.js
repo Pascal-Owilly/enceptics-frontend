@@ -16,11 +16,13 @@ const Destination = () => {
     name: '',
     description: '',
     cover_image: null,
-    price: 0,
+    price: null,
   });
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [destinationToUpdate, setDestinationToUpdate] = useState(null);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+
 
   const [selectedDestination, setSelectedDestination] = useState(null);
   const [selectedDestinationInfo, setSelectedDestinationInfo] = useState({});
@@ -29,7 +31,7 @@ const Destination = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [price, setPrice] = useState(0); // Initialize with an appropriate default value
+  const [price, setPrice] = useState(null); // Initialize with an appropriate default value
 const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with an appropriate default value
 
 
@@ -65,21 +67,18 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
     fetchPlaceInfo(destination.id);
     setSelectedDestination(destination);
   
-    // Store the booking data in a cookie, including place name and price
+    // Store the booking data in state, including price
     const placeBookingData = {
       placeName: destination.name,
       price: destination.price,
       // Add other relevant booking data here
     };
   
-    // Store the booking data in a cookie
-    Cookies.set('placeBookingData', JSON.stringify(placeBookingData));
-  
-    navigate(`/place-info/${destination.id}`);
+    // Navigate to the PlaceInfo component with query parameters
+    navigate(`/place-info/${destination.id}?placeName=${encodeURIComponent(destination.name)}&price=${destination.price}`, {
+      state: { placeBookingData },
+    });
   };
-  
-  
-  
   
 
   const openModal = () => {
@@ -107,42 +106,79 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       });
   }
 
-  const createNewDestination = () => {
-    const formData = new FormData();
-    formData.append('name', newDestination.name);
-    formData.append('description', newDestination.description);
-    formData.append('price', newDestination.price);
-    formData.append('cover_image', newDestination.cover_image);
-  
-    axios.post('http://127.0.0.1:8000/api/places/', formData)
-      .then(response => {
-        // Update destinations with the new destination
-        setDestinations([response.data, ...destinations]);
-        navigate('/info')
-        closeModal();
-        window.location.reload();
-      })
-      .catch(error => {
-        console.error(error);
-        console.log('Not successful');
-      });
+  const createNewDestination = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('name', newDestination.name);
+      formData.append('description', newDestination.description);
+      formData.append('price', newDestination.price);
+      formData.append('cover_image', newDestination.cover_image);
+
+      const response = await axios.post('http://127.0.0.1:8000/api/places/', formData);
+      setDestinations([response.data, ...destinations]);
+      console.log('Cover Image:', newDestination.cover_image);
+
+      navigate('/info');
+      closeModal();
+      window.location.reload();
+    } catch (error) {
+      handleAxiosError(error);
+    }
   };
+
+  const [errorMessage, setErrorMessage] = useState(null); // Add state for error messages
+
+
+  // Handle Axios errors and set error message
+  const handleAxiosError = (error) => {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // Extract error data from the response
+      const { data, status } = error.response;
+      const message = data.detail || 'An error occurred on the server.';
+      setErrorMessage(`Server error (${status}): ${message}`);
+    } else if (error.request) {
+      // The request was made but no response was received
+      setErrorMessage('Network error: Unable to connect to the server.');
+    } else {
+      // Something else happened while setting up the request
+      setErrorMessage('An error occurred. Please try again later.');
+    }
+  };
+  
+  const handleUpdate = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('name', newDestination.name);
+      formData.append('description', newDestination.description);
+      formData.append('price', newDestination.price);
+      formData.append('cover_image', newDestination.cover_image);
+  
+      const response = await axios.put(`http://127.0.0.1:8000/api/places/${destinationToUpdate.id}/`, formData);
+      closeModal();
+      fetchDestinations();
+      console.log('Cover Image:', newDestination.cover_image);
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
+    
   
   const handleNewDestinationChange = (event) => {
     const { name, value, files } = event.target;
-  
+
     if (name === 'cover_image') {
-      setNewDestination((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
+        setNewDestination((prevData) => ({
+            ...prevData,
+            [name]: files[0], // This should set the File object
+        }));
     } else {
-      setNewDestination((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+        setNewDestination((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     }
-  };
+};
   
   const openUpdateModal = (destination) => {
     setDestinationToUpdate(destination);
@@ -152,30 +188,10 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       price: destination.price,
       cover_image: destination.cover_image,
     });
+    setIsUpdateMode(true); // Set update mode to true
     openModal();
   };
 
-  const handleUpdate = () => {
-    const updatedData = {
-      name: newDestination.name,
-      description: newDestination.description,
-      price: newDestination.price,
-      cover_image: newDestination.cover_image,
-    };
-
-    axios
-      .put(`http://127.0.0.1:8000/api/places/${destinationToUpdate.id}/`, updatedData)
-      .then((response) => {
-        closeModal();
-        fetchDestinations();
-      })
-      .catch((error) => {
-        console.error("Update error:", error);
-        if (error.response) {
-          console.log("Response data:", error.response.data);
-        }
-      });
-  };
 
   const deleteDestination = (id) => {
     axios.delete(`http://127.0.0.1:8000/api/places/${id}/`)
@@ -253,11 +269,13 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
             margin: '0',     
           }}  
         >
-          <Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', borderRadius:'10px' }}>
-            <Modal.Title className="text-center  ">
-             <h3 className="text-secondary" style={{color:''}}>{destinationToUpdate ? 'Update Destination' : 'Add New Destination'}</h3> 
-              </Modal.Title>
-          </Modal.Header>
+<Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', borderRadius: '10px' }}>
+  <Modal.Title className="text-center  ">
+    <h3 className="text-secondary" style={{ color: '' }}>
+      {isUpdateMode ? 'Update Destination' : 'Add New Destination'}
+    </h3>
+  </Modal.Title>
+</Modal.Header>
  
           <Modal.Body className=" text-secondary m-1" style={{ height: '100%', width:'auto', backgroundColor: '#121661', borderRadius:'10px' }}>
             <div className="container">
@@ -268,13 +286,13 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
 
                 <p style={{ fontSize:'18px'}}>Upload cover image</p>
               
-              <input
-                className="bg-white"
-                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
-                type="file"
-                name='cover_image'
-                onChange={handleNewDestinationChange}
-              />
+                <input
+  className="bg-white"
+  style={{ border: '1px solid #121661', width: '100%', color: 'rgb(18, 187, 87)' }}
+  type="file"
+  name="cover_image"
+  onChange={handleNewDestinationChange} // Make sure the event handler is correctly wired up
+/>
            
             <p style={{fontSize:'18px'}}>Name of destination</p>
             <p>
@@ -318,11 +336,11 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
         </div>
       </Modal.Body>
 
-      <Modal.Footer className="m-1" style={{ backgroundColor: '#121661', color: '#d9d9d9', borderRadius:'10px' }}>
-            <button className="btn btn-outline-primary" style={{ fontWeight: 'bold', width:'100%' }} onClick={destinationToUpdate ? handleUpdate : createNewDestination}>
-              {destinationToUpdate ? 'Update' : 'Submit'}
-            </button>
-          </Modal.Footer>
+      <Modal.Footer className="m-1" style={{ backgroundColor: '#121661', color: '#d9d9d9', borderRadius: '10px' }}>
+  <button className="btn btn-outline-primary" style={{ fontWeight: 'bold', width: '100%' }} onClick={isUpdateMode ? handleUpdate : createNewDestination}>
+    {isUpdateMode ? 'Update' : 'Submit'}
+  </button>
+</Modal.Footer>
         </Modal>
         {showPlaceInfo && selectedDestination && (
   <div>

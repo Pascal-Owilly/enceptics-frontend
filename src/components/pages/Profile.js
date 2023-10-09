@@ -38,14 +38,15 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/profile/profile/`, {
+      const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
         headers: {
           Authorization: `Token ${authToken}`,
         },
       });
       const userProfile = response.data;
       setProfile(userProfile);
-      console.log('Profile Picture URL:', userProfile.profile_pic);
+      console.log('Profile Picture URL:', profile.profile_pic);
+
 
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -104,9 +105,8 @@ const Profile = () => {
   <div className="user-heading round">
     <img
     
-    src={profile.profile_pic} 
-    alt="Pic"
-      style={{}}
+    src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+    style={{}}
     />
    
   </div>

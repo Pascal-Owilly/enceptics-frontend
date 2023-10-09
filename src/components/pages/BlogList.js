@@ -21,6 +21,10 @@ function BlogList() {
   const [imagePreview, setImagePreview] = useState(null);
   const [profilePics, setProfilePics] = useState({});
   const [user, setUser] = useState(null);
+  
+  const [profile, setProfile] = useState({}); // Define setProfile here
+  const [profilePicUrl, setProfilePicUrl] = useState(null);
+
 
   const authToken = Cookies.get('authToken');
   const [selectedPost, setSelectedPost] = useState(null);
@@ -41,7 +45,23 @@ function BlogList() {
           const userData = response.data;
           setUser(userData);
   
-          // Now that authToken is available, fetch posts and profile pics
+          // Fetch user's profile including profile pic
+          axios
+            .get(`http://127.0.0.1:8000/api/profile/`, {
+              headers: {
+                Authorization: `Token ${authToken}`,
+              },
+            })
+            .then((response) => {
+              const userProfile = response.data;
+              setProfile(userProfile);
+              setProfilePicUrl(userProfile.profile_pic); // Set the profile pic URL in state
+            })
+            .catch((error) => {
+              console.error('Error fetching user profile:', error);
+            });
+  
+          // Fetch blog posts and comments
           axios
             .get('http://127.0.0.1:8000/api/blogposts/', {
               headers: {
@@ -51,29 +71,44 @@ function BlogList() {
             .then((response) => {
               const postsData = response.data;
               const sortedPostsData = postsData.sort((a, b) => b.likes - a.likes);
-
+  
               // Fetch comments and profile pictures for each post
               const fetchPostsData = postsData.map((post) => {
-                const fetchComments = axios.get(`http://127.0.0.1:8000/api/comments/?post=${post.id}`, {
-                  headers: {
-                    Authorization: `Token ${authToken}`,
-                  },
-                });
+                const fetchComments = axios.get(
+                  `http://127.0.0.1:8000/api/comments/?post=${post.id}`,
+                  {
+                    headers: {
+                      Authorization: `Token ${authToken}`,
+                    },
+                  }
+                );
   
-                const fetchProfilePic = axios.get(`http://127.0.0.1:8000/profile/profile/${post.author}/`, {
-                  headers: {
-                    Authorization: `Token ${authToken}`,
-                  },
-                });
+                const fetchProfilePic = axios.get(
+                  `http://127.0.0.1:8000/api/profile/${post.author}/`,
+                  {
+                    headers: {
+                      Authorization: `Token ${authToken}`,
+                    },
+                  }
+                );
   
                 // Combine both promises to fetch comments and profile picture
-                return Promise.all([fetchComments, fetchProfilePic]).then(([commentsResponse, profilePicResponse]) => {
-                  return {
-                    ...post,
-                    comments: commentsResponse.data,
-                    profilePic: profilePicResponse.data.profile_pic,
-                  };
-                });
+                return Promise.all([fetchComments, fetchProfilePic]).then(
+                  ([commentsResponse, profilePicResponse]) => {
+                    const postWithProfilePic = {
+                      ...post,
+                      comments: commentsResponse.data,
+                      profilePic: profilePicResponse.data.profile_pic,
+                    };
+              
+                    // console.log('Profile Pic for Post', post.id, ':', postWithProfilePic.profilePic); // Add this line for debugging
+              
+                    return postWithProfilePic;
+              
+
+
+                  }
+                );
               });
   
               // Use Promise.all to fetch comments, profile pics, and posts data
@@ -81,22 +116,23 @@ function BlogList() {
                 .then((postsWithCommentsAndProfilePics) => {
                   setPosts(postsWithCommentsAndProfilePics);
                   setSortedPosts(sortedPostsData);
-
                 })
                 .catch((error) => {
                   console.error('Error fetching comments, profile pics, and posts:', error);
-                  // Handle the error, e.g., show an error message to the user
                 });
             })
             .catch((error) => {
               console.error('Error fetching posts:', error);
             });
+  
+          // ... rest of your code
         })
         .catch((error) => {
           console.error('Error fetching user data:', error);
         });
     }
   }, [authToken]);
+  
   
 // Define a separate useEffect to initialize showComments state
 // useEffect(() => {
@@ -165,7 +201,7 @@ useEffect(() => {
     formData.append('author', user.pk); // Assuming 'user.pk' contains the user's ID
   
     // Log the formData object to check its contents
-    console.log('formData:', formData);
+    // console.log('formData:', formData);
   
     // Ensure you send 'author' as a parameter
     const config = {
@@ -176,13 +212,19 @@ useEffect(() => {
   
     axios.post('http://127.0.0.1:8000/api/blogposts/', formData, config)
       .then(response => {
+
+        window.location.reload();
+
+
         setPosts([response.data, ...posts]);
         setNewPostContent('');
         setSelectedImage(null);
         setImagePreview(null);
+
+
       })
       .catch(error => {
-        console.log('Error creating blog post for user', user.last_name, error.response.data);
+        // console.log('Error creating blog post for user', user.last_name, error.response.data);
       });
   };
 
@@ -379,7 +421,14 @@ const handleLike = (postId) => {
   <div  key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', boxShadow: '',width:'87%' }}>
     <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
     <div className="d-flex align-items-center">
-                      <img src={profilePics[post.author.user]} alt="Author" className="rounded-circle author-avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+    <img
+  src={post.profilePic}
+  alt="Profile Pic"
+  className="rounded-circle author-avatar"
+  style={{ width: '50px', height: '50px', marginRight: '10px' }}
+/>
+
+
                       <div className="author-info">
                       <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}
                       &nbsp;&nbsp;

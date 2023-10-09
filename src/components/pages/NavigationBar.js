@@ -373,7 +373,9 @@ const handleRegistrationChange = (e) => {
   <li className="nav-item mx-2" style={{ backgroundColor: 'transparent', width: '45px', height: '45px', borderRadius: '100%', listStyleType: 'none' }}>
     <a className="nav-link text-white" href="/profile">
       {profile && profile.profile_pic ? (
-        <img src={profile.profile_pic} style={{ width: '30px', height: '30px', borderRadius: '100%' }} alt="" />
+        <img 
+        src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+        style={{ width: '30px', height: '30px', borderRadius: '100%' }} alt="" />
       ) : (
         <span></span>
       )}

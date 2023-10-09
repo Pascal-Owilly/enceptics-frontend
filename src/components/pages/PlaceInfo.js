@@ -5,54 +5,86 @@ import { FaArrowRight } from 'react-icons/fa';
 import { Carousel, Card } from 'react-bootstrap';
 
 const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => {
+
+    const navigate = useNavigate()
+
     const { id } = useParams();
-    const navigate = useNavigate();
     const [placeInfo, setPlaceInfo] = useState(null);
-    const [placeName, setPlaceName] = useState('New York'); // Default place name
+    const [placeName, setPlaceName] = useState(''); // Initialize with an empty string
     const [price, setPrice] = useState(0);
     const [weatherData, setWeatherData] = useState(null);
     const location = useLocation(); // Get the location object
+    const queryParams = new URLSearchParams(location.search);
+
+    // Use the URLSearchParams object to get the 'placeName' query parameter
+    const fetchedPlaceName = queryParams.get('placeName');
+    const fetchedPlacePrice = queryParams.get('price');
 
     useEffect(() => {
         fetchPlaceInfo(id);
-        fetchWeatherData(placeName); // Fetch weather data when placeName changes
-    }, [id, placeName]); // Include placeName as a dependency
+    }, [id]);
 
     const fetchPlaceInfo = (id) => {
         axios
             .get(`http://127.0.0.1:8000/api/place-info/${id}/`)
             .then((response) => {
                 setPlaceInfo(response.data);
-                fetchPlaceName(response.data.id);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-
-    // Function to fetch the place name
-    const fetchPlaceName = (placeId) => {
-        axios
-            .get(`http://127.0.0.1:8000/api/places/${placeId}/`) // Assuming this is the endpoint to fetch place details
-            .then((response) => {
-                setPlaceName(response.data.name);
+                setPlaceName(fetchedPlaceName); // Set placeName from the query parameter
                 setPrice(response.data.price);
+                fetchWeatherData(fetchedPlaceName);
             })
             .catch((error) => {
                 console.error(error);
             });
     };
 
-    // Function to fetch weather data
-    const fetchWeatherData = (placeName) => {
-        axios
-            .get(`http://127.0.0.1:8000/weather/weather-forecast/${placeName}/`) // Adjust the URL as needed
-            .then((response) => {
-                setWeatherData(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
+   // Function to fetch weather data based on place name
+const fetchWeatherData = (placeName) => {
+    // Use Google Geocoding to fetch coordinates based on placeName
+    getCoordinates(placeName)
+        .then((coordinates) => {
+            if (coordinates) {
+                // Fetch weather data using coordinates
+                axios
+                    .get(`http://127.0.0.1:8000/weather/weather-forecast/${coordinates.latitude}/${coordinates.longitude}`)
+                    .then((response) => {
+                        setWeatherData(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+                // Handle the case where coordinates are not found
+                console.error('Coordinates not found for the place');
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+};
+
+    // Function to get coordinates using Google Geocoding
+    const getCoordinates = async (placeName) => {
+        try {
+            const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+                params: {
+                    address: placeName,
+                    key: 'YOUR_GOOGLE_API_KEY', // Replace with your Google API key
+                },
             });
+
+            const { results } = response.data;
+            if (results && results.length > 0) {
+                const { lat, lng } = results[0].geometry.location;
+                return { latitude: lat, longitude: lng };
+            } else {
+                throw new Error('Geocoding failed');
+            }
+        } catch (error) {
+            console.error('Geocoding error:', error);
+            // Handle geocoding errors here
+            return null;
+        }
     };
 
     // Function to navigate to the booking page with booking data
@@ -74,7 +106,7 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
                                 <hr />
                                 <Card style={{ maxHeight: '450px' }}>
                                     <Carousel
-                                        style={{ width: '100%', maxHeight: '450px' }}
+                                        style={{ width: '100%', maxHeight: '450px', border:'none' }}
                                         fade={false}
                                         controls={true}
                                         indicators={true}
