@@ -72,6 +72,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       placeName: destination.name,
       price: destination.price,
       // Add other relevant booking data here
+      
     };
   
     // Navigate to the PlaceInfo component with query parameters

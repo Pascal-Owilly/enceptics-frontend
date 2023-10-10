@@ -733,3 +733,25 @@ button,
 /* p {
 	font-size: 30px;
 } */
+
+
+
+/* WEATHER WIDGET */
+
+/* Add this to your CSS file */
+.weather-widget {
+  /* background-color: #fff; */
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  color: #333;
+  font-size: 16px;
+  color: yellow;
+}
+
+.weather-widget p {
+  margin: 5px 0;
+}
+
+/* Customize the styles as needed */

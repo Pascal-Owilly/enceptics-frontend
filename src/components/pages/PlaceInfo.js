@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import { Carousel, Card } from 'react-bootstrap';
 
-const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => {
-
-    const navigate = useNavigate()
-
+const PlaceInfo = () => {
     const { id } = useParams();
-    const [placeInfo, setPlaceInfo] = useState(null);
-    const [placeName, setPlaceName] = useState(''); // Initialize with an empty string
-    const [price, setPrice] = useState(0);
-    const [weatherData, setWeatherData] = useState(null);
-    const location = useLocation(); // Get the location object
+    const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-
-    // Use the URLSearchParams object to get the 'placeName' query parameter
     const fetchedPlaceName = queryParams.get('placeName');
     const fetchedPlacePrice = queryParams.get('price');
+
+    const [placeInfo, setPlaceInfo] = useState(null);
+    const [placeName, setPlaceName] = useState(fetchedPlaceName || ''); // Initialize with fetchedPlaceName if available
+    const [price, setPrice] = useState(fetchedPlacePrice || 0);
+    const [weatherData, setWeatherData] = useState(null);
+    const [loadWeather, setLoadWeather] = useState(false); // Control whether to load weather container
+    const [isLoadingWeather, setIsLoadingWeather] = useState(false);
 
     useEffect(() => {
         fetchPlaceInfo(id);
@@ -29,18 +27,35 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
             .get(`http://127.0.0.1:8000/api/place-info/${id}/`)
             .then((response) => {
                 setPlaceInfo(response.data);
-                setPlaceName(fetchedPlaceName); // Set placeName from the query parameter
+                if (!placeName && response.data.name) {
+                    setPlaceName(response.data.name);
+                }
                 setPrice(response.data.price);
+                setLoadWeather(true); // Set loadWeather to true after fetching place info
             })
             .catch((error) => {
                 console.error(error);
-            });  
+            });
     };
 
+    useEffect(() => {
+        if (loadWeather) {
+            fetchWeatherData();
+        }
+    }, [loadWeather]);
 
-    // Function to navigate to the booking page with booking data
-    const handleProceedToBooking = () => {
-        navigate(`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`);
+    const fetchWeatherData = () => {
+        setIsLoadingWeather(true);
+        axios
+            .get(`http://127.0.0.1:8000/weather/weather-forecast/${placeName}/`)
+            .then((response) => {
+                setWeatherData(response.data);
+                setIsLoadingWeather(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setIsLoadingWeather(false);
+            });
     };
 
     return (
@@ -56,15 +71,15 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
                             <div className="col-md-6">
                                 <hr />
                                 <Card style={{ maxHeight: '450px' }}>
-                                    <Carousel
-                                        style={{ width: '100%', maxHeight: '450px', border:'none' }}
+                                <Carousel
+                                        style={{ width: '100%', maxHeight: '450px', border: 'none' }}
                                         fade={false}
                                         controls={true}
                                         indicators={true}
                                         interval={3000}
                                         keyboard={false}
                                     >
-                                        <Carousel.Item>
+             <Carousel.Item>
                                             <img
                                                 className="mb-5"
                                                 src={placeInfo.pictures}
@@ -88,30 +103,52 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
                                                 <source src={placeInfo.videos} type="video/3gp" />
                                                 Your browser does not support the video tag.
                                             </video>
-                                        </Carousel.Item>
-                                    </Carousel>
+                                        </Carousel.Item>                                    </Carousel>
                                 </Card>
                             </div>
-                            <div className="col-md-5 text-center mb-4">
-                                <h5 className="text-secondary mb-3 text-center">2 Day Weather Forecast for {placeName}</h5>
-                                
-                                <hr />
 
-                                <Link to={`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`}>
-                                    <button
-                                        className="what-card-price btn mt-5 btn-sm"
-                                        style={{
-                                            fontSize: '18px',
-                                            color: 'goldenrod',
-                                            fontWeight: 'bold',
-                                            width: 'auto',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        Proceed to booking &nbsp;&nbsp; <FaArrowRight />
-                                    </button>
-                                </Link>
-                            </div>
+                            {loadWeather && (
+                                <div className="col-md-5 text-center mb-4">
+                                    <div className="weather-widget">
+                                        <h5 className="text-secondary mb-3 text-center">Weather forecast in {placeName}</h5>
+                                        <hr />
+                                        {isLoadingWeather ? (
+                                            <p>Loading weather data...</p>
+                                        ) : weatherData ? (
+                                            <div>
+                                                <p>Summary: {weatherData.summary}</p>
+                                                <p>Temperature: {weatherData.temperature_celsius} °C</p>
+                                                <p>Icon: {weatherData.icon}</p>
+                                                <p>Humidity: {weatherData.humidity}</p>
+                                                <p>Visibility: {weatherData.visibility}</p>
+                                                <p>UV Index: {weatherData.uvIndex}</p>
+                                                <p>Cloud Cover: {weatherData.cloudCover}</p>
+                                                <p>Wind Speed: {weatherData.windSpeed}</p>
+                                                <p>Wind Gust: {weatherData.windGust}</p>
+                                            </div>
+                                        ) : (
+                                            <p>No weather data available</p>
+                                        )}
+                                        <hr />
+                                        <Link
+                                            to={`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`}
+                                        >
+                                            <button
+                                                className="what-card-price btn mt-5 btn-sm"
+                                                style={{
+                                                    fontSize: '18px',
+                                                    color: 'goldenrod',
+                                                    fontWeight: 'bold',
+                                                    width: 'auto',
+                                                    textAlign: 'left',
+                                                }}
+                                            >
+                                                Proceed to booking &nbsp;&nbsp; <FaArrowRight />
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
