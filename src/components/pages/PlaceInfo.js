@@ -31,61 +31,12 @@ const PlaceInfo = ({ destinationId, placeBookingData, selectedDestination }) => 
                 setPlaceInfo(response.data);
                 setPlaceName(fetchedPlaceName); // Set placeName from the query parameter
                 setPrice(response.data.price);
-                fetchWeatherData(fetchedPlaceName);
             })
             .catch((error) => {
                 console.error(error);
-            });
+            });  
     };
 
-   // Function to fetch weather data based on place name
-const fetchWeatherData = (placeName) => {
-    // Use Google Geocoding to fetch coordinates based on placeName
-    getCoordinates(placeName)
-        .then((coordinates) => {
-            if (coordinates) {
-                // Fetch weather data using coordinates
-                axios
-                    .get(`http://127.0.0.1:8000/weather/weather-forecast/${coordinates.latitude}/${coordinates.longitude}`)
-                    .then((response) => {
-                        setWeatherData(response.data);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            } else {
-                // Handle the case where coordinates are not found
-                console.error('Coordinates not found for the place');
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-};
-
-    // Function to get coordinates using Google Geocoding
-    const getCoordinates = async (placeName) => {
-        try {
-            const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
-                params: {
-                    address: placeName,
-                    key: 'YOUR_GOOGLE_API_KEY', // Replace with your Google API key
-                },
-            });
-
-            const { results } = response.data;
-            if (results && results.length > 0) {
-                const { lat, lng } = results[0].geometry.location;
-                return { latitude: lat, longitude: lng };
-            } else {
-                throw new Error('Geocoding failed');
-            }
-        } catch (error) {
-            console.error('Geocoding error:', error);
-            // Handle geocoding errors here
-            return null;
-        }
-    };
 
     // Function to navigate to the booking page with booking data
     const handleProceedToBooking = () => {
@@ -102,7 +53,7 @@ const fetchWeatherData = (placeName) => {
                                 {placeName}
                             </h2>
 
-                            <div className="col-md-8">
+                            <div className="col-md-6">
                                 <hr />
                                 <Card style={{ maxHeight: '450px' }}>
                                     <Carousel
@@ -141,35 +92,9 @@ const fetchWeatherData = (placeName) => {
                                     </Carousel>
                                 </Card>
                             </div>
-                            <div className="col-md-3 text-center mb-4">
+                            <div className="col-md-5 text-center mb-4">
                                 <h5 className="text-secondary mb-3 text-center">2 Day Weather Forecast for {placeName}</h5>
-                                <table className="table table-bordered table-hover" style={{}}>
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Morning (°C)</th>
-                                            <th>Afternoon (°C)</th>
-                                            <th>Evening (°C)</th>
-                                            <th>Night (°C)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Monday</td>
-                                            <td>18°C Sunny</td>
-                                            <td>22°C Cloudy</td>
-                                            <td>20°C Rainy</td>
-                                            <td>15°C Windy</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tuesday</td>
-                                            <td>18°C Sunny</td>
-                                            <td>22°C Cloudy</td>
-                                            <td>20°C Rainy</td>
-                                            <td>15°C Windy</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                
                                 <hr />
 
                                 <Link to={`/booking?placeName=${encodeURIComponent(placeName)}&price=${price}`}>

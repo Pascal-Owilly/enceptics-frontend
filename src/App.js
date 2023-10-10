@@ -30,6 +30,8 @@ import BookingExample from './components/pages/BookingExample';
 import { SearchProvider } from './components/pages/SearchContext';
 import SearchResults from './components/pages/SearchResults';
 
+import TopChats from './components/pages/TopChats';
+
 function App() {
   
   return (  
@@ -58,6 +60,8 @@ function App() {
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
           <Route path="/place-info/:id" element={<PlaceInfo />} />  
           <Route path="/info" element={<AddPlaceInfo />} />          
+          <Route path="/topchats" element={<TopChats />} />          
+
         
           <Route path="/bookingexample" element={<BookingExample />} />          
 

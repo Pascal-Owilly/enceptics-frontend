@@ -10,9 +10,7 @@ import SearchResults from './SearchResults';
 import Places from './Places'; // Import your Places component
 import Blogs from './Blogs'; // Import your Blogs component
 // import { useAuth } from "../pages/authenticate/AuthContext";
-import { useNavigate } from 'react-router-dom';
-
-
+import { useNavigate, Link } from 'react-router-dom';
 
 function FlashMessage({ message, type }) {
   return (
@@ -23,12 +21,23 @@ function FlashMessage({ message, type }) {
 }
 
 function NavigationBar() {
-const navigate = useNavigate()
 
-const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
+  const navigate = useNavigate()
+
+  const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
 
 // search
-const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // if (!user) {
+  //   // User data is not available, handle this case (e.g., show a loading indicator or login button)
+  //   return null; // or return an appropriate component
+  // }
+
+  // // Access user properties here
+  // const { username } = user;
+
+
 
  // Function to handle search input changes
  const handleSearchInputChange = (e) => {
@@ -81,9 +90,9 @@ const [loginData, setLoginData] = useState({
 });
 
 const [profile, setProfile] = useState([]);
-const [user, setUser] = useState(null);
+// const [user, setUser] = useState(null);
 const authToken = Cookies.get('authToken');
-
+const [user, setUser] = useState({})
 
 const login = async (e) => {
   if (e) {
@@ -244,6 +253,12 @@ const handleRegistrationChange = (e) => {
     fontWeight:'500',
 
   };
+
+  // const handleBookNowBtn = (e) =>{
+  //   navigate('/places')
+
+  //   // window.location.reload()
+  // }
   
   return (
 <>
@@ -281,14 +296,16 @@ const handleRegistrationChange = (e) => {
                 </a>
               </li>
               <li className="nav-item">
-               
-                <a className="nav-link text-white" href="/places">
+
+              <a className="nav-link text-white" href="/places">
+
                 <button className='btn btn-sm what-card' style={{backgroundColor:'#121661', color:'#fff', fontWeight:'bolder'}}>
                   Book Now
                   </button>
-                </a>
-                
+                  </a>
+
               </li>
+
               <li>
 
 {/* <SearchBar /> */}
@@ -345,15 +362,19 @@ const handleRegistrationChange = (e) => {
 
             {!isLoggedIn && ( // Render only if not logged in
           <div>
+            {/* <Link to='/signup'> */}
             <button
               type="button"
               className="btn btn-sm mx-4 what-card"
               style={{ backgroundColor: '', color: '#d9d9d9', border: 'none' }}
               onClick={openSignUpModal}
+
             >
               Sign Up 
             </button>
-            
+            {/* </Link> */}
+
+            {/* <Link to='/login'> */}
             <button
               type="button"
               className="btn btn-sm m-1 what-card"
@@ -362,6 +383,7 @@ const handleRegistrationChange = (e) => {
             >
               Login
             </button>
+            {/* </Link> */}
           </div>
         )} 
 
@@ -369,23 +391,23 @@ const handleRegistrationChange = (e) => {
             
 <>
 <div>
-{user && (
-  <li className="nav-item mx-2" style={{ backgroundColor: 'transparent', width: '45px', height: '45px', borderRadius: '100%', listStyleType: 'none' }}>
-    <a className="nav-link text-white" href="/profile">
-      {profile && profile.profile_pic ? (
-        <img 
-        src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
-        style={{ width: '30px', height: '30px', borderRadius: '100%' }} alt="" />
-      ) : (
-        <span></span>
-      )}
-      <div style={{maxWidth:'30px'}}>
-      <span style={{fontSize:'14px', fontWeight:'', opacity:'.9', fontFamily:'cursive', letterSpacing:'2px', lineHeight:'5px'}} className='text-white'>{profile && user.username}</span>
+<li className="nav-item mx-2" style={{ backgroundColor: 'transparent', width: '45px', height: '45px', borderRadius: '100%', listStyleType: 'none' }}>
+  <a className="nav-link text-white" href="/profile">
+    {profile && profile.profile_pic && (
+      <>
+        <img
+          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          style={{ width: '43px', height: '43px', borderRadius: '100%' }}
+          alt=""
+        />
+        <div style={{ maxWidth: '30px' }}>
+          <span style={{ fontSize: '14px', fontWeight: '', opacity: '.9', fontFamily: 'cursive', letterSpacing: '2px', lineHeight: '5px' }} className='text-white'>{profile && user.username}</span>
+        </div>
+      </>
+    )}
+  </a>
+</li>
 
-      </div>
-    </a>
-  </li>
-)}
 
 </div>
 <li>

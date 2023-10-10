@@ -32,106 +32,104 @@ function BlogList() {
   // const [comments, setComments] = useState([]);
 
 
-  useEffect(() => {
-    if (authToken) {
-      // Fetch user data
-      axios
-        .get(`http://127.0.0.1:8000/api/auth/user/`, {
-          headers: {
-            Authorization: `Token ${authToken}`,
-          },
-        })
-        .then((response) => {
-          const userData = response.data;
-          setUser(userData);
-  
-          // Fetch user's profile including profile pic
-          axios
-            .get(`http://127.0.0.1:8000/api/profile/`, {
-              headers: {
-                Authorization: `Token ${authToken}`,
-              },
-            })
-            .then((response) => {
-              const userProfile = response.data;
-              setProfile(userProfile);
-              setProfilePicUrl(userProfile.profile_pic); // Set the profile pic URL in state
-            })
-            .catch((error) => {
-              console.error('Error fetching user profile:', error);
+ // Remove the call to fetchCommentsForAllPosts
+ useEffect(() => {
+  if (authToken) {
+    // Fetch user data
+    axios
+      .get(`http://127.0.0.1:8000/api/auth/user/`, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
+      })
+      .then((response) => {
+        const userData = response.data;
+        setUser(userData);
+
+        // Fetch user's profile including profile pic
+        axios
+          .get(`http://127.0.0.1:8000/api/profile/`, {
+            headers: {
+              Authorization: `Token ${authToken}`,
+            },
+          })
+          .then((response) => {
+            const userProfile = response.data;
+            setProfile(userProfile);
+            setProfilePicUrl(userProfile.profile_pic); // Set the profile pic URL in state
+          })
+          .catch((error) => {
+            console.error('Error fetching user profile:', error);
+          });
+
+        // Fetch blog posts and comments
+        axios
+          .get('http://127.0.0.1:8000/api/blogposts/', {
+            headers: {
+              Authorization: `Token ${authToken}`,
+            },
+          })
+          .then((response) => {
+            const postsData = response.data;
+            const sortedPostsData = postsData.sort((a, b) => b.likes - a.likes);
+
+            // Fetch comments and profile pictures for each post
+            const fetchPostsData = postsData.map((post) => {
+              const fetchProfilePic = axios.get(
+                `http://127.0.0.1:8000/api/profile/${post.author}/`,
+                {
+                  headers: {
+                    Authorization: `Token ${authToken}`,
+                  },
+                }
+              );
+
+              // Combine both promises to fetch comments and profile picture
+              return Promise.all([fetchProfilePic]).then(
+                ([profilePicResponse]) => {
+                  const postWithProfilePic = {
+                    ...post,
+                    profilePic: profilePicResponse.data.profile_pic,
+                  };
+
+                  return postWithProfilePic;
+                }
+              );
             });
-  
-          // Fetch blog posts and comments
-          axios
-            .get('http://127.0.0.1:8000/api/blogposts/', {
-              headers: {
-                Authorization: `Token ${authToken}`,
-              },
-            })
-            .then((response) => {
-              const postsData = response.data;
-              const sortedPostsData = postsData.sort((a, b) => b.likes - a.likes);
-  
-              // Fetch comments and profile pictures for each post
-              const fetchPostsData = postsData.map((post) => {
-                const fetchComments = axios.get(
-                  `http://127.0.0.1:8000/api/comments/?post=${post.id}`,
-                  {
-                    headers: {
-                      Authorization: `Token ${authToken}`,
-                    },
-                  }
-                );
-  
-                const fetchProfilePic = axios.get(
-                  `http://127.0.0.1:8000/api/profile/${post.author}/`,
-                  {
-                    headers: {
-                      Authorization: `Token ${authToken}`,
-                    },
-                  }
-                );
-  
-                // Combine both promises to fetch comments and profile picture
-                return Promise.all([fetchComments, fetchProfilePic]).then(
-                  ([commentsResponse, profilePicResponse]) => {
-                    const postWithProfilePic = {
-                      ...post,
-                      comments: commentsResponse.data,
-                      profilePic: profilePicResponse.data.profile_pic,
-                    };
-              
-                    // console.log('Profile Pic for Post', post.id, ':', postWithProfilePic.profilePic); // Add this line for debugging
-              
-                    return postWithProfilePic;
-              
 
+            // Use Promise.all to fetch profile pics and posts data
+            Promise.all(fetchPostsData)
+              .then((postsWithProfilePics) => {
+                setPosts(postsWithProfilePics);
+                setSortedPosts(sortedPostsData);
 
-                  }
+                // Initialize the 'likes' state based on fetched posts
+                const initialLikes = {};
+                postsWithProfilePics.forEach((post) => {
+                  initialLikes[post.id] = post.likes;
+                });
+                setLikes(initialLikes);
+              })
+              .catch((error) => {
+                console.error(
+                  'Error fetching profile pics and posts:',
+                  error
                 );
               });
-  
-              // Use Promise.all to fetch comments, profile pics, and posts data
-              Promise.all(fetchPostsData)
-                .then((postsWithCommentsAndProfilePics) => {
-                  setPosts(postsWithCommentsAndProfilePics);
-                  setSortedPosts(sortedPostsData);
-                })
-                .catch((error) => {
-                  console.error('Error fetching comments, profile pics, and posts:', error);
-                });
-            })
-            .catch((error) => {
-              console.error('Error fetching posts:', error);
-            });
-  
-          // ... rest of your code
-        })
-        .catch((error) => {
-          console.error('Error fetching user data:', error);
-        });
-    }
-  }, [authToken]);
+          })
+          .catch((error) => {
+            console.error('Error fetching posts:', error);
+          });
+
+        // ... rest of your code
+      })
+      .catch((error) => {
+        console.error('Error fetching user data:', error);
+      });
+  }
+}, [authToken]);
+
+
   
   
 // Define a separate useEffect to initialize showComments state
@@ -292,40 +290,40 @@ const createComment = () => {
 
 
 
-const fetchCommentsForPost = (postId) => {
-  if (!authToken || !postId) {
-    console.error('Authentication token or post ID is missing.');
-    return;
-  }
+// Function to fetch comments for all posts
+// const fetchCommentsForAllPosts = () => {
+//   if (!authToken) {
+//     console.error('Authentication token is missing.');
+//     return;
+//   }
 
-  axios.get(`http://127.0.0.1:8000/api/comments/?post=${postId}`, {
-    headers: {
-      Authorization: `Token ${authToken}`,
-    },
-  })
-  .then((response) => {
-    // Handle the successful response here
-    const comments = response.data;
-    
-    // Update the state with the fetched comments for the specific post
-    setPosts(prevPosts => {
-      return prevPosts.map(post => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            comments: [...post.comments, ...comments],
-          };
-        }
-        return post;
-      });
-    });
+//   // Fetch comments for all posts
+//   axios.get(`http://127.0.0.1:8000/api/comments/`, {
+//     headers: {
+//       Authorization: `Token ${authToken}`,
+//     },
+//   })
+//   .then((response) => {
+//     // Handle the successful response here
+//     const allComments = response.data;
 
-  })
-  .catch((error) => {
-    console.error('Error fetching comments:', error);
-    // Handle the error, e.g., show an error message to the user
-  });
-};
+//     // Update the state with comments associated with each post
+//     setPosts((prevPosts) => {
+//       return prevPosts.map((prevPost) => {
+//         const postComments = allComments.filter((comment) => comment.post === prevPost.id);
+//         return {
+//           ...prevPost,
+//           comments: postComments,
+//         };
+//       });
+//     });
+//   })
+//   .catch((error) => {
+//     console.error('Error fetching comments:', error);
+//     // Handle the error, e.g., show an error message to the user
+//   });
+// };
+
 
 
 
@@ -337,11 +335,13 @@ const toggleComments = (postId) => {
 };
 
 
+
 const handleLike = (postId) => {
   if (!authToken || !postId) {
     console.error('Authentication token or post ID is missing.');
     return;
   }
+
   // Send a POST request to add a like for the post
   const config = {
     headers: {
@@ -352,22 +352,20 @@ const handleLike = (postId) => {
   axios
     .post('http://127.0.0.1:8000/api/likes/', { post: postId }, config)
     .then(() => {
-      // Increment the likes count in the state
+      // Update the 'likes' state with the incremented likes count
       setLikes((prevLikes) => ({
         ...prevLikes,
         [postId]: prevLikes[postId] + 1,
       }));
+      console.log('Likes:', likes);
     })
     .catch((error) => {
       console.error('Error liking post:', error);
-      // alert(post.author)
-
-      // Check the error response for more details (if available)
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-      }
+      // Handle the error, e.g., show an error message to the user
     });
 };
+
+
 
 
 
@@ -397,7 +395,7 @@ const handleLike = (postId) => {
           />
               <label className="custom-file-upload m-2 what-card" style={{borderRadius:'100%', backgroundColor:'#A9A9A9', color:'#121661', fontWeight:'bold'}}>
                 <input
-                  type="file"
+                  type="file" 
                   accept="image/*"
                   className=" btn-sm m-1"
                   onChange={handleImageChange}
@@ -417,99 +415,80 @@ const handleLike = (postId) => {
             </div>
           )}
           <div className="row">
-   {posts.map(post => (
-  <div  key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', boxShadow: '',width:'87%' }}>
-    <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
-    <div className="d-flex align-items-center">
-    <img
-  src={post.profilePic}
-  alt="Profile Pic"
-  className="rounded-circle author-avatar"
-  style={{ width: '50px', height: '50px', marginRight: '10px' }}
-/>
-
-
-                      <div className="author-info">
-                      <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}
-                      &nbsp;&nbsp;
-                      <span className="text-success btn-sm follow-button" style={{fontSize:'12px', cursor:'pointer'}}> • <i className="fa fa-user-plus"></i> Follow</span>
-
-                      </h5>
-
-                        <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
-                          <span style={{fontSize:'12px'}} className="">{post.followers} </span> &nbsp; {formatTimeDifference(post.created_at)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-    {post.image && (
-      <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
-    )}
-    <div className="card-body">
-      <p className="card-text post-content" style={{ fontSize: '16px', lineHeight: '1.5' }}>{post.content}</p>
-    </div>
-
-    <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
-      <div className="d-flex justify-content-between">
-        <div>
-       
+          {posts.map((post) => (
+    <div key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', boxShadow: '', width: '87%' }}>
+      <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
+        <div className="d-flex align-items-center">
+          <img
+            src={post.profilePic}
+            alt="Profile Pic"
+            className="rounded-circle author-avatar"
+            style={{ width: '50px', height: '50px', marginRight: '10px' }}
+          />
+          <div className="author-info">
+            <h5 className="author-name" style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>{post.author_full_name}</h5>
+            <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
+              <span style={{ fontSize: '12px' }}>{post.followers} </span> &nbsp; {formatTimeDifference(post.created_at)}
+            </p>
           </div>
-          <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
-      {/* <span className="like-count">{likes[post.id]} Likes</span>&nbsp; */}
-      {/* <span className="comment-count" onClick={() => toggleComments(post.id)}>
-        {post.comments ? `${post.comments.length} Comments` : '0 Comments'}
-      </span> */}
-
-                {/* <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm delete-button"><i className="fa fa-trash"></i> Delete</button>&nbsp; */}
-                <span style={{fontSize:'12px'}} className="text-primary like-button" onClick={() => handleLike(post.id)}>
-          <i className="fa fa-thumbs-up"></i> 
-          <span className="like-count">{likes[post.id]} Likes</span>&nbsp;
-&nbsp;&nbsp;
-        </span>        
-          <span style={{fontSize:'12px', cursor:'pointer'}}  className=" text-secondary comment-button" onClick={() => selectPostForComment(post)}> 
-            <i className="fa fa-comment"></i> 
-            {post.comments ? `${post.comments.length} Comments` : '0 Comments'}
-
-          </span> 
-    </div>
-    {/* Conditionally render comments based on showComments state */}
-    {showComments[post.id] &&
-      post.comments &&
-      post.comments.length > 0 && (
-        <div>
-          {post.comments.map((comment) => (
-            <div key={comment.id}>
-              <span>{comment.user}: {comment.text}</span>
+        </div>
+      </div>
+      {post.image && (
+        <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
+      )}
+      <div className="card-body">
+        <p className="card-text post-content" style={{ fontSize: '16px', lineHeight: '1.5' }}>{post.content}</p>
+      </div>
+      <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
+      {selectedPost && selectedPost.id === post.id && (
+        <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Write a comment..."
+              value={commentText}
+              onChange={handleCommentTextChange}
+            />
+            <div className="input-group-append">
+              <button className="btn btn-outline-primary" onClick={createComment}>Submit</button>
             </div>
-      ))}
-    </div>
-  )}
+          </div>
+        </div>
+      )}
+        <div className="d-flex justify-content-between">
+          <div></div>
+          <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
+          <span style={{ fontSize: '12px' }} className="text-primary like-button" onClick={() => handleLike(post.id)}>
+  <i className="fa fa-thumbs-up"></i>
+  <span className="like-count">{likes[post.id] || 0} Likes</span>&nbsp;
+</span>
 
-
-
+            <span style={{ fontSize: '12px', cursor: 'pointer' }} className="text-secondary comment-button" onClick={() => toggleComments(post.id)}>
+              <i className="fa fa-comment"></i>
+              {post.comments ? `${post.comments.length} Comments` : '0 Comments'}
+            </span>
+          </div>
+        </div>
+        {/* Conditionally render comments based on showComments state */}
+        {showComments[post.id] &&
+          post.comments &&
+          post.comments.length > 0 && (
+            <div>
+              {post.comments.map((comment) => (
+                <div key={comment.id}>
+                  <span>{comment.user}: {comment.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
       </div>
-    </div>
+      {/* Comment Input Field */}
+      {/* Conditionally render the comment input field only if post.comments is available */}
 
-    {/* Comment Input Field */}
-    {/* Conditionally render the comment input field only if post.comments is available */}
-    {selectedPost && selectedPost.id === post.id && (
-  <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
-    <div className="input-group">
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Write a comment..."
-        value={commentText}
-        onChange={handleCommentTextChange}
-      />
-      <div className="input-group-append">
-        <button className="btn btn-outline-primary" onClick={createComment}>Submit</button>
-      </div>
     </div>
-  </div>
-)}
-  </div>
-))}
+  ))}
+
     </div>
     </div>
 
