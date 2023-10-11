@@ -49,6 +49,8 @@ function App() {
           <Route path="/signup" element={<SignUp />} />   
 
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/result/:id" element={<PlaceInfo />} />
+
        
 
           <Route path="/blog" element={ <BlogList />} />

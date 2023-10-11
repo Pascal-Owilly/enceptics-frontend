@@ -23,7 +23,7 @@ const LoginTest = () => {
     if (storedToken) {
       setIsLoggedIn(true);
       // Redirect to another page if the user is already logged in
-      //navigate('/booking'); // Replace '/dashboard' with your desired route
+      navigate('/booking'); // Replace '/dashboard' with your desired route
   
       // Check if there's placeName and price data in the location state
       const locationState = location.state;

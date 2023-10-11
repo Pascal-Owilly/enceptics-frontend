@@ -9,8 +9,14 @@ const Booking = () => {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  const queryParams = new URLSearchParams(location.search);
   const placeName = searchParams.get("placeName");
   const price = searchParams.get("price");
+  const id = queryParams.get('id');
+
+  console.log('ID from URL:', id);
+  console.log('Location object:', location);
+
   const { state } = location;
 
   const [hasKids, setHasKids] = useState(false); // New state for checking if customer has kids
@@ -28,28 +34,29 @@ const Booking = () => {
   const [places, setPlaces] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
     const [bookingData, setBookingData] = useState({
-      user: null,
-      place: null,
       checkin_date: null,
       checkout_date: null,
-      phone: '',
-      email: '',
-    });
+      phone: "",
+      email: "",
+      is_paid: false,
+      user: null,
+      place: null
+  });
 
   const [placeData, setPlaceData] = useState({
     placeName: '',
-    price: 0,
+    price: null,
   });
 
   const [user, setUser] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const authToken = Cookies.get('authToken');
 
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const authToken = Cookies.get('authToken');
     if (authToken) {
       axios.get('http://127.0.0.1:8000/api/auth/user/', {
         headers: {
@@ -66,7 +73,9 @@ const Booking = () => {
       .catch((error) => {
         console.log('Authentication failed:', error);
       });
-
+  
+      console.log('State object:', state); // Add this line to log the state object
+  
       if (state && state.placeId) {
         axios
           .get(`http://127.0.0.1:8000/api/places/${state.placeId}/`)
@@ -76,34 +85,32 @@ const Booking = () => {
             // After fetching place data, set it as the default place in bookingData
             setBookingData((prevData) => ({
               ...prevData,
+              user: placeResponse.data.user || null,
               place: placeResponse.data.id, // Set the place ID as default
               checkin_date: placeResponse.data.checkin_date || null, // Set checkin_date based on backend data
               checkout_date: placeResponse.data.checkout_date || null, // Set checkout_date based on backend data
               phone: placeResponse.data.phone || '', // Set phone based on backend data
               email: placeResponse.data.email || '', // Set email based on backend data
+              is_paid: placeResponse.data.is_paid || false,
             }));
           })
           .catch((placeError) => {
             console.log('Error fetching place data:', placeError);
           });
+      } else {
+        console.log('state.placeId is not available.');
+        // Handle the case where state.placeId is not available
       }
     } else {
       // Redirect unauthenticated users to the login page
       navigate('/login-booking');
     }
-  }, [navigate, state]);
+  }, [navigate, state, authToken]);
+  
 
   const handleBookingChange = (e) => {
     const { name, value, checked, type } = e.target;
-
-      // Calculate extra charges for kids and adults
-      const kidsCharges = numKids * pricePerKid;
-      const adultsCharges = (numAdults - 1) * pricePerAdult; // Subtract 1 for the first adult (included in the base price)
-      const totalExtraCharges = kidsCharges + adultsCharges;
   
-      setExtraCharges(totalExtraCharges);
-  
-
     if (type === 'number') {
       setBookingData({ ...bookingData, [name]: parseInt(value) });
     } else if (type === 'checkbox') {
@@ -117,56 +124,83 @@ const Booking = () => {
         }
       }
     } else {
-      if (name === 'checkinTime') {
-        setCheckinTime(value);
-        // Automatically calculate the "To" date as 2 days after the "From" date
-        const fromDate = new Date(value);
-        fromDate.setDate(fromDate.getDate() + 2);
-        const toDateString = fromDate.toISOString().split('T')[0];
-        setBookingData({ ...bookingData, [name]: value, checkoutTime: toDateString }); // Update checkoutTime in bookingData
-        setCheckoutTime(toDateString); // Update the checkoutTime state
-      } else if (name === 'checkoutTime') {
-        setCheckoutTime(value);
+      if (name === 'checkin_date') {
+        // Calculate checkout_date as two days after checkin_date
+        const checkinDate = new Date(value);
+        const checkoutDate = new Date(checkinDate);
+        checkoutDate.setDate(checkinDate.getDate() + 2);
+  
+        setBookingData({ ...bookingData, checkin_date: value, checkout_date: checkoutDate.toISOString().split('T')[0] });
       } else {
         setBookingData({ ...bookingData, [name]: value });
       }
     }
   };
-
+  
+  
   const handleBookingSubmit = (e) => {
     e.preventDefault();
-    if (user) {
+    console.log('state.placeId:', state.placeId);
+    if (user && state && state.placeId) {
+      // Create the orderPlace object here
       const orderPlace = {
         user: user.id,
-        place: placeData.id,
+        place: state.placeId,
         checkin_date: bookingData.checkin_date,
         checkout_date: bookingData.checkout_date,
         phone: bookingData.phone,
         email: bookingData.email,
+        is_paid: bookingData.is_paid,
       };
+  
+      // Log the orderPlace object as a JSON string
+      console.log('orderPlace data:', JSON.stringify(orderPlace, null, 2));
+      console.log('placeData.id is ' + placeData.id);
+      // console.log('place state  is' + state.placeId)        
 
-      axios.post('http://127.0.0.1:8000/api/book-place/', orderPlace)
-      .then((response) => {
-        // Handle success
-        console.log('Booking successful! ' + user.username + ' destination is ' + placeName);
+      axios.post('http://127.0.0.1:8000/api/book-place/', orderPlace, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
       })
-      .catch((error) => {
-        // Handle errors
-        if (error.response) {
-          // The request was made, and the server responded with a status code
-          console.log('Server responded with status code:', JSON.stringify(error.response.status));
-          console.log('Error response data:', error.response.data);
-        } else if (error.request) {
-          // The request was made, but no response was received
-          console.log('Request was made, but no response received:', error.request);
-        } else {
-          // Something else happened while setting up the request
-          console.log('Error while setting up the request:', error.message);
-        }
-        // Additional error handling can be done here
-      });
+        .then((response) => {
+          // Handle success
+          console.log('Booking successful! ' + user.username + ' destination is ' + placeName + ' and price is ' + price);
+        })
+        .catch((error) => {
+          // Handle errors
+          if (error.response) {
+            // The request was made, and the server responded with a status code
+  
+            // Log the specific error message
+            console.log('Server responded with status code:', JSON.stringify(error.response.status));
+            console.log('Error response data:', error.response.data);
+  
+            // You can also access and log the server's error message
+            if (error.response.data && error.response.data.error) {
+              console.log('Server error message:', error.response.data.error);
+            }
+          } else if (error.request) {
+            // The request was made, but no response was received
+            console.log('Request was made, but no response received:', error.request);
+          } else {
+            // Something else happened while setting up the request
+            console.log('Error while setting up the request:', error.message);
+          }
+          // Additional error handling can be done here
+        });
+        console.log('State object:', state);
+
+    }
+    else {
+      // Handle the case when state.placeId is not available
+      console.error("state.placeId is not available.");
+      // You can decide what action to take in this scenario
+
     }
   };
+  
+  
   
 
   const handleCheckDestinationSubmit = async (e) => {
@@ -247,7 +281,7 @@ const Booking = () => {
           <div className='row what-card-price m-auto' style={{width:'100%', borderRadius:'10px'}}>
           <div className='col-md-6'>
 {/* Content for the second column */}
-<h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName}</h5>
+<h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName} {price}</h5>
   </div>
   <div className='col-md-1'>
   
@@ -260,7 +294,7 @@ const Booking = () => {
           <div className='col-md-6 mt-2 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
 
 
-  <div className="form-group">
+  {/* <div className="form-group">
     <label>
       Do you have kids?
       <input
@@ -329,7 +363,7 @@ const Booking = () => {
     </label>
   </div>
   {/* <button type="submit" className="btn btn-primary">Book Now</button> */}
-</div>
+</div> 
 
 
             <div className='col-md-5 text-white m-auto'>
@@ -341,8 +375,8 @@ const Booking = () => {
               type="date"
               style={{border:'none'}}
               className="form-control bg-secondary"
-              name="checkinTime"
-              value={checkinTime}
+              name="checkin_date"
+              value={bookingData.checkin_date}
               onChange={handleBookingChange}
               required
             />
@@ -353,8 +387,8 @@ const Booking = () => {
               style={{border:'none'}}
               type="date"
               className="form-control bg-secondary"
-              name="checkoutTime"
-              value={checkoutTime}
+              name="checkout_date"
+              value={bookingData.checkout_date}
               onChange={handleBookingChange}
               readOnly
               required

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from 'js-cookie';
 
@@ -46,16 +46,15 @@ function SearchResults() {
       <p>No results found.</p>
     ) : (
       <ul>
-        {results.map((result) => (
-          <li key={result.id}>
-            <h5>{result.name}</h5>
-
-            <p>{result.description}</p>
-            <p>Price: KES {result.price}</p>
-
-
-          </li>
-        ))}
+         {results.map((result) => (
+    <li key={result.id}>
+      <Link to={`/result/${result.id}`}>
+        <h5>{result.name}</h5>
+        <p>{result.description}</p>
+        <p>Price: KES {result.price}</p>
+      </Link>
+    </li>
+  ))}
       </ul>
     )}
   </div>
