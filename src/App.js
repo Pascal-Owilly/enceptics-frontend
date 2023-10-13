@@ -32,6 +32,9 @@ import SearchResults from './components/pages/SearchResults';
 
 import TopChats from './components/pages/TopChats';
 
+import PaymentStatus from './components/pages/PaymentSuccess';
+
+
 function App() {
   
   return (  
@@ -62,7 +65,14 @@ function App() {
           <Route path="/currencyconverter" element={<CurrencyConverter />} />
           <Route path="/place-info/:id" element={<PlaceInfo />} />  
           <Route path="/info" element={<AddPlaceInfo />} />          
-          <Route path="/topchats" element={<TopChats />} />          
+          <Route path="/topchats" element={<TopChats />} /> 
+
+          <Route path="/payment/status/:status" element={<PaymentStatus />} />
+     
+{/* 
+          <Route path="/payment/status/success" element={<PaymentStatus status="success" />} />
+          <Route path="/payment/status/cancel" element={<PaymentStatus status="cancel" />} />
+          <Route path="/payment/status/failed" element={<PaymentStatus status="failure" />} />     */}
 
         
           <Route path="/bookingexample" element={<BookingExample />} />          

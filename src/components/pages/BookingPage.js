@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSearch } from './SearchContext';
 
+
 const Booking = () => {
   const { searchTerm } = useSearch();
 
@@ -13,6 +14,7 @@ const Booking = () => {
   const placeName = searchParams.get("placeName");
   const price = searchParams.get("price");
   const id = queryParams.get('id');
+
 
   console.log('ID from URL:', id);
   console.log('Location object:', location);
@@ -25,6 +27,19 @@ const Booking = () => {
   const [extraCharges, setExtraCharges] = useState(0); // State to store extra charges
   const [checkinTime, setCheckinTime] = useState(''); // Separate state for checkinTime
   const [checkoutTime, setCheckoutTime] = useState(''); // Separate state for checkoutTime
+
+
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+
+
+  const openPaymentModal = () => {
+    setShowPaymentModal(true);
+  };
+
+  const closePaymentModal = () => {
+    setShowPaymentModal(false);
+  };
 
   // Price per kid and adult
   const pricePerKid = 1000;
@@ -131,6 +146,7 @@ const Booking = () => {
         checkoutDate.setDate(checkinDate.getDate() + 2);
   
         setBookingData({ ...bookingData, checkin_date: value, checkout_date: checkoutDate.toISOString().split('T')[0] });
+
       } else {
         setBookingData({ ...bookingData, [name]: value });
       }
@@ -166,15 +182,19 @@ const Booking = () => {
         .then((response) => {
           // Handle success
           console.log('Booking successful! ' + user.username + ' destination is ' + placeName + ' and price is ' + price);
+          openPaymentModal();
+
         })
         .catch((error) => {
           // Handle errors
           if (error.response) {
+
             // The request was made, and the server responded with a status code
   
             // Log the specific error message
             console.log('Server responded with status code:', JSON.stringify(error.response.status));
-            console.log('Error response data:', error.response.data);
+           console.log('Error response data:', error.response.data.message);
+           alert('oops, something must have gone wrong, the error has been sent to us and we are handling it ASAP')
   
             // You can also access and log the server's error message
             if (error.response.data && error.response.data.error) {
@@ -197,6 +217,105 @@ const Booking = () => {
       console.error("state.placeId is not available.");
       // You can decide what action to take in this scenario
 
+    }
+  };
+
+  const handlePaymentPaypal = async (e) => {
+    e.preventDefault();
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const placeId = queryParams.get('id'); // Extract the placeId from the URL query parameters
+
+  
+    try {
+      // const paypalEndpoint = 'http://127.0.0.1:8000/paypal/create/order';
+          // const paypalEndpoint = `http://localhost:8000/paypal/create/order?placeId=${placeId}`; // Include the placeId in the URL
+          const paypalEndpoint = "http://127.0.0.1:8000/api/auth/paypal/create/"; // Include the placeId in the URL
+
+  
+      const paypalData = {
+        // Include any data required by the PayPal API
+        id: placeId, // Replace 'yourId' with the actual ID you want to send
+      };
+  
+      const response = await axios.post(paypalEndpoint, paypalData, {
+        headers: {
+          // content-type: "application/json"
+         },
+         timeout: 30000, // Set a timeout of 10 seconds (adjust this as needed)
+
+      });
+  
+      console.log('PayPal API Response:', response); // Log the entire response for debugging
+
+      const approvalUrl = response.data.approved_url;
+      console.log('Approval URL:', approvalUrl);
+  
+      if (!approvalUrl) {
+        console.error('Approval URL not found in response:', response);
+      } else {
+        // Redirect the user to the PayPal approval URL
+        window.location.href = approvalUrl;
+      }
+    } catch (error) {
+      console.error('Oops! Payment did not work:', error);
+      // Handle any errors that may occur during the PayPal payment process
+    }
+  };
+
+  // capture the response from paypal validation endpoint
+  const handlePaymentValidation = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/auth/paypal/validate/');
+  
+      if (response.data.success) {
+        // Payment was successful
+        console.log('Payment successful:', response.data.message);
+        setModalContent(
+          // Display a success message in the modal
+          <>
+            <h3>Payment Successful</h3>
+            <p>{response.data.message}</p>
+          </>
+        );
+      } else {
+        // Payment validation failed
+        console.error('Payment validation failed:', response.data.message);
+        setModalContent(
+          // Display a failure message in the modal
+          <>
+            <h3>Payment Failed</h3>
+            <p>{response.data.message}</p>
+          </>
+        );
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('Error validating payment:', error);
+      // Display an error message to the user
+      setModalContent(
+        // Display an error message in the modal
+        <>
+          <h3>Error</h3>
+          <p>An error occurred while validating the payment.</p>
+        </>
+      );
+    }
+  };
+  
+
+// Call the function to handle payment validation
+// handlePaymentValidation();
+
+  
+
+  const handlePaymentMpesa = async (e) => {
+    e.preventDefault();
+    try {
+      // Make an Mpesa payment request here
+      // Redirect the user to the Mpesa payment page
+    } catch (error) {
+      console.log("Oops! Mpesa payment didn't work", error);
     }
   };
   
@@ -281,7 +400,7 @@ const Booking = () => {
           <div className='row what-card-price m-auto' style={{width:'100%', borderRadius:'10px'}}>
           <div className='col-md-6'>
 {/* Content for the second column */}
-<h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName} {price}</h5>
+<h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName}</h5>
   </div>
   <div className='col-md-1'>
   
@@ -294,7 +413,7 @@ const Booking = () => {
           <div className='col-md-6 mt-2 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
 
 
-  {/* <div className="form-group">
+   <div className="form-group">
     <label>
       Do you have kids?
       <input
@@ -480,42 +599,47 @@ const Booking = () => {
               </div>
             </div>
             
-
-            {showModal && (
-              <div className="modal" style={{ display: 'block', backgroundColor:'rgb(0, 0, 0, 0.7)' }}>
-                <div className="modal-dialog">
-                  <div className="modal-content" style={{backgroundColor:'rgb(18, 187,18)', width:'350px'}}>
-                    <div className="modal-header">
-                      <h4 className="modal-title" style={{color:'#d9d9d9'}}>Payment Details</h4>
-                      <button type="button" className="close" onClick={closeModal}>
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div className="modal-body" style={{backgroundColor:'rgb(18, 187,18)', height:'350px', width:'300px', marginTop:'10px'}}>
-                     
-                      <h5 className='text-dark mb-2'>Amount: Ksh {price}</h5>
-                      <hr />
-                      <form onSubmit={handlePaymentSubmit}>
-                        <div className="form-group">
-                          <label className='text-dark m-1' htmlFor="cardNumber">Card Number</label>
-                          <input type="text" id="cardNumber" style={{border:'none'}} required />
-                        </div>
-                        <div className="form-group mt-3">
-                          <label className='text-dark m-1' htmlFor="expiryDate">Expiry Date</label>
-                          <input type="text" id="expiryDate" style={{border:'none'}} required />
-                        </div>
-                        <div className="form-group mt-3">
-                          <label className='text-dark m-1' htmlFor="cvv">CVV</label>
-                          <input type="text" id="cvv" style={{border:'none'}} required />
-                        </div>
+            {showPaymentModal && (
+            <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+              <div className="modal-dialog">
+                <div className="modal-content" style={{ backgroundColor: 'rgb(18, 187, 18)', width: '350px' }}>
+                  <div className="modal-header">
+                    <h4 className="modal-title" style={{ color: '#d9d9d9' }}>Payment Details</h4>
+                    <button type="button" className="close" onClick={closePaymentModal}>
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body" style={{ backgroundColor: 'rgb(18, 187, 18)', height: '350px', width: '300px', marginTop: '10px' }}>
+                    {modalContent ? (
+                      // Display the content based on the modalContent state
+                      modalContent
+                    ) : (
+                      // Display default content (buttons for PayPal and Mpesa)
+                      <>
+                        <h5 className='text-dark mb-2'>Amount: Ksh {price}</h5>
                         <hr />
-                        <button className='mt-3 what-card text-center mx-3' style={{backgroundColor: '#121661', color:'white', padding:'5px', width:'100%', borderRadius:'10px'}} type="submit">Pay Now</button>
-                      </form>
-                    </div>
+                        <button
+                          className='mt-3 what-card text-center mx-3'
+                          style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
+                          onClick={handlePaymentPaypal}
+                        >
+                          Pay with PayPal
+                        </button>
+                        <button
+                          className='mt-3 what-card text-center mx-3'
+                          style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
+                          onClick={handlePaymentMpesa}
+                        >
+                          Pay with Mpesa
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
+
           </div>
             </div>
             <div className='col-md-3'>

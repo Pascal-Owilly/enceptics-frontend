@@ -50,9 +50,10 @@ function SearchResults() {
     <li key={result.id}>
       <Link to={`/result/${result.id}`}>
         <h5>{result.name}</h5>
+        </Link>
         <p>{result.description}</p>
         <p>Price: KES {result.price}</p>
-      </Link>
+     
     </li>
   ))}
       </ul>

@@ -134,11 +134,11 @@ const PlaceInfo = () => {
                                                 <p>Summary: {weatherData.summary}</p>
                                                 <p>Temperature: {weatherData.temperature_celsius} °C</p>
                                                 <p>Icon: {weatherData.icon}</p>
-                                                <p>Humidity: {weatherData.humidity}</p>
+                                                <p>Humidity: {weatherData.humidity} %</p>
                                                 <p>Visibility: {weatherData.visibility}</p>
                                                 <p>UV Index: {weatherData.uvIndex}</p>
                                                 <p>Cloud Cover: {weatherData.cloudCover}</p>
-                                                <p>Wind Speed: {weatherData.windSpeed}</p>
+                                                <p>Wind Speed: {weatherData.windSpeed} Km/h</p>
                                                 <p>Wind Gust: {weatherData.windGust}</p>
                                             </div>
                                         ) : (
