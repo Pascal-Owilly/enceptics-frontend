@@ -134,7 +134,56 @@ function BlogList() {
           console.error('Error fetching user data:', error);
         });
     }
+    const fetchCommentsData = posts.map((post) => {
+      axios
+        .get(`http://127.0.0.1:8000/api/comments/?post=${post.id}`, {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        })
+        .then((response) => {
+          const updatedPost = { ...post, comments: response.data };
+          const updatedPosts = posts.map((p) => (p.id === updatedPost.id ? updatedPost : p));
+          setPosts(updatedPosts);
+        })
+        .catch((error) => {
+          console.error('Error fetching comments:', error);
+        });
+    });
+  
+    // Use Promise.all to fetch comments for all posts
+    Promise.all(fetchCommentsData)
+      .catch((error) => {
+        console.error('Error fetching comments for posts:', error);
+      });
+
+      // Fetch likes for each post
+// Inside your useEffect block
+const fetchLikesData = posts.map((post) => {
+  axios
+    .get(`http://127.0.0.1:8000/api/likes/${post.id}/`, {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    })
+    .then((response) => {
+      const updatedPost = { ...post, likes: response.data.length }; // Assuming likes are returned as an array
+      const updatedPosts = posts.map((p) => (p.id === updatedPost.id ? updatedPost : p));
+      setPosts(updatedPosts);
+    })
+    .catch((error) => {
+      console.error('Error fetching likes:', error);
+    });
+});
+
+// Use Promise.all to fetch likes for all posts
+Promise.all(fetchLikesData)
+  .catch((error) => {
+    console.error('Error fetching likes for posts:', error);
+  });
+
   }, [authToken]);
+ 
 
   const deletePost = (id) => {
     axios
@@ -235,36 +284,41 @@ function BlogList() {
       console.log('Unauthorised or post is not available', user, selectedPost);
       return;
     }
-
+  
     const newComment = {
       post: selectedPost.id,
       user: user.pk,
       text: commentText,
     };
-
+  
     const config = {
       headers: {
         Authorization: `Token ${authToken}`,
       },
     };
-
+  
     axios
       .post('http://127.0.0.1:8000/api/comments/', newComment, config)
       .then((response) => {
-        const updatedPost = { ...selectedPost };
-        updatedPost.comments.push(response.data);
-
+        // Make a copy of the selectedPost and initialize 'comments' if it doesn't exist
+        const updatedPost = {
+          ...selectedPost,
+          comments: selectedPost.comments ? [...selectedPost.comments, response.data] : [response.data],
+        };
+  
+        // Update the 'posts' state with the updatedPost
         const updatedPosts = posts.map((p) =>
           p.id === updatedPost.id ? updatedPost : p
         );
         setPosts(updatedPosts);
-
+  
         setCommentText('');
       })
       .catch((error) => {
         console.error('Error creating comment:', error.response ? error.response.data : error.message);
       });
   };
+  
 
   const toggleComments = (postId) => {
     setShowComments((prevShowComments) => ({
@@ -278,16 +332,17 @@ function BlogList() {
       console.error('Authentication token or post ID is missing.');
       return;
     }
-
+  
     const config = {
       headers: {
         Authorization: `Token ${authToken}`,
       },
     };
-
+  
     axios
       .post('http://127.0.0.1:8000/api/likes/', { post: postId }, config)
       .then(() => {
+        // Update likes state immutably by creating a new object
         setLikes((prevLikes) => ({
           ...prevLikes,
           [postId]: (prevLikes[postId] || 0) + 1,
@@ -297,7 +352,7 @@ function BlogList() {
         console.error('Error liking post:', error);
       });
   };
-
+  
   const formatTimeDifference = (timestamp) => {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
   };
@@ -313,15 +368,24 @@ function BlogList() {
         <div className="row">
           <div className="col-md-6">
             <div className="input-group blogpost-input mb-3">
+            {profile && profile.profile_pic && (
+     
+        <img
+          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          style={{ width: '43px', height: '43px', borderRadius: '100%' }}
+          alt=""
+        />
+       
+    )} &nbsp;
               <input
                 type="text"
-                className="form-control m-1 custom-blog-placeholder text-secondary"
+                className="form-control custom-blog-placeholder text-secondary"
                 placeholder="Share your experience ..."
                 value={newPostContent}
                 onChange={handleNewPostContentChange}
-                style={{ backgroundColor: '#121661', border: '1px solid #d9d9d9', borderRadius: '30px' }}
+                style={{ backgroundColor: '#121661', border: '1px solid ', borderRadius: '0 30px 30px 0' }}
               />
-              <label className="custom-file-upload m-2 what-card" style={{ borderRadius: '100%', backgroundColor: '#A9A9A9', color: '#121661', fontWeight: 'bold' }}>
+              <label className="custom-file-upload  what-card" style={{ borderRadius: '100%', backgroundColor: '#A9A9A9', color: '#121661', fontWeight: 'bold' }}>
                 <input
                   type="file"
                   accept="image/*"
@@ -330,7 +394,7 @@ function BlogList() {
                   style={{ display: 'none' }}
                 />
                 <span className="custom-button mx-1" style={{ fontSize: '9px', color: '#121661' }}>
-                  <span className="mt-2" style={{ borderRadius: '100%', width: '10%' }}>Upload image</span>
+                  <span className="" style={{ borderRadius: '10px', width: '10%' }}>Upload <br /> image</span>
                   <br />
                 </span>
               </label>
@@ -374,29 +438,39 @@ function BlogList() {
                   <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
                     {selectedPost && selectedPost.id === post.id && (
                       <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Write a comment..."
-                            value={commentText}
-                            onChange={handleCommentTextChange}
+    {profile && profile.profile_pic && (
+                        <div className="d-flex align-items-center">
+                          <img
+          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          alt="img"
+                            className="rounded-circle author-avatar"
+                            style={{ width: '40px', height: '40px', marginRight: '10px' }}
                           />
-                          <div className="input-group-append">
-                            <button className="btn btn-outline-primary" onClick={createComment}>Submit</button>
+                          <div className="author-info">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Write a comment..."
+                              value={commentText}
+                              onChange={handleCommentTextChange}
+                            />
                           </div>
                         </div>
+                      )}
+
+
                       </div>
                     )}
                     <div className="d-flex justify-content-between">
                       <div></div>
                       <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
-                        <span className="text-primary like-button" onClick={() => handleLike(post.id)}>
-                          <i className="fa fa-thumbs-up"></i>
-                          <span className="like-count">{likes[post.id] || 0} Likes</span>
-                        </span>
+                      <span className="text-primary like-button" onClick={() => handleLike(post.id)}>
+    <i className="fa fa-thumbs-up"></i>&nbsp;
+    <span className="like-count">{likes[post.id] || 0} Likes</span>
+  </span>
+                        &nbsp;&nbsp;
                         <span style={{ fontSize: '12px', cursor: 'pointer' }} className="text-secondary comment-button" onClick={() => selectPostForComment(post)}>
-                          <i className="fa fa-comment"></i>
+                          <i className="fa fa-comment"></i>&nbsp;
                           {post.comments ? `${post.comments.length} Comments` : '0 Comments'}
                         </span>
                       </div>
@@ -418,7 +492,7 @@ function BlogList() {
             </div>
           </div>
           <div className="col-md-4 text-right">
-            <h4 className="text-center mt-5" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Top chats</h4>
+            {/* <h4 className="text-center mt-5" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Top chats</h4>
             <Carousel
               className="fixed-carousel "
               style={{
@@ -428,22 +502,25 @@ function BlogList() {
                 borderRadius: '10px',
               }}
             >
-              {sortedPosts.map((post) => (
+              {sortedPosts.slice(0, 5).map((post) => (
                 <Carousel.Item key={post.id}>
                   <div key={post.id} className="">
+                  {profile && profile.profile_pic && (
+
                   <img
-                        src={post.profilePic}
-                        alt="pic"
+          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          alt="pic"
                         className="rounded-circle author-avatar"
                         style={{ width: '50px', height: '50px', marginRight: '10px' }}
                       />
-                    <p className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</p>
+                      )}
+                    <span className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</span>
                     <hr />
                     <p className='text-white mt-3'>{post.content}</p>
                   </div>
                 </Carousel.Item>
               ))}
-            </Carousel>
+            </Carousel> */}
             <br />
             <h4 className="text-center mt-4" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Sponsored Ads</h4>
             <hr />
