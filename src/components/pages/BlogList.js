@@ -420,9 +420,9 @@ function BlogList() {
           <div className="col-md-4 text-right">
             <h4 className="text-center mt-5" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Top chats</h4>
             <Carousel
-              className="fixed-carousel mt-3 mx-5"
+              className="fixed-carousel "
               style={{
-                height: '200px',
+                height: '300px',
                 outline: '1px solid #198754',
                 padding: '1rem',
                 borderRadius: '10px',
@@ -430,17 +430,15 @@ function BlogList() {
             >
               {sortedPosts.map((post) => (
                 <Carousel.Item key={post.id}>
-                  <div className="">
+                  <div key={post.id} className="">
+                  <img
+                        src={post.profilePic}
+                        alt="pic"
+                        className="rounded-circle author-avatar"
+                        style={{ width: '50px', height: '50px', marginRight: '10px' }}
+                      />
                     <p className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</p>
                     <hr />
-                    <div className="text-center">
-                      <img
-                        src={natpark}
-                        alt="User profile"
-                        className="rounded-circle"
-                        width="150"
-                      />
-                    </div>
                     <p className='text-white mt-3'>{post.content}</p>
                   </div>
                 </Carousel.Item>
