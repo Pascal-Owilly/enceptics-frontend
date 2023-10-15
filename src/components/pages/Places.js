@@ -11,6 +11,41 @@ import Cookies from 'js-cookie';
 const Destination = () => {
   const navigate = useNavigate();
 
+  function resizeImage(file, maxWidth, maxHeight, callback) {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+  
+    img.onload = function () {
+      const width = img.width;
+      const height = img.height;
+  
+      let newWidth = width;
+      let newHeight = height;
+  
+      if (width > maxWidth) {
+        newWidth = maxWidth;
+        newHeight = (height * maxWidth) / width;
+      }
+  
+      if (newHeight > maxHeight) {
+        newHeight = maxHeight;
+        newWidth = (width * maxHeight) / height;
+      }
+  
+      const canvas = document.createElement("canvas");
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+  
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+  
+      canvas.toBlob(function (blob) {
+        callback(blob);
+      }, file.type);
+    };
+  }
+ 
+
   const [destinations, setDestinations] = useState([]);
   const [newDestination, setNewDestination] = useState({
     name: '',
@@ -167,19 +202,29 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
   
   const handleNewDestinationChange = (event) => {
     const { name, value, files } = event.target;
-
+  
     if (name === 'cover_image') {
+      const file = files[0];
+      
+      resizeImage(file, 400, 400, (resizedBlob) => {
+        const resizedFile = new File([resizedBlob], file.name, {
+          type: file.type,
+          lastModified: Date.now(),
+        });
+        
         setNewDestination((prevData) => ({
-            ...prevData,
-            [name]: files[0], // This should set the File object
+          ...prevData,
+          [name]: resizedFile,
         }));
+      });
     } else {
-        setNewDestination((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+      setNewDestination((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
-};
+  };
+  
   
   const openUpdateModal = (destination) => {
     setDestinationToUpdate(destination);

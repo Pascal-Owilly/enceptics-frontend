@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Profile.css';
 import '../../static/Styles.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { Card, Modal, Button } from 'react-bootstrap';
-import natpark from '../../images/undraw_trip_re_f724.svg';
 import { useNavigate } from 'react-router-dom';
-import img from '../../images/about.svg';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import './Profile.css';
+import { Card, Modal, Button } from 'react-bootstrap';
 
 const Profile = () => {
   const authToken = Cookies.get('authToken');
@@ -16,7 +14,6 @@ const Profile = () => {
   const [profile, setProfile] = useState({});
   const [editedProfilePic, setEditedProfilePic] = useState(null);
   const [editedProfile, setEditedProfile] = useState({
-    // Initialize with the current values
     profile_pic: null,
     current_city: '',
     bio: '',
@@ -26,34 +23,74 @@ const Profile = () => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const handleEditProfilePic = (file) => {
-    setEditedProfilePic(file);
+    resizeAndSetProfilePic(file);
   };
 
-  // const saveProfileChanges = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('profile_pic', editedProfilePic); // Add the edited profile picture
-  //     formData.append('bio', editedProfile.bio);
-  //     formData.append('current_city', editedProfile.current_city);
+  const resizeAndSetProfilePic = (file, quality) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.src = e.target.result;
   
-  //     const response = await axios.put(
-  //       `http://127.0.0.1:8000/api/profile/${profile.id}/`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: `Token ${authToken}`,
-  //           'Content-Type': 'multipart/form-data', // Important for file upload
-  //         },
-  //       }
-  //     );
-  //     setProfile(response.data);
-  //     setShowEditModal(false);
-  //   } catch (error) {
-  //     console.error('Error saving profile changes:', error);
-  //     // Handle the error here, e.g., display an error message to the user
-  //   }
-  // };
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 400; // Define your desired maximum width here
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        const ctx = canvas.getContext('2d');
   
+        ctx.drawImage(img, 0.6, 0.8, canvas.width, canvas.height);
+  
+        canvas.toBlob((blob) => {
+          const resizedFile = new File([blob], 'profile_pic.jpg', {
+            type: 'image/jpeg',
+            lastModified: Date.now(),
+          });
+  
+          setEditedProfilePic(resizedFile);
+        }, 'image/jpeg', quality); // Adjust quality (e.g., quality between 0 and 1)
+      };
+    };
+  
+    reader.readAsDataURL(file);
+  };
+  
+
+  const saveProfileChanges = async () => {
+    try {
+      const formData = new FormData();
+
+      if (editedProfilePic) {
+        formData.append('profile_pic', editedProfilePic);
+      }
+
+      formData.append('user', user.pk);
+      formData.append('current_city', editedProfile.current_city);
+      formData.append('bio', editedProfile.bio);
+      formData.append('first_name', editedProfile.first_name);
+      formData.append('last_name', editedProfile.last_name);
+
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/profile/${profile.id}/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        }
+      );
+
+      setProfile(response.data);
+      setShowEditModal(false);
+    } catch (error) {
+      if (error.response) {
+        console.error('Error saving profile changes:', error.response.data);
+      } else {
+        console.error('Error saving profile changes:', error.message);
+      }
+    }
+  };
 
   const fetchUserData = async () => {
     try {
@@ -74,6 +111,8 @@ const Profile = () => {
       const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
         headers: {
           Authorization: `Token ${authToken}`,
+          'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+
         },
       });
       const userProfile = response.data;
@@ -94,42 +133,6 @@ const Profile = () => {
 
   const handleEdit = (field, value) => {
     setEditedProfile({ ...editedProfile, [field]: value });
-  };
-
-  const saveProfileChanges = async () => {
-    try {
-      const formData = new FormData();
-  
-      if (editedProfilePic) {
-        formData.append('profile_pic', editedProfilePic);
-      }
-  
-      formData.append('user', user.pk);
-      formData.append('current_city', editedProfile.current_city);
-      formData.append('bio', editedProfile.bio);
-      formData.append('first_name', editedProfile.first_name);
-      formData.append('last_name', editedProfile.last_name);
-  
-      const response = await axios.put(
-        `http://127.0.0.1:8000/api/profile/${profile.id}/`,
-        formData, // Send the formData here
-        {
-          headers: {
-            Authorization: `Token ${authToken}`,
-            'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
-          },
-        }
-      );
-  
-      setProfile(response.data);
-      setShowEditModal(false);
-    } catch (error) {
-      if (error.response) {
-        console.error('Error saving profile changes:', error.response.data);
-      } else {
-        console.error('Error saving profile changes:', error.message);
-      }
-    }
   };
   
   return (
@@ -219,26 +222,7 @@ const Profile = () => {
               <img src={URL.createObjectURL(editedProfilePic)} alt="Profile Picture Preview" />
             )}
           </div>
-          <div className="form-group">
-            <label htmlFor="first_name">First Name</label>
-            <textarea
-              id="first_name"
-              className="form-control"
-              value={editedProfile.first_name}
-              onChange={(e) => handleEdit('first_name', e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="last_name">Last Name</label>
-            <input
-              type="text"
-              id="last_name"
-              className="form-control"
-              value={editedProfile.last_name}
-              onChange={(e) => handleEdit('last_name', e.target.value)}
-            />
-          </div>
-
+        
           <div className="form-group">
             <label htmlFor="bio">Bio</label>
             <textarea

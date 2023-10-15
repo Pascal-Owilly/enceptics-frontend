@@ -133,15 +133,15 @@ function BlogList() {
   
   
 // Define a separate useEffect to initialize showComments state
-// useEffect(() => {
-//   if (posts && posts.length > 0) {
-//     const initialShowComments = {};
-//     posts.forEach((post) => {
-//       initialShowComments[post.id] = false;
-//     });
-//     setShowComments(initialShowComments);
-//   }
-// }, [posts]);
+useEffect(() => {
+  if (posts && posts.length > 0) {
+    const initialShowComments = {};
+    posts.forEach((post) => {
+      initialShowComments[post.id] = false;
+    });
+    setShowComments(initialShowComments);
+  }
+}, [posts]);
 
 useEffect(() => {
   if (posts && posts.length > 0) {
@@ -170,16 +170,40 @@ useEffect(() => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-
+  
     if (file) {
-      setSelectedImage(file);
       const reader = new FileReader();
+  
       reader.onload = (e) => {
-        setImagePreview(e.target.result);
+        const img = new Image();
+        img.src = e.target.result;
+  
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800; // Set your desired maximum width here
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          const ctx = canvas.getContext('2d');
+  
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  
+          canvas.toBlob((blob) => {
+            const resizedFile = new File([blob], file.name, {
+              type: 'image/jpeg', // You can choose the format and quality here
+              lastModified: Date.now(),
+            });
+  
+            setSelectedImage(resizedFile);
+            setImagePreview(URL.createObjectURL(resizedFile));
+          }, 'image/jpeg', 0.8); // 0.8 specifies the JPEG quality (adjust as needed)
+        };
       };
+  
       reader.readAsDataURL(file);
     }
   };
+  
 
 
 
@@ -433,12 +457,13 @@ const handleLike = (postId) => {
           </div>
         </div>
       </div>
-      {post.image && (
-        <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
-      )}
       <div className="card-body">
         <p className="card-text post-content" style={{ fontSize: '16px', lineHeight: '1.5' }}>{post.content}</p>
       </div>
+      {post.image && (
+        <img src={post.image} alt="Post" className="card-img-top post-image" style={{ maxWidth: '100%', height: 'auto' }} />
+      )}
+
       <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
       {selectedPost && selectedPost.id === post.id && (
         <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
