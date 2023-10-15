@@ -17,8 +17,11 @@ const Profile = () => {
   const [editedProfilePic, setEditedProfilePic] = useState(null);
   const [editedProfile, setEditedProfile] = useState({
     // Initialize with the current values
-    current_city: profile.current_city || '',
-    bio: profile.bio || '',
+    profile_pic: null,
+    current_city: '',
+    bio: '',
+    first_name: '',
+    last_name: '',
   });
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -95,35 +98,39 @@ const Profile = () => {
 
   const saveProfileChanges = async () => {
     try {
+      const formData = new FormData();
+  
+      if (editedProfilePic) {
+        formData.append('profile_pic', editedProfilePic);
+      }
+  
+      formData.append('user', user.pk);
+      formData.append('current_city', editedProfile.current_city);
+      formData.append('bio', editedProfile.bio);
+      formData.append('first_name', editedProfile.first_name);
+      formData.append('last_name', editedProfile.last_name);
+  
       const response = await axios.put(
         `http://127.0.0.1:8000/api/profile/${profile.id}/`,
-        {
-          user: user.pk, // Include the user ID in the request
-          current_city: editedProfile.current_city, // String with a maximum length of 50
-          bio: editedProfile.bio, // String with a minimum length of 1
-        },
+        formData, // Send the formData here
         {
           headers: {
             Authorization: `Token ${authToken}`,
-            'Content-Type': 'application/json', // Set the content type to JSON
+            'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
           },
         }
       );
+  
       setProfile(response.data);
       setShowEditModal(false);
     } catch (error) {
       if (error.response) {
-        // If the error has a response, it means the server provided more details.
         console.error('Error saving profile changes:', error.response.data);
       } else {
-        // Handle other types of errors (e.g., network issues).
         console.error('Error saving profile changes:', error.message);
       }
     }
   };
-  
-  
-  
   
   return (
     <>
@@ -212,7 +219,25 @@ const Profile = () => {
               <img src={URL.createObjectURL(editedProfilePic)} alt="Profile Picture Preview" />
             )}
           </div>
-
+          <div className="form-group">
+            <label htmlFor="first_name">First Name</label>
+            <textarea
+              id="first_name"
+              className="form-control"
+              value={editedProfile.first_name}
+              onChange={(e) => handleEdit('first_name', e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="last_name">Last Name</label>
+            <input
+              type="text"
+              id="last_name"
+              className="form-control"
+              value={editedProfile.last_name}
+              onChange={(e) => handleEdit('last_name', e.target.value)}
+            />
+          </div>
 
           <div className="form-group">
             <label htmlFor="bio">Bio</label>
