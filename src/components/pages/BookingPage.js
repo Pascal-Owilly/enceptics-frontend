@@ -80,6 +80,8 @@ const Booking = () => {
       })
       .then((response) => {
         setUser(response.data);
+        console.log('User data:', response.data);
+
         setBookingData((prevData) => ({
           ...prevData,
           user: response.data.id,
@@ -223,6 +225,8 @@ const Booking = () => {
   const handlePaymentPaypal = async (e) => {
     e.preventDefault();
 
+    
+
     const queryParams = new URLSearchParams(window.location.search);
     const placeId = queryParams.get('id'); // Extract the placeId from the URL query parameters
 
@@ -231,11 +235,14 @@ const Booking = () => {
       // const paypalEndpoint = 'http://127.0.0.1:8000/paypal/create/order';
           // const paypalEndpoint = `http://localhost:8000/paypal/create/order?placeId=${placeId}`; // Include the placeId in the URL
           const paypalEndpoint = "http://127.0.0.1:8000/api/auth/paypal/create/"; // Include the placeId in the URL
+          const user_id = user ? user.id : null;
 
   
       const paypalData = {
         // Include any data required by the PayPal API
         id: placeId, // Replace 'yourId' with the actual ID you want to send
+        user_id, // Include the user ID in the data
+
       };
   
       const response = await axios.post(paypalEndpoint, paypalData, {
@@ -247,7 +254,7 @@ const Booking = () => {
       });
   
       console.log('PayPal API Response:', response); // Log the entire response for debugging
-
+      console.log('user object', user_id)
       const approvalUrl = response.data.approved_url;
       console.log('Approval URL:', approvalUrl);
   
@@ -308,19 +315,61 @@ const Booking = () => {
 // handlePaymentValidation();
 
   
+const handlePaymentMpesa = async (e) => {
+  e.preventDefault();
 
-  const handlePaymentMpesa = async (e) => {
-    e.preventDefault();
-    try {
-      // Make an Mpesa payment request here
-      // Redirect the user to the Mpesa payment page
-    } catch (error) {
-      console.log("Oops! Mpesa payment didn't work", error);
+  // Pass the user ID as an argument to the function
+  // You can access the user ID directly from the state
+  const user_id = user ? user.id : null;
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const placeId = queryParams.get('id'); // Extract the placeId from the URL query parameters
+
+  try {
+    // Define the endpoint for initiating the M-Pesa payment request
+    const mpesaEndpoint = 'http://localhost:8000/mpesa-payments/daraja/'; // Adjust the URL as needed
+
+    const user_id = user ? user.pk : null;
+    const mpesaData = {
+      id: id, // Include any data required for your M-Pesa integration
+      user_id: user_id, // Include the user ID
+    };
+    console.log('Mpesa Data:', mpesaData);
+
+    // Inform the user that the payment request has been received
+
+    const response = await axios.post(mpesaEndpoint, mpesaData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 30000, // Set a timeout of 30 seconds (adjust this as needed)
+    });
+
+    console.log('M-Pesa API Response:', response); // Log the entire response for debugging
+
+    // Extract the payment URL from the response (customize based on your API response structure)
+    const paymentUrl = response.data;
+    console.log('Payment response:', response);
+
+    if (!paymentUrl) {
+      console.error('Payment URL not found in response:', response);
+    } else {
+      // Log the callback URL
+      const callbackUrl = response.data.response.CheckoutRequestID;
+      console.log('Callback URL:', callbackUrl);
+
+      // Redirect the user to the M-Pesa payment page
+      // window.location.href = paymentUrl.url;
+      window.location.href = '/payment/response?paymentResponse=' + JSON.stringify(response);
+
     }
-  };
-  
-  
-  
+  } catch (error) {
+    console.error('Oops! M-Pesa payment did not work:', error);
+    // Handle any errors that may occur during the M-Pesa payment process
+  }
+};
+
+
 
   const handleCheckDestinationSubmit = async (e) => {
     e.preventDefault();
@@ -389,6 +438,7 @@ const Booking = () => {
     <>
 
       <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto' }}>
+
         <br />
         <div className='container m-auto'>
           <div className='row'>

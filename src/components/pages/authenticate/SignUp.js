@@ -6,8 +6,7 @@ function SignUpForm() {
   const navigate = useNavigate();
 
   const [registrationData, setRegistrationData] = useState({
-    first_name: '',
-    last_name: '',
+
     username: '',
     email: '',
     password1: '',
@@ -36,32 +35,8 @@ function SignUpForm() {
         <div className='row'>
           <div className='col-md-4'></div>
           <div className='col-md-4'>
-            <h2 className='mt-4'>Sign Up</h2>
+            <h3 className='mt-4'>Sign Up</h3>
             <form className='card p-3' onSubmit={signUp}>
-              <div className='form-group'>
-                <label htmlFor='first_name'>First Name</label>
-                <input
-                  type='text'
-                  className='form-control'
-                  id='first_name'
-                  name='first_name'
-                  value={registrationData.first_name}
-                  onChange={handleRegistrationChange}
-                  required
-                />
-              </div>
-              <div className='form-group'>
-                <label htmlFor='last_name'>Last Name</label>
-                <input
-                  type='text'
-                  className='form-control'
-                  id='last_name'
-                  name='last_name'
-                  value={registrationData.last_name}
-                  onChange={handleRegistrationChange}
-                  required
-                />
-              </div>
               <div className='form-group'>
                 <label htmlFor='username'>Username</label>
                 <input

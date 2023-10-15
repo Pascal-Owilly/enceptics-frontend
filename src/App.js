@@ -16,6 +16,7 @@ import NavigationBar from './components/pages/NavigationBar';
 import Home from './components/pages/Home';
 import Login from './components/pages/authenticate/Login';
 import LoginBooking from './components/pages/authenticate/LoginBooking';
+import ForgotPassword from './components/pages/authenticate/ForgotPassword';
 
 import SignUp from './components/pages/authenticate/SignUp';
 import Footer from './components/pages/Footer';
@@ -33,9 +34,26 @@ import SearchResults from './components/pages/SearchResults';
 import TopChats from './components/pages/TopChats';
 
 import PaymentStatus from './components/pages/PaymentSuccess';
+import PaymentResponsePage from './components/pages/mpesa/paymentResponse';
 
 
 function App() {
+
+  // Mpesa payment response
+  const response = {
+    data: {
+      msg: "M-Pesa payment initiated successfully",
+      response: {
+        CheckoutRequestID: "ws_CO_15102023102931234725276739",
+        CustomerMessage: "Success. Request accepted for processing",
+        MerchantRequestID: "92646-150652872-1",
+        ResponseCode: "0",
+        ResponseDescription: "Success. Request accepted for processing"
+      }
+    },
+    status: 201,
+    statusText: 'Created'
+  };
   
   return (  
     <Router>
@@ -48,6 +66,9 @@ function App() {
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login-booking" element={<LoginBooking />} />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
 
           <Route path="/signup" element={<SignUp />} />   
 
@@ -68,6 +89,9 @@ function App() {
           <Route path="/topchats" element={<TopChats />} /> 
 
           <Route path="/payment/status/:status" element={<PaymentStatus />} />
+
+          <Route path="/payment/response" element={<PaymentResponsePage paymentResponse={response} />} />
+
      
 {/* 
           <Route path="/payment/status/success" element={<PaymentStatus status="success" />} />

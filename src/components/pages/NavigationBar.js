@@ -76,8 +76,6 @@ useEffect(() => {
 
 
 const [registrationData, setRegistrationData] = useState({
-  first_name: '',
-  last_name: '',
   username: '',
   email: '',
   password1: '',
@@ -447,30 +445,7 @@ const handleRegistrationChange = (e) => {
                 <div className="modal-body ">
                   {isSignUpModal ? (
                     <form onSubmit={handleRegistrationSubmit}>
-                          <div className="form-group">
-                                    <label htmlFor="first_name">First Name</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      id="first_name"
-                                      name="first_name"
-                                      value={registrationData.first_name}
-                                      onChange={handleRegistrationChange}
-                                      required
-                                    />
-                                  </div>
-                                  <div className="form-group">
-                                    <label htmlFor="last_name">Last Name</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      id="last_name"
-                                      name="last_name"
-                                      value={registrationData.last_name}
-                                      onChange={handleRegistrationChange}
-                                      required
-                                    />
-                                  </div>
+               
                       <div className="form-group">
                         <label className="mt-4" htmlFor="username">Username</label>
                         <input
@@ -528,7 +503,8 @@ const handleRegistrationChange = (e) => {
                         style={{ backgroundColor: '#000092', borderColor: '#000092' , width:'100%'}}
                       >
                         Sign Up
-                      </button> 
+                      </button> <hr />
+                      <p>Already have an account? <a href='/login'>Login</a></p>
                     </form> 
                   ) : (
                     <>
@@ -566,6 +542,11 @@ const handleRegistrationChange = (e) => {
                       >
                         Login
                       </button>
+                      <hr />
+                      <p>Don't have an account? <a href='/signup'>SignUp</a></p>
+                      <p className='mb-2 text-secondary'>
+                        <Link to='/forgot-password' onClick={closeModal}>Forgot your password?</Link>
+                      </p>
                     </form>
                     </>
                   )}

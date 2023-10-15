@@ -79,7 +79,7 @@ const PlaceInfo = () => {
                     <div className="container-fluid" style={{ marginTop: '', color: 'yellow' }}>
                         <div className="row">
                             <h2 className="mt-4" style={{ marginTop: 'vh' }}>
-                                {placeName} {price && `Price: ${price}`}
+                                {placeName} <span style={{fontSize:'16px', fontFamily:'cursive'}}>{price && `Price: ${price}`} </span>
                             </h2>
 
                             <div className="col-md-6">

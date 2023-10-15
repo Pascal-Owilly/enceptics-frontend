@@ -14,12 +14,43 @@ const Profile = () => {
   const authToken = Cookies.get('authToken');
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState({});
+  const [editedProfilePic, setEditedProfilePic] = useState(null);
   const [editedProfile, setEditedProfile] = useState({
     // Initialize with the current values
     current_city: profile.current_city || '',
     bio: profile.bio || '',
   });
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const handleEditProfilePic = (file) => {
+    setEditedProfilePic(file);
+  };
+
+  // const saveProfileChanges = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('profile_pic', editedProfilePic); // Add the edited profile picture
+  //     formData.append('bio', editedProfile.bio);
+  //     formData.append('current_city', editedProfile.current_city);
+  
+  //     const response = await axios.put(
+  //       `http://127.0.0.1:8000/api/profile/${profile.id}/`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: `Token ${authToken}`,
+  //           'Content-Type': 'multipart/form-data', // Important for file upload
+  //         },
+  //       }
+  //     );
+  //     setProfile(response.data);
+  //     setShowEditModal(false);
+  //   } catch (error) {
+  //     console.error('Error saving profile changes:', error);
+  //     // Handle the error here, e.g., display an error message to the user
+  //   }
+  // };
+  
 
   const fetchUserData = async () => {
     try {
@@ -66,20 +97,33 @@ const Profile = () => {
     try {
       const response = await axios.put(
         `http://127.0.0.1:8000/api/profile/${profile.id}/`,
-        editedProfile,
+        {
+          user: user.pk, // Include the user ID in the request
+          current_city: editedProfile.current_city, // String with a maximum length of 50
+          bio: editedProfile.bio, // String with a minimum length of 1
+        },
         {
           headers: {
             Authorization: `Token ${authToken}`,
+            'Content-Type': 'application/json', // Set the content type to JSON
           },
         }
       );
       setProfile(response.data);
       setShowEditModal(false);
     } catch (error) {
-      console.error('Error saving profile changes:', error);
-      // Handle the error here, e.g., display an error message to the user
+      if (error.response) {
+        // If the error has a response, it means the server provided more details.
+        console.error('Error saving profile changes:', error.response.data);
+      } else {
+        // Handle other types of errors (e.g., network issues).
+        console.error('Error saving profile changes:', error.message);
+      }
     }
   };
+  
+  
+  
   
   return (
     <>
@@ -156,6 +200,20 @@ const Profile = () => {
         </Modal.Header>
         <Modal.Body>
           {/* Add form fields for editing the profile */}
+          <div className="form-group">
+            <label htmlFor="profile_pic">Profile Picture</label>
+            <input
+              type="file"
+              id="profile_pic"
+              className="form-control"
+              onChange={(e) => handleEditProfilePic(e.target.files[0])}
+            />
+            {editedProfilePic && (
+              <img src={URL.createObjectURL(editedProfilePic)} alt="Profile Picture Preview" />
+            )}
+          </div>
+
+
           <div className="form-group">
             <label htmlFor="bio">Bio</label>
             <textarea

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import authService from './authService'; // Import the authService
 
 const LoginTest = () => {
@@ -66,9 +66,7 @@ const LoginTest = () => {
         <h3 className='text-center text-white'>Login</h3>
         <hr style={{ color: '#d9d9d9' }} />
         <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
-     <p>
-     <label className="mt-4" htmlFor="username">Username</label>
-     </p> 
+     <label className="mt-1" htmlFor="username">Username</label>
       <input
         type="text"
         style={{background:'#d9d9d9'}}
@@ -82,9 +80,9 @@ const LoginTest = () => {
     </div>
 
     <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
-      <p>
-      <label className="mt-4" htmlFor="password">Password</label>
-      </p>
+      {/* <p> */}
+      <label className="mt-1" htmlFor="password">Password</label>
+      {/* </p> */}
       <input
         type="password"
         style={{background:'#d9d9d9'}}
@@ -98,11 +96,18 @@ const LoginTest = () => {
     </div> 
     <button
       type="submit"
-      className="btn btn-outline-secondary text-center mt-5 what-card-price btn-sm mt-4"
-      style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%', margin:'auto', float:'right' }}
+      className="btn btn-outline-secondary text-center mt-2 what-card-price btn-sm mt-4"
+      style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%', margin:'auto'}}
     >
       Login
     </button>
+  <hr />
+  <p className='mb-2 text-secondary'>
+  Don't have an account? <Link to='/signup'>Login</Link>
+  </p>  
+  <p className='mb-2 text-secondary'>
+  <Link to='/forgot-password'>Forgot your password?</Link>
+</p>
           </form>
     </div>
   );

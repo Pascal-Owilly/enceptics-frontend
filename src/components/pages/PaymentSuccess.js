@@ -9,7 +9,7 @@ const PaymentStatus = () => {
 
   switch (status) {
     case 'success':
-      message = 'Payment was successful! Thank you for your order.';
+      message = 'Payment was successful! Thank you for choosing Enceptics.';
       className = 'success';
       break;
     case 'failure':
@@ -29,8 +29,9 @@ const PaymentStatus = () => {
   return (
     <div style={{ height: '100vh' }}>
       <div className={`payment-status ${className}`} style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-        <h1>Payment Status</h1>
-        <p>{message}</p>
+        <h2>{message}</h2>
+        <p></p>
+        <br />
         <p>
           <a href="/">Return to Home</a>
         </p>
