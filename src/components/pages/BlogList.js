@@ -357,6 +357,25 @@ Promise.all(fetchLikesData)
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
   };
 
+  const carouselData = [
+    {
+      image: placeholderImage1,
+      title: 'Holiday Destination',
+      text: 'Explore the world with our luxury holiday packages.',
+    },
+    {
+      image: placeholderImage2,
+      title: 'Mountain Retreat',
+      text: 'Find the best mountain retreats for a peaceful vacation.',
+    },
+    {
+      image: placeholderImage3,
+      title: 'Beach Resorts',
+      text: 'Enjoy your holidays at the most exquisite beach resorts.',
+    },
+  ];
+
+
   return (
     <div style={{ backgroundColor: '#121661', color: 'white' }}>
       <div className="container" style={{ minHeight: '100vh' }}>
@@ -455,6 +474,7 @@ Promise.all(fetchLikesData)
                               onChange={handleCommentTextChange}
                             />
                           </div>
+                          <button className='btn btn-sm btn-outline-primary'>Post</button>
                         </div>
                       )}
 
@@ -492,53 +512,27 @@ Promise.all(fetchLikesData)
             </div>
           </div>
           <div className="col-md-4 text-right">
-            {/* <h4 className="text-center mt-5" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Top chats</h4>
-            <Carousel
-              className="fixed-carousel "
-              style={{
-                height: '300px',
-                outline: '1px solid #198754',
-                padding: '1rem',
-                borderRadius: '10px',
-              }}
-            >
-              {sortedPosts.slice(0, 5).map((post) => (
-                <Carousel.Item key={post.id}>
-                  <div key={post.id} className="">
-                  {profile && profile.profile_pic && (
-
-                  <img
-          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
-          alt="pic"
-                        className="rounded-circle author-avatar"
-                        style={{ width: '50px', height: '50px', marginRight: '10px' }}
-                      />
-                      )}
-                    <span className='text-success' style={{ fontWeight: 'bolder' }}>{post.author_full_name}</span>
-                    <hr />
-                    <p className='text-white mt-3'>{post.content}</p>
-                  </div>
-                </Carousel.Item>
-              ))}
-            </Carousel> */}
             <br />
             <h4 className="text-center mt-4" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Sponsored Ads</h4>
             <hr />
-            <div className="what-card text-secondary">
-              <img src={placeholderImage1} alt="Ad 1" className="img-fluid mx-auto mt-2" />
-              <p className="text-primary what-card-title" style={{ color: '#198754', fontWeight: 'bold' }}>Holiday Destination</p>
-              <p className="what-card-text">Explore the world with our luxury holiday packages.</p>
-            </div>
-            <div className="what-card text-secondary">
-              <img src={placeholderImage2} alt="Ad 2" className="img-fluid mx-auto mt-2" />
-              <p className="text-primary what-card-title" style={{ color: '#198754', fontWeight: 'bold' }}>Mountain Retreat</p>
-              <p className="what-card-text">Find the best mountain retreats for a peaceful vacation.</p>
-            </div>
-            <div className="what-card text-secondary">
-              <img src={placeholderImage3} alt="Ad 3" className="img-fluid mx-auto mt-2" />
-              <p className="text-primary what-card-title" style={{ color: '#198754', fontWeight: 'bold' }}>Beach Resorts</p>
-              <p className="what-card-text">Enjoy your holidays at the most exquisite beach resorts.</p>
-            </div>
+            <Carousel fade style={{ height: '400px' }}>
+              {carouselData.map((item, index) => (
+                <Carousel.Item key={index}>
+                  <img
+                    className="d-block w-100"
+                    src={item.image}
+                    alt={`Ad ${index + 1}`}
+                    style={{ maxHeight: '400px' }}
+                  />
+                  <Carousel.Caption style={{ background: 'rgba(0, 0, 0, 0.5)', bottom: 0, height:'400px' }}>
+                    <h3 style={{ color: 'greenyellow', fontWeight: 'bold', textAlign: 'center', padding: '1px', width:'100%', top: '20px' }}>
+                      {item.title}
+                    </h3>
+                    <p className="mx-4" style={{ textAlign: 'center', padding: '3px', width:'80%', margin:'auto', top: '40%' }}>{item.text}</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
+            </Carousel>
           </div>
         </div>
       </div>
