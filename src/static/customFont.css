@@ -1,0 +1,11 @@
+/* custom-font.css */
+
+@font-face {
+    font-family: 'CustomFont';
+    src: url('../../src/fonts/Lobster/Lobster-Regular.ttf') format('woff'),
+         url('../../src/fonts/Open_Sans/OFL.txt') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-size: 28px;
+  }
+  

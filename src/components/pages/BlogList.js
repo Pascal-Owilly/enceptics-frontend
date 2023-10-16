@@ -474,8 +474,10 @@ Promise.all(fetchLikesData)
                               onChange={handleCommentTextChange}
                             />
                           </div>
-                          <button className='btn btn-sm btn-outline-primary'>Post</button>
+                          <button className='btn btn-sm btn-outline-primary' onClick={createComment}>Post</button>
+
                         </div>
+
                       )}
 
 
@@ -512,28 +514,28 @@ Promise.all(fetchLikesData)
             </div>
           </div>
           <div className="col-md-4 text-right">
-            <br />
-            <h4 className="text-center mt-4" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Sponsored Ads</h4>
-            <hr />
-            <Carousel fade style={{ height: '400px' }}>
-              {carouselData.map((item, index) => (
-                <Carousel.Item key={index}>
-                  <img
-                    className="d-block w-100"
-                    src={item.image}
-                    alt={`Ad ${index + 1}`}
-                    style={{ maxHeight: '400px' }}
-                  />
-                  <Carousel.Caption style={{ background: 'rgba(0, 0, 0, 0.5)', bottom: 0, height:'400px' }}>
-                    <h3 style={{ color: 'greenyellow', fontWeight: 'bold', textAlign: 'center', padding: '1px', width:'100%', top: '20px' }}>
-                      {item.title}
-                    </h3>
-                    <p className="mx-4" style={{ textAlign: 'center', padding: '3px', width:'80%', margin:'auto', top: '40%' }}>{item.text}</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              ))}
-            </Carousel>
-          </div>
+      <br />
+      <h4 className="text-center mt-4" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Sponsored Ads</h4>
+      <hr />
+      <Carousel fade style={{ height: '400px' }}>
+        {carouselData.map((item, index) => (
+          <Carousel.Item key={index}>
+            <img
+              className="d-block w-100"
+              src={item.image}
+              alt={`Ad ${index + 1}`}
+              style={{ maxHeight: '400px' }}
+            />
+            <Carousel.Caption style={{ background: 'rgba(0, 0, 0, 0.5)', bottom: 0, height:'400px' }}>
+              <h3 style={{ color: 'greenyellow', fontWeight: 'bold', textAlign: 'center', padding: '1px', width:'100%', top: '20px' }}>
+                {item.title}
+              </h3>
+              <p className="mx-4" style={{ textAlign: 'center', padding: '3px', width:'80%', margin:'auto', top: '40%' }}>{item.text}</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
+      </Carousel>
+    </div>
         </div>
       </div>
     </div>

@@ -23,8 +23,6 @@ import Footer from './components/pages/Footer';
 import CurrencyConverter from './components/pages/CurrencyConverter'
 import "bootstrap/dist/css/bootstrap.min.css";
 import BlogList from './components/pages/BlogList';
-import BlogDetail from './components/pages/BlogDetail';
-import BlogForm from './components/pages/BlogForm';
 import AddPlaceInfo from './components/pages/placeinfotest/AddPlaceInfo';
 
 import BookingExample from './components/pages/BookingExample';
@@ -61,6 +59,7 @@ function App() {
       <div className='wrapper'>
         <NavigationBar />
         <Routes>
+
           <Route path="/" element={<Homepage />} />
           <Route path="/places" element={<Places />} />
           <Route path="/about" element={<Aboutus />} />
@@ -78,9 +77,6 @@ function App() {
        
 
           <Route path="/blog" element={ <BlogList />} />
-          <Route path="/post/:id" element={< BlogDetail />} />
-          <Route path="/create" element={< BlogForm />} />
-          <Route path="/edit/:id" element={ <BlogForm />} />
           <Route exact path='/profile/*' element={<Profile/>}/>
           <Route exact path='/booking' element={<BookingPage/>}/>
           <Route path="/currencyconverter" element={<CurrencyConverter />} />

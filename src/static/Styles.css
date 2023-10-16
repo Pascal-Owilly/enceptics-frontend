@@ -1,30 +1,50 @@
+.nav-item {
+  position: relative;
+  text-decoration: none; /* Remove the default underline */
+}
+
+.nav-item ::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0; /* Initially set the width to 0 */
+  height: 2px; /* You can adjust the thickness of the underline */
+  background-color: goldenrod; /* Set the color of the underline */
+  transition: width 0.5s ease; /* Add a transition effect for width */
+}
+
+.nav-item :hover::before {
+  width: 100%; /* Increase the width to 100% on hover */
+}
+
 /* Mobile devices */
-@media only screen and (max-width: 576px) and (max-width: 767px) {
-    .hero-section{
+/* @media only screen and (max-width: 576px) and (max-width: 767px) { */
+    /* .hero-section{
         height: 30vh;
     }
     .carousel-item{
         margin-top: 1vh;
         height: auto;
     }
-}
+} */
 
 /* Medium devices (desktops) */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-    .hero-section{
+/* @media only screen and (min-width: 768px) and (max-width: 991px) { */
+    /* .hero-section{
         height: 80vh;
     }
-}
+} */
 
 /* Large desktops */
-@media only screen and (min-width: 992px) {
+/* @media only screen and (min-width: 992px) {
     .hero-section{
         min-height: 100vh;
     }
     .carousel-item{
         height: 100vh;
     }
-}
+} */
 
 .login-form{
     display: flex;
@@ -41,7 +61,7 @@
 
 /* CAROUSEL CAPTION ANIMATION */
 
- .caption-p{
+ /* .caption-p{
   position: absolute;
   left: 1400px;
   width: 100%;
@@ -53,7 +73,7 @@
  
   /* animation: fadein-slide1 3s; */
   
-}
+/* 
 
 @-webkit-keyframes caption-p {
   50% {
@@ -61,13 +81,13 @@
     overflow: hidden;
   }
 
-}
+} */
 
-@keyframes caption-p {
-  100%{left: 47%;
+/* @keyframes caption-p {
+  100%{left: 26%;
     overflow: hidden;
   }
-}
+} */
 
 /* END CAROUSEL CAPTION ANIMATION*/
 
@@ -325,6 +345,16 @@
       transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
   padding: 10px 10px 10px 10px;
 }
+
+.what-card-navbar{
+  font-family: 'Nunito', sans-serif;
+  padding: 2px;
+  box-shadow: 0 6px 10px 
+  #6d6d6d, 0 0 6px ;
+    transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+padding: 10px 10px 10px 10px;
+}
+
   .what-card-price{
     font-family: 'Nunito', sans-serif;
     padding: 2px;
@@ -340,9 +370,6 @@ color: #A9A9A9;
   font-style: italic; /* Italicize the placeholder text */
 }
 
-/* .what-card-price:hover{
-  font-family: 'Nunito', sans-serif;
-} */
 
 .places-cards{
   font-family: 'Nunito', sans-serif;
@@ -352,12 +379,21 @@ color: #A9A9A9;
     transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
 padding: 10px 10px 10px 10px;
 
-
 }
 
 .what-card:hover{
     transform: scale(1.02);
  box-shadow: 0 10px 20px rgba(243, 241, 241, 0.12), 0 4px 8px rgba(238, 227, 227, 0.06);
+}
+
+.what-card-btn{
+  transform: scale(1.02);
+box-shadow: 0 10px 20px rgba(243, 241, 241, 0.12), 0 4px 8px rgba(238, 227, 227, 0.06);
+}
+
+.what-card-btn:hover{
+  transform: scale(1.05);
+box-shadow: 0 10px 20px rgba(243, 241, 241, 0.12), 0 4px 8px rgba(238, 227, 227, 0.6);
 }
 
 .places-cards:hover{
@@ -450,10 +486,7 @@ box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
           text-shadow: 16px 22px 11px rgba(18, 187, 18,0.8);
         }
         
-
           /* end result and header */
-
-
 
     .heading {
       font-family: 'Pacifico', cursive;
@@ -499,10 +532,6 @@ box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
       font-size: 11px;
       padding: 1rem;
     }
-
-
-
- 
 
   /* END CURRENCY CONVERTER */
 
@@ -755,3 +784,62 @@ button,
 }
 
 /* Customize the styles as needed */
+
+/* START SEARCH BAR */
+
+
+
+/* body,html{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #e74c3c !important;
+  } */
+
+  .searchbar{
+  margin-bottom: auto;
+  margin-top: auto;
+  height: auto;
+  background-color: #121661;
+  box-shadow: 1px 1px 1px 1px #666;
+  border-radius: 30px 30px 30px 30px;
+  padding: 3px;
+  }
+
+  .search_input{
+  color: white;
+  border: 0;
+  outline: 0;
+  background: none;
+  width: 0;
+  caret-color:transparent;
+  line-height: 30px;
+  transition: width 0.4s linear;
+  }
+
+  .searchbar:hover > .search_input{
+  padding: 0 10px;
+  width: 200px;
+  caret-color: #a9a9a9;
+  transition: width 0.4s linear;
+  }
+
+  .searchbar:hover > .search_icon{
+  background: white;
+  color: #e74c3c;
+  }
+
+  .search_icon{
+  height: 30px;
+  width: 30px;
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #a9a9a9;
+  text-decoration:none;
+  }
+
+  /* END SEARCH BAR */

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../static/Homepage.css';
+import '../../static/customFont.css';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // Import js-cookie library
 import './Profile.js';
@@ -261,14 +262,14 @@ const handleRegistrationChange = (e) => {
   return (
 <>
 <nav
-        className="navbar navbar-expand-lg what-card-price"
+        className="navbar navbar-expand-lg what-card-navbar mx-2"
         variant="fixed"
-        style={{ backgroundColor: '#121661', position: '', zIndex: '2', width:'auto', top: 0 }}
+        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width:'99%', top: '0.5rem', margin:'auto' }}
       >
         <div className="container-fluid">
           <a className="navbar-brand text-white mx-2" href="/">
-            <span className="brand-first-letter">E</span>
-            <sub className="brand-text">nceptics</sub>
+            <span style={{fontFamily:'CustomFont', fontSize:'28px', letterSpacing:'3px'}} className="brand-first-letter">E</span>
+            <sub style={{fontFamily:'cursive', fontWeight:'bold', letterSpacing:'2px', fontSize:'16px'}} className="brand-text">nceptics</sub>
           </a>
           <button
             className="navbar-toggler"
@@ -283,22 +284,37 @@ const handleRegistrationChange = (e) => {
           </button>
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
+              <li className="nav-items">
+                <div className="container h-100">
+                  <div className="d-flex justify-content-center h-100">
+                    <div className="searchbar mx-5">
+                      <input className="search_input" type="text" name="" placeholder="Search in places..."
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
+                       />
+              <a className="search_icon"><FaSearch onClick={handleSearch}
+          /></a>
+        </div>
+      </div>
+    </div>
+
+              </li> 
             <li className="nav-item">
-                <a className="nav-link text-white" href="/">
+                <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/">
                   Home
                 </a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link text-white" href="/about">
+              <li className="nav-item mx-3">
+              <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/about">
                   About Us
                 </a>
               </li>
-              <li className="nav-item">
+              <li className="nav-items">
 
-              <a className="nav-link text-white" href="/places">
+              <a style={{fontFamily:'arial', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/places">
 
-                <button className='btn btn-sm what-card' style={{backgroundColor:'#121661', color:'#fff', fontWeight:'bolder'}}>
-                  Book Now
+                <button className='btn btn-sm what-card-btn ' style={{backgroundColor:'green', color:'#fff', fontWeight:'bolder', padding:''}}>
+                 <span style={{padding:'10px'}}> Book Now</span>
                   </button>
                   </a>
 
@@ -310,44 +326,11 @@ const handleRegistrationChange = (e) => {
 
               </li>   
 
-                <li className="nav-item">
-                {/* <a className="nav-link text-white" href="#"> */}
-      <form className='search-form align-right' onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-      <input
-        placeholder='Search in places...'
-        type="text"
-        value={searchQuery}
-        onChange={handleSearchInputChange} // Update the searchQuery state
-        style={{
-          width: '150px',
-          height: '28px',
-          padding: '10px',
-          backgroundColor: '#121661',
-          border: '1px solid #a9a9a9',
-        }}
-      />
-      <button
-        onClick={handleSearch}
-        className='search-btn d-inline p-1'
-        style={{
-          borderRadius: '0 25px 25px 25px',
-          width: '30px',
-          fontSize: '11px',
-          height: '25px',
-          fontWeight: '500',
-          border: 'none',
-        }}
-        type="button" // Use type="button" to prevent form submission
-      >
-        <FaSearch />
-      </button>
-    </form>
-                {/* </a> */}
-              </li> 
+  
 
-              <li className="nav-item mx-1">
-                <a className="nav-link" href="/currencyconverter" style={greatvibes}>
-                  Convert Currency
+              <li className="nav-item mx-2 ">
+              <a style={{fontFamily:'cursive', fontWeight:'400', letterSpacing:'1px', fontSize:'16px', color:'goldenrod'}} className="nav-link" href="/currencyconverter">
+                  Currency
                 </a>
               </li>
 
@@ -363,23 +346,35 @@ const handleRegistrationChange = (e) => {
             {/* <Link to='/signup'> */}
             <button
               type="button"
-              className="btn btn-sm mx-4 what-card"
-              style={{ backgroundColor: '', color: '#d9d9d9', border: 'none' }}
+              className="btn btn-sm m-1 what-card-btn"
+              style={{color: '#d9d9d9', border: 'none' }}
               onClick={openSignUpModal}
 
             >
+                                          <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
+
+              <span style={{padding:'5px'}}>
               Sign Up 
+              </span>
+              </span>
             </button>
             {/* </Link> */}
 
             {/* <Link to='/login'> */}
             <button
               type="button"
-              className="btn btn-sm m-1 what-card"
+              className="btn btn-sm m-1 what-card-btn"
               style={{color: '#d9d9d9', border: 'none' }}
               onClick={openLoginModal}
             >
+                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
+
+              <span style={{padding:'5px'}}>
+
               Login
+                            </span>
+
+              </span>
             </button>
             {/* </Link> */}
           </div>
@@ -389,17 +384,33 @@ const handleRegistrationChange = (e) => {
             
 <>
 <div>
-<li className="nav-item mx-2" style={{ backgroundColor: 'transparent', width: '45px', height: '45px', borderRadius: '100%', listStyleType: 'none' }}>
+
+
+
+</div>
+<li>
+              <a href="/blog">
+              <button className="btn btn-sm  mt-2 what-card-btn" 
+                    style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
+                    >
+                      <span style={{padding:'10px'}}>
+                    <IoMdChatboxes style={{fontSize:'19px'}} /> chat
+                    </span>
+                    
+                  </button> </a>
+              </li>
+
+              <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-17px' }}>
   <a className="nav-link text-white" href="/profile">
     {profile && profile.profile_pic && (
       <>
         <img
           src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
-          style={{ width: '43px', height: '43px', borderRadius: '100%' }}
+          style={{ width: '40px', height: '40px', borderRadius: '100%' }}
           alt=""
         />
         <div style={{ maxWidth: '30px' }}>
-          <span style={{ fontSize: '14px', fontWeight: '', opacity: '.9', fontFamily: 'cursive', letterSpacing: '2px', lineHeight: '5px' }} className='text-white'>{profile && user.username}</span>
+          <span style={{ fontSize: '14px', fontWeight: '500', opacity: '.9', fontFamily: 'cursive', letterSpacing: '1px', lineHeight: '1px' }} className='text-white'>{profile && user.username}</span>
         </div>
       </>
     )}
@@ -407,28 +418,20 @@ const handleRegistrationChange = (e) => {
 </li>
 
 
-</div>
-<li>
-              <a href="/blog">
-              <button className="btn btn-sm mx-2 mt-2 what-card" 
-                    style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
-                    >
-                      
-                    <IoMdChatboxes style={{fontSize:'19px'}} /> chat
-                      
-                    
-                  </button> </a>
-              </li>
-
-
                 <button
                                 type="button"
-                                className="btn btn-sm mx-4 what-card"
+                                className="btn btn-sm mx-4 what-card-btn"
                                 style={{  color: '#d9d9d9', border: 'none'}}
                                 onClick={logout}
                               >
-                                Logout
-                                  
+ <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white">
+
+<span style={{padding:'5px'}}>
+
+Login
+              </span>
+
+</span>                                  
                                 </button>
                                 </>
                               )} 

@@ -16,9 +16,9 @@
   src: url('../fonts/Great_Vibes/GreatVibes-Regular.ttf') format('truetype');
 } 
 
-@media only screen and (min-width: 992px) {
+/* @media only screen and (min-width: 992px) { */
 
-  .carousel-caption{
+  /* .carousel-caption{
     position: relative; 
     top: 0;
   
@@ -29,9 +29,9 @@
     padding-bottom: 1.25rem;
     color: #fff;
     text-align: center;
-  }
+  } */
 
-  .carousel-caption h3{
+  /* .carousel-caption h3{
 
     position: absolute;
      top: 30vh; 
@@ -42,7 +42,7 @@
      font-weight: 700;
      color: rgb(18, 187, 18);
      /* text-align: left; */
-  }
+  
 
   /* .caption-p{
     transform: rotate(30deg);
@@ -57,7 +57,7 @@
     }
   } */
 
-  .carousel-caption p{
+  /* .carousel-caption p{
 
     position: absolute;
      top: 43vh; 
@@ -65,13 +65,10 @@
      color: white;
      font-size: 18px;
      width: 50%;
-     /* text-align: left; */
-  }
+  } */
 
   /* .readmorehero{
     top: 43vh; 
      right: 0;
      text-align: left;
   } */
-
-}

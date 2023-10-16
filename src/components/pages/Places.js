@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import './Places.css';
 import PlaceInfo from "./PlaceInfo";
 import Cookies from 'js-cookie';
+import { HiChatAlt2 } from "react-icons/hi";
 
 const Destination = () => {
   const navigate = useNavigate();
@@ -81,22 +82,6 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
         setIsLoading(false);
       });
   };
-
-  // const handleSeeDescriptionClick = (destination) => {
-  //   fetchPlaceInfo(destination.id);
-  //   setSelectedDestination(destination);
-  
-  //   // Store the booking data in state, including price
-  //   const placeBookingData = {
-  //     placeName: destination.name,
-  //     price: destination.price, // Include the price in the booking data
-  //     // Add other relevant booking data here
-  //   };
-  
-  //   navigate(`/place-info/${destination.id}`, {
-  //     state: { placeBookingData }, // Pass the bookingData as state
-  //   });
-  // };
 
   const handleSeeDescriptionClick = (destination) => {
     fetchPlaceInfo(destination.id);
@@ -252,11 +237,15 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
   return (
     <>
       <Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
-        <div className="mt-5">
-          <button className="mb-4 mt-5 p-1 what-card" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
-            <FaPlus /> Add New Destination
-          </button>
-        </div>
+        <div className="" style={{marginTop:'10vh'}}>
+  <span className="" style={{ marginRight: '8rem', fontSize:'32px', color:'#a9a9a9', fontWeight:'500' }}>Adventure awaits. Let your vacay begin</span>
+  <button className="mt-4 p-1 what-card" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
+    <FaPlus /> Add New Destination
+  </button>
+  <hr className="text-secondary"/>
+
+</div>
+
         {isLoading ? ( 
           <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Loading...</p>
           ) : destinations.length === 0 ? (
@@ -267,7 +256,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
               {destinations.map((destination) => (
                 <div key={destination.id}>
                   <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'470px'}}>
-                    <Card.Img src={destination.cover_image} style={{ width: '100%', height:'210px' }} />
+                    <Card.Img src={destination.cover_image} style={{ width: '100%', height:'180px' }} />
                     <Card.Body style={{ color: 'black' }}>
                       <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
                         {destination.name}
@@ -279,13 +268,14 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                     </Card.Body>
                     <Card.Footer>
                       <button
-                        className="btn btn-outline-secondary btn-sm text-dark"
+                        className="btn btn-outline-secondary btn-sm text-dark mb-2"
                         style={{ width: '100%', backgroundColor: 'rgb(18, 187, 18)', fontWeight: 'bold' }}
                         onClick={() => handleSeeDescriptionClick(destination)}
                       >
                         See description
                       </button> 
-                      <hr className="text-white" />
+                      {/* <hr className="text-white" /> */}
+                      <br />
                       <div className="d-flex">
                         <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
                           <FaEdit /> Edit
@@ -342,27 +332,31 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
            
             <p style={{fontSize:'18px'}}>Name of destination</p>
             <p>
-              <input
-                className="bg-white "
-                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
-                type="text"
-                name='name'
-                placeholder="Example, Salar De Uyuni"
-                value={newDestination.name}
-                onChange={handleNewDestinationChange}
-              />
+            <input
+              className="bg-white"
+              style={{ border: '1px solid #121661', width: '100%', color: 'rgb(18, 187, 87)' }}
+              type="text"
+              name='name'
+              placeholder="Example, Salar De Uyuni"
+              value={newDestination.name}
+              onChange={handleNewDestinationChange}
+              maxLength={23} // 12 words x 5 characters per word (adjust this based on your typical word length)
+            />
+
             </p>
             <p style={{fontSize:'18px'}}>Short description</p>
             <p>
-              <input
-                className="bg-white"
-                style={{ border: '1px solid #121661', width: '100%', color:'rgb(18, 187, 87)' }}
-                type="text"
-                name='description'
-                placeholder="Welcome to Salar de uyuni"
-                value={newDestination.description}
-                onChange={handleNewDestinationChange}
-              />
+            <input
+              className="bg-white"
+              style={{ border: '1px solid #121661', width: '100%', color: 'rgb(18, 187, 87)' }}
+              type="text"
+              name='description'
+              placeholder="Example, Salar De Uyuni"
+              value={newDestination.description}
+              onChange={handleNewDestinationChange}
+              maxLength={72} // 12 words x 5 characters per word (adjust this based on your typical word length)
+            />
+
             </p>
             <p style={{fontSize:'18px'}}>Price for this destination</p>
             <p>
