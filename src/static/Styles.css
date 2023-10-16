@@ -1,3 +1,11 @@
+
+/* Weather  */
+
+.table-transparent {
+  background-color: transparent;
+  border: none;
+}
+
 .nav-item {
   position: relative;
   text-decoration: none; /* Remove the default underline */

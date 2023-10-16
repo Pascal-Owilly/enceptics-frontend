@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import { Carousel, Card } from 'react-bootstrap';
+import '../../static/Styles.css';
 
 const PlaceInfo = () => {
     const { id } = useParams();
@@ -76,72 +77,113 @@ const PlaceInfo = () => {
         <div style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
             {placeInfo ? (
                 <div>
-                    <div className="container-fluid" style={{ marginTop: '', color: 'yellow' }}>
+                    <div className="container-fluid" style={{ marginTop: '14vh', color: 'yellow' }}>
                         <div className="row">
                             <h2 className="mt-4" style={{ marginTop: 'vh' }}>
                                 {placeName} <span style={{fontSize:'16px', fontFamily:'cursive'}}>{price && `Price: ${price}`} </span>
                             </h2>
 
-                            <div className="col-md-6">
-                                <hr />
-                                <Card style={{ maxHeight: '450px' }}>
-                                    <Carousel
-                                        style={{ width: '100%', maxHeight: '450px', border: 'none' }}
-                                        fade={false}
-                                        controls={true}
-                                        indicators={true}
-                                        interval={3000}
-                                        keyboard={false}
-                                    >
-                                        <Carousel.Item>
-                                            <img
-                                                className="mb-5"
-                                                src={placeInfo.pictures}
-                                                alt="img"
-                                                style={{ width: '100%', maxHeight: '448px' }}
-                                            />
-                                        </Carousel.Item>
-                                        <Carousel.Item>
-                                            <Carousel.Caption style={{ backgroundColor: 'rgb(0, 0, 0, 0.7)', maxHeight: '450px' }}>
-                                                <p style={{ color: 'white', width: '80%', fontSize: '18px', bottom: 0, left: 0, top: 0 }}>
-                                                    {placeInfo.weather_forecast}
-                                                </p>
-                                            </Carousel.Caption>
-                                        </Carousel.Item>
-                                        <Carousel.Item style={{ width: '100%' }}>
-                                            <video width="100%" controls style={{ top: 0 }}>
-                                                <source src={placeInfo.videos} type="video/mp4" />
-                                                <source src={placeInfo.videos} type="video/webm" />
-                                                <source src={placeInfo.videos} type="video/ogg" />
-                                                <source src={placeInfo.videos} type="video/mkv" />
-                                                <source src={placeInfo.videos} type="video/3gp" />
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        </Carousel.Item>
-                                    </Carousel>
-                                </Card>
-                            </div>
+                            <div className="col-md-8">
+    <hr />
+    <Card style={{ maxHeight: '450px' }}>
+        <Carousel
+            style={{ width: '100%', maxHeight: '450px', border: 'none' }}
+            fade={false}
+            controls={true}
+            indicators={true}
+            interval={3000}
+            keyboard={false}
+        >
+            <Carousel.Item>
+                <img
+                    className="mb-5"
+                    src={placeInfo.pictures}
+                    alt="img"
+                    style={{ width: '100%', maxHeight: '448px' }}
+                />
+            </Carousel.Item>
+            <Carousel.Item>
+    <Carousel.Caption style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', height: '450px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'white', width: '80%', fontSize: '18px', height: '100%', overflow: 'auto' }}>
+            {placeInfo.weather_forecast}
+        </p>
+    </Carousel.Caption>
+</Carousel.Item>
+
+
+
+            <Carousel.Item style={{ width: '100%', position: 'relative' }}>
+                <video width="100%" controls style={{ top: 0 }}>
+                    <source src={placeInfo.videos} type="video/mp4" />
+                    <source src={placeInfo.videos} type="video/webm" />
+                    <source src={placeInfo.videos} type="video/ogg" />
+                    <source src={placeInfo.videos} type="video/mkv" />
+                    <source src={placeInfo.videos} type="video/3gp" />
+                    Your browser does not support the video tag.
+                </video>
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                    <button style={{ background: 'none', border: 'none', fontSize: '32px', color: 'white', cursor: 'pointer' }}>
+                        ▶️
+                    </button>
+                </div>
+            </Carousel.Item>
+        </Carousel>
+    </Card>
+</div>
+
 
                             {loadWeather && (
-                                <div className="col-md-5 text-center mb-4">
+                                <div className="col-md-4 text-center mb-4">
                                     <div className="weather-widget">
-                                        <h5 className="text-secondary mb-3 text-center">Weather forecast in {placeName}</h5>
                                         <hr />
                                         {isLoadingWeather ? (
                                             <p>Loading weather data...</p>
                                         ) : weatherData ? (
-                                            <div>
-                                                <p>Summary: {weatherData.summary}</p>
-                                                <p>Temperature: {weatherData.temperature_celsius} °C</p>
-                                                <p>Icon: {weatherData.icon}</p>
-                                                <p>Humidity: {weatherData.humidity} %</p>
-                                                <p>Visibility: {weatherData.visibility}</p>
-                                                <p>UV Index: {weatherData.uvIndex}</p>
-                                                <p>Cloud Cover: {weatherData.cloudCover}</p>
-                                                <p>Wind Speed: {weatherData.windSpeed} Km/h</p>
-                                                <p>Wind Gust: {weatherData.windGust}</p>
-                                            </div>
-                                        ) : (
+                                            <Card className="weather-card" style={{ background: '#121661' }}>
+                                            <Card.Body>
+                                                <Card.Title style={{color:'#A9A9A9'}}>Weather forecast for {placeName}</Card.Title>
+                                                <table style={{ background: '#121661', color: 'greenyellow' }}>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Summary</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.summary}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Temperature (°C)</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.temperature_celsius}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Icon</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.icon}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Humidity (%)</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.humidity}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Visibility</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.visibility}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>UV Index</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.uvIndex}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Cloud Cover</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.cloudCover}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Wind Speed (Km/h)</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.windSpeed}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Wind Gust</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.windGust}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </Card.Body>
+                                        </Card>                ) : (
                                             <p>No weather data available</p>
                                         )}
                                         <hr />
