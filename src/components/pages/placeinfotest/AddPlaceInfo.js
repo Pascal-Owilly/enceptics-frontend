@@ -71,7 +71,7 @@ const PlaceInfoForm = () => {
   };
 
   return (
-    <div className="container-fluid" style={{ paddingTop: "50px", backgroundColor: "#121661",height:'100vh' }}>
+    <div className="container-fluid" style={{ paddingTop: "50px", backgroundColor: "#121661",height:'100vh', marginTop:'14vh' }}>
       <div className="row justify-content-center">
         <div className="col-md-6">
           <form className=" p-4 what-card-price" style={{ borderRadius: "10px", backgroundColor:'#121661' }}>

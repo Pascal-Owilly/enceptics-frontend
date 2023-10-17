@@ -73,6 +73,19 @@ const PlaceInfo = () => {
         navigate(`/booking?id=${id}&placeName=${encodeURIComponent(placeName)}&price=${price}`, { state: { placeId: id } });
       };
 
+      function toggleVideoPlayback() {
+        const videoPlayer = document.getElementById('videoPlayer');
+        if (videoPlayer) {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        }
+    }
+    
+    
+
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
             {placeInfo ? (
@@ -85,63 +98,104 @@ const PlaceInfo = () => {
 
                             <div className="col-md-8">
     <hr />
-    <Card style={{ maxHeight: '450px' }}>
-        <Carousel
-            style={{ width: '100%', maxHeight: '450px', border: 'none' }}
-            fade={false}
-            controls={true}
-            indicators={true}
-            interval={3000}
-            keyboard={false}
-        >
-            <Carousel.Item>
-                <img
-                    className="mb-5"
-                    src={placeInfo.pictures}
-                    alt="img"
-                    style={{ width: '100%', maxHeight: '448px' }}
-                />
-            </Carousel.Item>
-            <Carousel.Item>
-    <Carousel.Caption style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', height: '450px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: 'white', width: '80%', fontSize: '18px', height: '100%', overflow: 'auto' }}>
-            {placeInfo.weather_forecast}
-        </p>
-    </Carousel.Caption>
-</Carousel.Item>
+    <Card style={{ height: '450px', background:'black' }}>
+    <Carousel
+  fade={false}
+  controls={true}
+  indicators={true}
+  interval={5000}
+  keyboard={false}
+>
+  <Carousel.Item>
+    <div className="position-relative">
+      <img
+        className=""
+        src={placeInfo.pictures}
+        alt="img"
+        style={{ width: '100%', height: '450px' }}
+      />
+      <div
+        className="full-width-caption"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0, 0, 0, 0.6)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+        }}
+      >
+        <p className='text-center' style={{width:'80%', top: '10%'}}>{placeInfo.weather_forecast}</p>
+      </div>
+    </div>
+  </Carousel.Item>
 
+  <Carousel.Item style={{ width: '100%', position: 'relative' }}>
+    <video id="videoPlayer" width="100%" controls style={{ top: 0, display: 'block', width: '100%', height:'450px' }}>
+      <source src={placeInfo.videos} type="video/mp4" />
+      <source src={placeInfo.videos} type="video/webm" />
+      <source src={placeInfo.videos} type="video/ogg" />
+      <source src={placeInfo.videos} type="video/mkv" />
+      <source src={placeInfo.videos} type="video/3gp" />
+      Your browser does not support the video tag.
+    </video>
+    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+      <button
+        style={{
+          background: 'rgba(0, 0, 0, 0.7)',
+          border: 'none',
+          borderRadius: '50%',
+          width: '55px',
+          height: '55px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '32px',
+          cursor: 'pointer',
+          padding: '5px',
+        }}
+        onClick={() => toggleVideoPlayback()}
+      >
+        ▶️
+      </button>
+    </div>
+  </Carousel.Item>
+</Carousel>
 
+</Card>
 
-            <Carousel.Item style={{ width: '100%', position: 'relative' }}>
-                <video width="100%" controls style={{ top: 0 }}>
-                    <source src={placeInfo.videos} type="video/mp4" />
-                    <source src={placeInfo.videos} type="video/webm" />
-                    <source src={placeInfo.videos} type="video/ogg" />
-                    <source src={placeInfo.videos} type="video/mkv" />
-                    <source src={placeInfo.videos} type="video/3gp" />
-                    Your browser does not support the video tag.
-                </video>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <button style={{ background: 'none', border: 'none', fontSize: '32px', color: 'white', cursor: 'pointer' }}>
-                        ▶️
-                    </button>
-                </div>
-            </Carousel.Item>
-        </Carousel>
-    </Card>
+                                        <button
+                                            onClick={() => handleNavigateToBooking(id, placeName, price)}
+
+                                            className="what-card-price btn mt-3  btn-sm"
+                                            style={{
+                                                fontSize: '18px',
+                                                color: 'goldenrod',
+                                                fontWeight: 'bold',
+                                                width: 'auto',
+                                                textAlign: 'right',
+                                            }}
+                                        >
+                                            Proceed to booking &nbsp;&nbsp; <FaArrowRight />
+                                        </button>
 </div>
 
 
                             {loadWeather && (
-                                <div className="col-md-4 text-center mb-4">
+                                <div className="col-md-4 text-center" style={{}}>
                                     <div className="weather-widget">
-                                        <hr />
+                                       
                                         {isLoadingWeather ? (
                                             <p>Loading weather data...</p>
                                         ) : weatherData ? (
                                             <Card className="weather-card" style={{ background: '#121661' }}>
                                             <Card.Body>
-                                                <Card.Title style={{color:'#A9A9A9'}}>Weather forecast for {placeName}</Card.Title>
+                                                <Card.Title style={{color:'#A9A9A9'}}>Weather info for {placeName}</Card.Title>
                                                 <table style={{ background: '#121661', color: 'greenyellow' }}>
                                                     <tbody>
                                                         <tr>
@@ -186,26 +240,8 @@ const PlaceInfo = () => {
                                         </Card>                ) : (
                                             <p>No weather data available</p>
                                         )}
-                                        <hr />
                                     </div>
-                                    {/* <Link
-                                        to={`/booking?id=${id}&placeName=${encodeURIComponent(placeName)}&price=${price}`}
-                                        > */}
-                                        <button
-                                            onClick={() => handleNavigateToBooking(id, placeName, price)}
-
-                                            className="what-card-price btn mt-5 btn-sm"
-                                            style={{
-                                                fontSize: '18px',
-                                                color: 'goldenrod',
-                                                fontWeight: 'bold',
-                                                width: 'auto',
-                                                textAlign: 'left',
-                                            }}
-                                        >
-                                            Proceed to booking &nbsp;&nbsp; <FaArrowRight />
-                                        </button>
-                                    {/* </Link> */}
+                                  
                                 </div>
                             )}
                         </div>

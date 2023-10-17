@@ -12,7 +12,9 @@ const Booking = () => {
   const searchParams = new URLSearchParams(location.search);
   const queryParams = new URLSearchParams(location.search);
   const placeName = searchParams.get("placeName");
-  const price = searchParams.get("price");
+  const priceFromURL = searchParams.get("price");
+  const price = parseFloat(priceFromURL) || 0; // Ensure it's a number, default to 0 if parsing fails
+
   const id = queryParams.get('id');
 
 
@@ -28,6 +30,22 @@ const Booking = () => {
   const [checkinTime, setCheckinTime] = useState(''); // Separate state for checkinTime
   const [checkoutTime, setCheckoutTime] = useState(''); // Separate state for checkoutTime
 
+  // const [price, setPrice] = useState(0); // Initialize price state to 0
+
+    // Calculate extra charges based on the number of kids and adults
+    useEffect(() => {
+      if (price) {
+        // Calculate extra charges based on the number of kids and adults
+        const extraChargesForKids = numKids * pricePerKid;
+        const extraChargesForAdults = (numAdults - 1) * pricePerAdult; // Subtract 1 for the default adult
+        const totalExtraCharges = extraChargesForKids + extraChargesForAdults;
+        // Calculate the total price by adding the base price and extra charges
+        const totalPrice = price + totalExtraCharges;
+        setExtraCharges(totalExtraCharges);
+        setPaymentAmount(totalPrice); // Set the payment amount to the total price
+      }
+    }, [price, numKids, numAdults]);
+    
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -324,7 +342,7 @@ const handlePaymentMpesa = async (e) => {
 
   const queryParams = new URLSearchParams(window.location.search);
   const placeId = queryParams.get('id'); // Extract the placeId from the URL query parameters
-
+  
   try {
     // Define the endpoint for initiating the M-Pesa payment request
     const mpesaEndpoint = 'http://localhost:8000/mpesa-payments/daraja/'; // Adjust the URL as needed
@@ -437,7 +455,7 @@ const handlePaymentMpesa = async (e) => {
   return (
     <>
 
-      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto' }}>
+      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto', marginTop:'13vh' }}>
 
         <br />
         <div className='container m-auto'>
@@ -650,46 +668,45 @@ const handlePaymentMpesa = async (e) => {
             </div>
             
             {showPaymentModal && (
-            <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
-              <div className="modal-dialog">
-                <div className="modal-content" style={{ backgroundColor: 'rgb(18, 187, 18)', width: '350px' }}>
-                  <div className="modal-header">
-                    <h4 className="modal-title" style={{ color: '#d9d9d9' }}>Payment Details</h4>
-                    <button type="button" className="close" onClick={closePaymentModal}>
-                      <span aria-hidden="true">&times;</span>
+        <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content" style={{ backgroundColor: 'rgb(18, 187, 18)', width: '350px' }}>
+              <div className="modal-header">
+                <h4 className="modal-title" style={{ color: '#d9d9d9' }}>Payment Details</h4>
+                <button type="button" className="close" onClick={closePaymentModal}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body" style={{ backgroundColor: 'rgb(18, 187, 18)', height: '350px', width: '300px', marginTop: '10px' }}>
+                {modalContent ? (
+                  // Display the content based on the modalContent state
+                  modalContent
+                ) : (
+                  // Display default content (buttons for PayPal and Mpesa)
+                  <>
+                    <h5 className='text-dark mb-2'>Amount: Ksh {price + extraCharges}</h5>
+                    <hr />
+                    <button
+                      className='mt-3 what-card text-center mx-3'
+                      style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
+                      onClick={handlePaymentPaypal}
+                    >
+                      Pay with PayPal
                     </button>
-                  </div>
-                  <div className="modal-body" style={{ backgroundColor: 'rgb(18, 187, 18)', height: '350px', width: '300px', marginTop: '10px' }}>
-                    {modalContent ? (
-                      // Display the content based on the modalContent state
-                      modalContent
-                    ) : (
-                      // Display default content (buttons for PayPal and Mpesa)
-                      <>
-                        <h5 className='text-dark mb-2'>Amount: Ksh {price}</h5>
-                        <hr />
-                        <button
-                          className='mt-3 what-card text-center mx-3'
-                          style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
-                          onClick={handlePaymentPaypal}
-                        >
-                          Pay with PayPal
-                        </button>
-                        <button
-                          className='mt-3 what-card text-center mx-3'
-                          style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
-                          onClick={handlePaymentMpesa}
-                        >
-                          Pay with Mpesa
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
+                    <button
+                      className='mt-3 what-card text-center mx-3'
+                      style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
+                      onClick={handlePaymentMpesa}
+                    >
+                      Pay with Mpesa
+                    </button>
+                  </>
+                )}
               </div>
             </div>
-          )}
-
+          </div>
+        </div>
+      )}
           </div>
             </div>
             <div className='col-md-3'>

@@ -42,6 +42,7 @@ const ImageCarousel = () => {
           body {
             margin: 0;
             padding: 0;
+            overflow-x: hidden; /* Hide horizontal overflow */
           }
 
           .carousel-caption h2 {
@@ -86,10 +87,10 @@ const ImageCarousel = () => {
       </style>
       <Row>
         <Col>
-          <Carousel activeIndex={index} fade={true} controls={true} interval={5000} onSelect={handleSelect} style={{ backgroundColor: 'rgba(18, 22, 97)', position: 'relative', height: '100vh' }}>
+          <Carousel activeIndex={index} fade={true} controls={true} interval={5000} onSelect={handleSelect} style={{ backgroundColor: 'rgba(18, 22, 97)', position: 'relative', height: '100vh', pointerEvents: 'none', width:'100%' }}>
             {images.map((image, i) => (
               <Carousel.Item key={i}>
-                <img className="d-block w-100 hero-image" src={image.src} alt="Carousel Image" style={{ top: 0, height: '100vh', bottom: 0 }} />
+                <img className="d-block w-100 hero-image" src={image.src} alt="Carousel Image" style={{ top: 0, height: '100vh', bottom: 0, width:'100%' }} />
                   <Carousel.Caption style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', width: '100%', left: 0, right: 0, top: 0, bottom: 0 }}>
                   <h2 className='heading mb-4' style={{ fontSize: '52px', color: 'green', fontWeight:'200' }}> {image.title} </h2>
                   <p className='style-p' style={{ fontSize: '25px', color: '#A9A9A9', width: '60%' }}> {image.text} </p>

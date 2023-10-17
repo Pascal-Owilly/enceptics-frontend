@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faImages } from '@fortawesome/free-regular-svg-icons';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import natpark from '../../images/natpark.jpg';
@@ -380,56 +382,71 @@ Promise.all(fetchLikesData)
     <div style={{ backgroundColor: '#121661', color: 'white' }}>
       <div className="container" style={{ minHeight: '100vh' }}>
         <br />
-        <h1 className="text-secondary" style={{ fontFamily: 'cursive' }}>
+        <h1 className="text-secondary" style={{ fontFamily: 'cursive', marginTop:'11vh' }}>
           Travellers Blog
         </h1>
         <hr />
         <div className="row">
           <div className="col-md-6">
-            <div className="input-group blogpost-input mb-3">
-            {profile && profile.profile_pic && (
-     
-        <img
-          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
-          style={{ width: '43px', height: '43px', borderRadius: '100%' }}
-          alt=""
-        />
-       
-    )} &nbsp;
-              <input
-                type="text"
-                className="form-control custom-blog-placeholder text-secondary"
-                placeholder="Share your experience ..."
-                value={newPostContent}
-                onChange={handleNewPostContentChange}
-                style={{ backgroundColor: '#121661', border: '1px solid ', borderRadius: '0 30px 30px 0' }}
-              />
-              <label className="custom-file-upload  what-card" style={{ borderRadius: '100%', backgroundColor: '#A9A9A9', color: '#121661', fontWeight: 'bold' }}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="btn-sm m-1"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                />
-                <span className="custom-button mx-1" style={{ fontSize: '9px', color: '#121661' }}>
-                  <span className="" style={{ borderRadius: '10px', width: '10%' }}>Upload <br /> image</span>
-                  <br />
-                </span>
-              </label>
-              <div className="input-group-append">
-                <button className="btn btn-outline-secondary m-1" type="button" onClick={createNewPost}>Post</button>
-              </div>
-            </div>
+          <div className="input-group blogpost-input mb-3">
+  {profile && profile.profile_pic && (
+    <img
+      src={`http://localhost:8000${profile.profile_pic}`}
+      style={{
+        width: '43px',
+        height: '43px',
+        borderRadius: '50%',
+        objectFit: 'cover', // To maintain the aspect ratio of the profile picture
+      }}
+      alt="Profile Pic"
+    />
+  )}
+  &nbsp;
+  <input
+    type="text"
+    className="form-control custom-blog-placeholder text-secondary m-1"
+    placeholder="Share your experience..."
+    value={newPostContent}
+    onChange={handleNewPostContentChange}
+    style={{
+      backgroundColor: '#121661',
+      border: '1px solid #A9A9A9', // Changed the border color
+      borderRadius: '0 30px 30px 0',
+      height:'40px'
+    }}
+  />
+  <label className="custom-file-uploa what-card-btn m-2">
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleImageChange}
+      style={{ display: 'none' }}
+    />
+    <span className="custom-button mx-2">
+      <FontAwesomeIcon icon={faImages} />&nbsp;Photo
+      <br />
+    </span>
+  </label>
+  <div className="input-group-append">
+    <button
+      className="btn btn-outline-info btn-sm mt-2" // Changed button style to btn-primary
+      type="button"
+      onClick={createNewPost}
+    >
+      Post
+    </button>
+  </div>
+</div>
+
             <hr />
             {imagePreview && (
               <div className="mb-3 mt-1">
-                <img src={imagePreview} alt="Image Preview" style={{ maxWidth: '100%' }} />
+                <img src={imagePreview} alt="Image Preview" style={{ width: '100%' }} />
               </div>
             )}
             <div className="row">
               {posts.map((post) => (
-                <div key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', width: '87%' }}>
+                <div key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', width: '97%' }}>
                   <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
                     <div className="d-flex align-items-center">
                       <img
@@ -513,21 +530,21 @@ Promise.all(fetchLikesData)
               ))}
             </div>
           </div>
-          <div className="col-md-4 text-right">
+          <div className="col-md-4 text-right mx-auto">
       <br />
       <h4 className="text-center mt-4" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Sponsored Ads</h4>
       <hr />
-      <Carousel fade style={{ height: '400px' }}>
+      <Carousel fade style={{ height: '300px' }}>
         {carouselData.map((item, index) => (
           <Carousel.Item key={index}>
             <img
               className="d-block w-100"
               src={item.image}
               alt={`Ad ${index + 1}`}
-              style={{ maxHeight: '400px' }}
+              style={{ height: '300px' }}
             />
-            <Carousel.Caption style={{ background: 'rgba(0, 0, 0, 0.5)', bottom: 0, height:'400px' }}>
-              <h3 style={{ color: 'greenyellow', fontWeight: 'bold', textAlign: 'center', padding: '1px', width:'100%', top: '20px' }}>
+            <Carousel.Caption style={{ background: 'rgba(0, 0, 0, 0.7)', bottom: 0, height:'300px',left: 0, right: 0 }}>
+              <h3 style={{ color: 'green', fontWeight: 'bold', textAlign: 'center', padding: '1px', width:'100%', top: '20px' }}>
                 {item.title}
               </h3>
               <p className="mx-4" style={{ textAlign: 'center', padding: '3px', width:'80%', margin:'auto', top: '40%' }}>{item.text}</p>

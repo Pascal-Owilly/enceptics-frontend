@@ -1,87 +1,172 @@
-// App.js
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Dropdown from 'react-dropdown';
 import { HiSwitchHorizontal } from 'react-icons/hi';
-// import 'react-dropdown/style.css';
-import '../../static/Styles.css'
+
+const containerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'rgba(18, 22, 97)',
+  height: '100vh',
+  color: 'white',
+};
+
+const headingStyle = {
+  textAlign: 'center',
+  fontSize: '24px',
+  color: 'white',
+};
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
+
+const inputStyle = {
+  padding: '5px',
+  border: 'none',
+  backgroundColor: 'rgb(255,255,255,0.7)',
+  color: 'green',
+  width: '100%',
+  marginBottom: '20px',
+};
+
+const dropdownStyle = {
+  backgroundColor: 'green',
+  color: 'white',
+  border: '1px solid white',
+  maxHeight: '200px', // Set a max height
+  overflowY: 'scroll', // Add scroll for overflow
+  width: '100%',
+  marginBottom: '20px',
+  padding: '5px',
+  borderRadius: '5px',
+  textTransform: 'uppercase',
+};
+
+const switchStyle = {
+  color: 'goldenrod',
+  background:'#121661',
+  padding: '5px',
+  borderRadius:'50%',
+  margin:'1rem',
+};
+
+const resultsContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  color: 'white',
+};
+
+const convertButtonStyle = {
+  backgroundColor: '#121661',
+  color: 'white',
+  border: 'none',
+  padding: '5px 20px',
+  cursor: 'pointer',
+};
 
 function CurrencyConverter() {
+  const [info, setInfo] = useState([]);
+  const [input, setInput] = useState(0);
+  const [from, setFrom] = useState('usd');
+  const [to, setTo] = useState('kes');
+  const [options, setOptions] = useState([]);
+  const [output, setOutput] = useState(0);
 
-	// Initializing all the state variables 
-	const [info, setInfo] = useState([]);
-	const [input, setInput] = useState(0);
-	const [from, setFrom] = useState("usd");
-	const [to, setTo] = useState("inr");
-	const [options, setOptions] = useState([]);
-	const [output, setOutput] = useState(0);
+  useEffect(() => {
+    Axios.get(
+      `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`
+    ).then((res) => {
+      setInfo(res.data[from]);
+    });
+  }, [from]);
 
-	// Calling the api whenever the dependency changes
-	useEffect(() => {
-		Axios.get(
-			`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
-			.then((res) => {
-				setInfo(res.data[from]);
-			})
-	}, [from]);
+  useEffect(() => {
+    setOptions(Object.keys(info));
+    convert();
+  }, [info]);
 
-	// Calling the convert function whenever
-	// a user switches the currency
-	useEffect(() => {
-		setOptions(Object.keys(info));
-		convert();
-	}, [info])
+  function convert() {
+    const rate = info[to];
+    setOutput(input * rate);
+  }
 
-	// Function to convert the currency
-	function convert() {
-		var rate = info[to];
-		setOutput(input * rate);
-	}
+  function flip() {
+    const temp = from;
+    setFrom(to);
+    setTo(temp);
+  }
 
-	// Function to switch between two currency
-	function flip() {
-		var temp = from;
-		setFrom(to);
-		setTo(temp);
-	}
+  return (
+    <div style={containerStyle}  >
+		      <div style={headingStyle} >
+        <h1 className='mt-3' style={{color:'green'}}>Convert Currency</h1>
+		<hr className='text-secondary'/>
 
-	return (
-		<div className="App">
-			<div className="heading">
-				<h1>Convert Currency</h1>
-			</div>
-			<div className="container">
-				<div className="left">
-					<h3>Amount</h3>
-					<input type="text"
-						placeholder="Enter the amount"
-						onChange={(e) => setInput(e.target.value)} />
-				</div>
-				<div className="middle">
-					<h3>From</h3>
-					<Dropdown options={options}
-						onChange={(e) => { setFrom(e.value) }}
-						value={from} placeholder="From" />
-				</div>
-				<div className="switch">
-					<HiSwitchHorizontal size="30px"
-						onClick={() => { flip() }} />
-				</div>
-				<div className="right">
-					<h3>To</h3>
-					<Dropdown options={options}
-						onChange={(e) => { setTo(e.value) }}
-						value={to} placeholder="To" />
-				</div>
-			</div>
-			<div className="results">
-				<button onClick={() => { convert() }}>Convert</button>
-				<span>Converted Amount:</span>
-				<span>{input + " " + from + " = " + output.toFixed(2) + " " + to}</span>
+      </div>
+<div className=' p-4 m-3 ' style={{background:'green', transition:'none', borderRadius:'5px', height:'400px'}}>
 
-			</div>
+      <form style={formStyle} >
+        <h3>Amount</h3>
+        <input
+          type="text"
+          placeholder="Enter the amount"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          style={inputStyle}
+        />
+
+		<div className='d-flex'>
+
+		
+        <h5 style={{fontWeight:'300'}} className='mx-3'>From</h5>
+        <select
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          style={dropdownStyle}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <h5 style={{fontWeight:'300'}} className='mx-3'>To</h5>
+		
+        <select
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          style={dropdownStyle}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
 		</div>
-	);
+      </form>
+
+      <div style={resultsContainerStyle}>
+	  <div style={switchStyle}>
+        <HiSwitchHorizontal size="30px" onClick={() => flip()} />
+      </div>
+        <button onClick={() => convert()} style={convertButtonStyle}>
+          Convert
+        </button>
+		<hr />
+        <h4 style={{ textTransform: 'uppercase'}}>
+          {input + ' ' + from + ' = ' + output.toFixed(2) + ' ' + to}
+        </h4>
+      </div>
+    </div>
+	</div>
+  );
 }
 
 export default CurrencyConverter;

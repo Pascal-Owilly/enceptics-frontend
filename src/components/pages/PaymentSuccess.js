@@ -27,15 +27,18 @@ const PaymentStatus = () => {
   }
 
   return (
-    <div style={{ height: '100vh' }}>
+        <div style={{height:"100vh",  background:'#121661', marginTop:'13vh'}}>
+
+<div style={{ display:'flex', alignItems:'center', flexDirection:'column', height:'20vh'}}>
       <div className={`payment-status ${className}`} style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-        <h2>{message}</h2>
+        <h2 className='text-center mx-aut mt-5' style={{color:'green',fontWeight:'800', marginTop:'10vh', width:'70%'}}>{message}</h2>
         <p></p>
         <br />
         <p>
           <a href="/">Return to Home</a>
         </p>
       </div>
+    </div>
     </div>
   );
 };

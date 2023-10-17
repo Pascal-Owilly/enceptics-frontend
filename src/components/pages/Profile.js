@@ -140,9 +140,9 @@ const Profile = () => {
       <div style={{ backgroundColor: '#121661', height: '100vh' }}>
         {user && Object.keys(profile).length > 0 ? (
           <div className="container bootstrap snippets bootdey">
-            <div className="row" style={{ backgroundColor: '#121661', marginTop: '' }}>
+            <div className="row" style={{ backgroundColor: '#121661', marginTop: '13vh' }}>
               <div className='col-md-3'>
-                <h5 className='text-white mt-5' style={{ textTransform: '' }}>
+                <h5 className='text-white mt-5 user-heading' style={{ textTransform: '' }}>
                   {user.username ? <span style={{ textTransform: 'capitalize' }}>{user.username}'s</span> : ''}
                   &nbsp; Profile
                 </h5>
@@ -156,11 +156,11 @@ const Profile = () => {
               </div>
               <hr className='text-white' />
               <div className="profile-nav col-md-4">
-                <div className="panel what-card" style={{ border:' 1px solid #d9d9d9'  }}>
-                  <div className="user-heading round">
+                <div className="panel" style={{width:'100%', borderRadius:'5px', border:'none'}}>
+                  <div className="user-heading" >
                     <img
                       src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
-                      style={{width:'100%'}}
+                      style={{width:'100%', borderRadius:'50%', border:'none'}}
                     />
                   </div>
                 </div>
@@ -179,23 +179,26 @@ const Profile = () => {
                   {/* <p className='text-white'>Username : &nbsp; <span className='text-secondary'>{user.username}</span></p> */}
 
                   {/* Display Bio */}
-                  <p className='text-white'>Bio : &nbsp;<span className='text-secondary'>{profile.bio}</span></p>
+                  <p className='bio-graph-heading'>Bio : &nbsp;</p>
+                  <span className=' bio-graph-info'>{profile.bio}</span>
                   {/* Display Current City */}
-                  <p className='text-white'>Current City : &nbsp; <span className='text-secondary'>{profile.current_city}</span></p>
                 </div>
                 <ul className="text-secondary" style={{ listStyleType:'none' }}>
+                <hr />
+
                   <p>
-                    <li><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-user"></i> Following <span className="label"></span></a>&nbsp; 12</li>
-                    <hr />
+                    <span><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-user profile-activity"></i> Following <span className="label"></span></a>&nbsp; 12</span>
+                    <span className="active mx-4"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-calendar "></i> Wishlist</a></span>
+
                   </p>
                   <p>
-                    <li className="active"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-calendar"></i> Wishlist</a></li>
                     <hr />
+                    <p className='text-white summary-head'>Current City : &nbsp; <span className='text-secondary'>{profile.current_city}</span></p>
+
                   </p>
                 </ul>
               </div>
-              <div className='col-md-4'>
-                {/* Add social media links here */}
+              <div className='col-md-3'>
               </div>
             </div>
           </div>

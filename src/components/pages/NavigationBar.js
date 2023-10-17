@@ -264,7 +264,7 @@ const handleRegistrationChange = (e) => {
 <nav
         className="navbar navbar-expand-lg what-card-navbar mx-2"
         variant="fixed"
-        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width:'99%', top: '0.5rem', margin:'auto' }}
+        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width:'99%', top: '0.5rem' }}
       >
         <div className="container-fluid">
           <a className="navbar-brand text-white mx-2" href="/">
@@ -410,7 +410,7 @@ const handleRegistrationChange = (e) => {
           alt=""
         />
         <div style={{ maxWidth: '30px' }}>
-          <span style={{ fontSize: '14px', fontWeight: '500', opacity: '.9', fontFamily: 'cursive', letterSpacing: '1px', lineHeight: '1px' }} className='text-white'>{profile && user.username}</span>
+          <span style={{ fontSize: '14px', fontWeight: '500', opacity: '.9', fontFamily: 'cursive', letterSpacing: '1px', lineHeight: '1px' }} className='text-white text-center'>{profile && user.username}</span>
         </div>
       </>
     )}
