@@ -105,7 +105,7 @@ function CurrencyConverter() {
   return (
     <div style={containerStyle}  >
 		      <div style={headingStyle} >
-        <h1 className='mt-3' style={{color:'green'}}>Convert Currency</h1>
+        <h1 className='mt-5' style={{color:'green'}}>Convert Currency</h1>
 		<hr className='text-secondary'/>
 
       </div>

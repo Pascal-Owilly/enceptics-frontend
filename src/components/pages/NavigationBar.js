@@ -7,11 +7,14 @@ import './Profile.js';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdChatboxes } from 'react-icons/io';
+import dash from '../../images/three-dashes.svg';
 import SearchResults from './SearchResults';
 import Places from './Places'; // Import your Places component
 import Blogs from './Blogs'; // Import your Blogs component
 // import { useAuth } from "../pages/authenticate/AuthContext";
 import { useNavigate, Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
+
 
 function FlashMessage({ message, type }) {
   return (
@@ -24,8 +27,17 @@ function FlashMessage({ message, type }) {
 function NavigationBar() {
 
   const navigate = useNavigate()
-
   const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
+  const [expanded, setExpanded] = useState(false);
+
+   const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
+
+
+    // Add an event handler to close the navbar when a nav link is clicked
+
+  const isSmallScreen = useMediaQuery({ maxWidth: 767 }); // Adjust the maxWidth as needed
 
 // search
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,6 +64,7 @@ function NavigationBar() {
     // Check if searchQuery is not empty before navigating
     if (searchQuery.trim() !== '') {
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+
     }
   };
 
@@ -253,83 +266,80 @@ const handleRegistrationChange = (e) => {
 
   };
 
-  // const handleBookNowBtn = (e) =>{
-  //   navigate('/places')
-
-  //   // window.location.reload()
-  // }
+ 
   
   return (
 <>
-<nav
-        className="navbar navbar-expand-lg what-card-navbar mx-2"
-        variant="fixed"
-        style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width:'99%', top: '0.5rem' }}
-      >
+<nav expanded={expanded} className="navbar navbar-expand-md  mx-2 what-card-navbar" style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '98.5%', top: '0.4rem', borderRadius:'0' }}>
+
         <div className="container-fluid">
           <a className="navbar-brand text-white mx-2" href="/">
             <span style={{fontFamily:'CustomFont', fontSize:'28px', letterSpacing:'3px'}} className="brand-first-letter">E</span>
             <sub style={{fontFamily:'cursive', fontWeight:'bold', letterSpacing:'2px', fontSize:'16px'}} className="brand-text">nceptics</sub>
           </a>
           <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-          <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+          style={{ marginRight: '1rem', fontSize: '14px'}}
+          className="navbar-toggler text-white btn-sm"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          onClick={toggleExpanded}
+        >
+          <span className='text-secondary'>Menu</span>
+          <svg
+              viewBox="0 0 30 15"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ outline: 'none' }}
+            >
+              <path stroke="#a9a9a9" strokeWidth="2" strokeLinecap="round" d="M4 7h22M4 15h22" />
+            </svg>
+
+
+        </button>
+
+          <div className="collapse navbar-collapse justify-content-end text-center" id="navbarNav"  style={{transition:'1s ease', zIndex: 999}}>
             <ul className="navbar-nav">
               <li className="nav-items">
-                <div className="container h-100">
-                  <div className="d-flex justify-content-center h-100">
-                    <div className="searchbar mx-5">
+                <div className="container h-100"> 
+                  <div className="d-flex justify-content-center h-100 toggled-link">
+                    <div className="searchbar " onClick={handleSearch}>
                       <input className="search_input" type="text" name="" placeholder="Search in places..."
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                        />
-              <a className="search_icon"><FaSearch onClick={handleSearch}
-          /></a>
+              <a className="search_icon"><FaSearch /></a>
         </div>
       </div>
     </div>
 
               </li> 
-            <li className="nav-item">
-                <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item mx-3">
-              <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/about">
-                  About Us
-                </a>
-              </li>
-              <li className="nav-items">
-
-              <a style={{fontFamily:'arial', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/places">
-
-                <button className='btn btn-sm what-card-btn ' style={{backgroundColor:'green', color:'#fff', fontWeight:'bolder', padding:''}}>
-                 <span style={{padding:'10px'}}> Book Now</span>
-                  </button>
-                  </a>
-
-              </li>
-
-              <li>
-
-{/* <SearchBar /> */}
-
-              </li>   
-
+              <li className="nav-item">
+              {/* Close the navbar when this link is clicked */}
+              <a style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/">
+                Home
+              </a>
+            </li>
+            <li className="nav-item mx-3">
+              {/* Close the navbar when this link is clicked */}
+              <a style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/about">
+                About Us
+              </a>
+            </li>
+            <li className="nav-items">
+              {/* Close the navbar when this link is clicked */}
+              <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/places">
+                <button className='btn btn-sm what-card-btn ' style={{ backgroundColor: 'green', color: '#fff', fontWeight: 'bolder', padding: '' }}>
+                  <span style={{ padding: '10px' }}> Book Now</span>
+                </button>
+              </a>
+            </li>
   
 
               <li className="nav-item mx-2 ">
-              <a style={{fontFamily:'cursive', fontWeight:'400', letterSpacing:'1px', fontSize:'16px', color:'goldenrod'}} className="nav-link" href="/currencyconverter">
+              <a  style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px', color:'goldenrod' }} className="nav-link toggled-link" href="/currencyconverter">
                   Currency
                 </a>
               </li>
@@ -351,7 +361,7 @@ const handleRegistrationChange = (e) => {
               onClick={openSignUpModal}
 
             >
-                                          <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
+                                          <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white toggled-link" >
 
               <span style={{padding:'5px'}}>
               Sign Up 
@@ -367,7 +377,7 @@ const handleRegistrationChange = (e) => {
               style={{color: '#d9d9d9', border: 'none' }}
               onClick={openLoginModal}
             >
-                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
+                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white z" >
 
               <span style={{padding:'5px'}}>
 
@@ -388,7 +398,7 @@ const handleRegistrationChange = (e) => {
 
 
 </div>
-<li>
+<li style={{listStyleType:'none'}}>
               <a href="/blog">
               <button className="btn btn-sm  mt-2 what-card-btn" 
                     style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
@@ -438,7 +448,7 @@ Login
       {showModal && (
           <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh', backgroundColor:'rgb(0, 0, 0, 0.8)' }}>
             <div className="modal-dialog">
-              <div className="modal-content what-card-price text-secondary" style={{background:'#121661', width:'400px'}}>
+              <div className="modal-content what-card-bt text-secondary" style={{background:'#121661', width:'300px'}}>
                 <div className="modal-header">
                   <h5 className="modal-title text-secondary">{isSignUpModal ? 'Sign Up' : 'Login'}</h5>
                   <button style={{backgroundColor:'', border:'none', color:'white', width:'40px', borderRadius:'4px'}} type="button" className="close" onClick={closeModal}>
@@ -447,7 +457,7 @@ Login
                 </div>
                 <div className="modal-body ">
                   {isSignUpModal ? (
-                    <form onSubmit={handleRegistrationSubmit}>
+                    <form className=' m-1' onSubmit={handleRegistrationSubmit}>
                
                       <div className="form-group">
                         <label className="mt-4" htmlFor="username">Username</label>

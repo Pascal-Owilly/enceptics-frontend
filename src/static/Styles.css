@@ -1,4 +1,18 @@
+/* START NAVBAR */
 
+
+/* Define a class for the search link */
+.toggled-link {
+  /* margin-top: 1.254rem !important;
+  border-top: 1px solid green; Add a top border for the line
+  padding: .6rem !important; Add some padding to separate the line from the link text */
+}
+
+.toggled-link-bottom{
+  margin-bottom: 1.254rem !important;
+}
+
+/* END NAVBAR */
 /* Weather  */
 
 .table-transparent {
@@ -115,7 +129,6 @@
     transition: opacity 1s ease-in-out;
     border: #ffffff;
     border: 1px solid #ffffff !important;
-    /* margin-left: -4rem !important; */
   }
   
   #search-form.visible {
@@ -755,7 +768,7 @@ button,
   }
 
   .searchbar:hover > .search_input{
-  padding: 0 10px;
+  padding: 3px;
   width: 200px;
   caret-color: #a9a9a9;
   transition: width 0.4s linear;
@@ -763,7 +776,8 @@ button,
 
   .searchbar:hover > .search_icon{
   background: white;
-  color: #e74c3c;
+  color: green;
+  cursor: pointer;
   }
 
   .search_icon{

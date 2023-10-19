@@ -38,26 +38,27 @@ function SearchResults() {
   
 
   return (
-    <div style={{ height: '100vh', overflow: 'auto' }}>
+    <div className="" style={{ height: '100vh', marginTop:"14vh", backgroundColor:'#121661', color:'white' }}>
+      <div className="mx-5">
     <h2>Search Results for "{searchQuery}"</h2>
     {loading ? (
-      <p>Loading...</p>
+      <p className="text-center">Loading...</p>
     ) : results.length === 0 ? (
       <p>No results found.</p>
     ) : (
       <ul>
          {results.map((result) => (
-    <li key={result.id}>
+    <li className="mt-3" key={result.id} style={{listStyleType:'none'}}>
       <Link to={`/result/${result.id}`}>
-        <h5>{result.name}</h5>
+        <h5 style={{color:'green'}}>{result.name}</h5>
         </Link>
         <p>{result.description}</p>
         <p>Price: KES {result.price}</p>
-     
     </li>
   ))}
       </ul>
     )}
+  </div>
   </div>
   );
 }

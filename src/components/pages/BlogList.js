@@ -383,7 +383,7 @@ Promise.all(fetchLikesData)
       <div className="container" style={{ minHeight: '100vh' }}>
         <br />
         <h1 className="text-secondary" style={{ fontFamily: 'cursive', marginTop:'11vh' }}>
-          Travellers Blog
+        Tourist's Tribune: Travel Stories
         </h1>
         <hr />
         <div className="row">
@@ -422,7 +422,7 @@ Promise.all(fetchLikesData)
       onChange={handleImageChange}
       style={{ display: 'none' }}
     />
-    <span className="custom-button mx-2">
+    <span className="custom-button mx-1">
       <FontAwesomeIcon icon={faImages} />&nbsp;Photo
       <br />
     </span>
@@ -432,6 +432,11 @@ Promise.all(fetchLikesData)
       className="btn btn-outline-info btn-sm mt-2" // Changed button style to btn-primary
       type="button"
       onClick={createNewPost}
+      style={
+      {
+        zIndex: 0
+      }
+      }
     >
       Post
     </button>
@@ -534,7 +539,7 @@ Promise.all(fetchLikesData)
       <br />
       <h4 className="text-center mt-4" style={{ fontFamily: 'cursive', fontWeight: 'bold' }}>Sponsored Ads</h4>
       <hr />
-      <Carousel fade style={{ height: '300px' }}>
+      <Carousel fade style={{ height: '300px', zIndex: 0 }}>
         {carouselData.map((item, index) => (
           <Carousel.Item key={index}>
             <img

@@ -8,7 +8,7 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <div style={{height:'100vh'}}>
+    <div style={{height:'100vh', marginTop:'14vh'}}>
       <input
         placeholder="Search for places, blogs, etc..."
         type="text"

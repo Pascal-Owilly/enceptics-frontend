@@ -448,14 +448,14 @@ const handlePaymentMpesa = async (e) => {
 
   if (!user) {
     // If user is null, render a loading message
-    return <div style={{height:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'25px', backgroundColor:'#121661', color:'white'}}>Loading...</div>;
+    return <div style={{height:'auto', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'25px', backgroundColor:'#121661', color:'white'}}>Loading...</div>;
   }
 
 
   return (
     <>
 
-      <div className="booking pt-2" style={{ backgroundColor: '#121661', height: '105vh', color: 'white', margin:'auto', marginTop:'13vh' }}>
+      <div className="booking pt-2 " style={{ backgroundColor: '#121661', height: 'auto', color: 'white', margin:'auto', marginTop:'13vh' }}>
 
         <br />
         <div className='container m-auto'>
@@ -465,7 +465,7 @@ const handlePaymentMpesa = async (e) => {
 
           </div>
           <div className='col-md-6'>
-          <div className='row what-card-price m-auto' style={{width:'100%', borderRadius:'10px'}}>
+          <div className='row what-card-btn mb-5 m-auto' style={{width:'100%', borderRadius:'10px'}}>
           <div className='col-md-6'>
 {/* Content for the second column */}
 <h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName}</h5>
@@ -478,11 +478,11 @@ const handlePaymentMpesa = async (e) => {
    <p  className='mt-1' style={{ color: '#d9d9d9' }}>Price for 2: <span className='' style={{color:'goldenrod', fontWeight:'bold'}}> &nbsp; Ksh {price}</span></p>
   </div>
           <hr style={{ color: 'white', height: '0rem' }} />
-          <div className='col-md-6 mt-2 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
+          <div className='col-md-6 mb-3 mt-2 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
 
 
    <div className="form-group">
-    <label>
+    <label className='text-secondary'>
       Do you have kids?
       <input
       className='bg-secondary'
@@ -495,7 +495,7 @@ const handlePaymentMpesa = async (e) => {
   </div>
   {hasKids && (
     <div className="form-group mt-2">
-<label>How many Kids?
+<label className='text-secondary'>How many Kids?
         <input
         className='mx-2'
           type="number"
@@ -510,7 +510,7 @@ const handlePaymentMpesa = async (e) => {
     </div>
   )}
   <div className="form-group mt-2">
-    <label>
+    <label className='text-secondary'>
      Add more people
       <input
        className='bg-secondary'
@@ -527,7 +527,7 @@ const handlePaymentMpesa = async (e) => {
   </div>
   {bookingData.moreAdults && (
     <div className="form-group mt-2">
-      <label>
+      <label className='text-secondary'>
         How many additional adults? 
         <br />
         &nbsp; 
@@ -544,7 +544,7 @@ const handlePaymentMpesa = async (e) => {
     </div>
   )}
   <div className="form-group mt-2">
-    <label>
+    <label className='text-secondary'>
       Extra Charges :
       <span style={{ color: 'goldenrod', fontWeight: 'bold' }}> Ksh {extraCharges}</span>
     </label>
@@ -659,8 +659,8 @@ const handlePaymentMpesa = async (e) => {
                 <button
                   onClick={handleBookingSubmit}
                   type="submqqit"
-                  className="btn what-card-price mb-2 btn-lg mt-4"
-                  style={{ backgroundColor: '#121661', color: 'goldenrod', width: '100%', margin: 'auto' }}
+                  className="btn what-card-btn mb-4 btn-md mt-4"
+                  style={{ backgroundColor: '#121661', color: 'goldenrod', width: '100%', margin: 'auto', fontWeight:'bold' }}
                 >
                   Proceed to checkout
                 </button>
@@ -670,14 +670,14 @@ const handlePaymentMpesa = async (e) => {
             {showPaymentModal && (
         <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
           <div className="modal-dialog">
-            <div className="modal-content" style={{ backgroundColor: 'rgb(18, 187, 18)', width: '350px' }}>
+            <div className="modal-content mt-5" style={{ backgroundColor: 'rgb(18, 187, 18)', width: 'auto', marginRight:'1rem' }}>
               <div className="modal-header">
                 <h4 className="modal-title" style={{ color: '#d9d9d9' }}>Payment Details</h4>
                 <button type="button" className="close" onClick={closePaymentModal}>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div className="modal-body" style={{ backgroundColor: 'rgb(18, 187, 18)', height: '350px', width: '300px', marginTop: '10px' }}>
+              <div className="modal-body" style={{ backgroundColor: 'rgb(18, 187, 18)', height: '350px', width: 'auto', marginTop: '10px' }}>
                 {modalContent ? (
                   // Display the content based on the modalContent state
                   modalContent
@@ -688,14 +688,14 @@ const handlePaymentMpesa = async (e) => {
                     <hr />
                     <button
                       className='mt-3 what-card text-center mx-3'
-                      style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
+                      style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '200px', borderRadius: '10px' }}
                       onClick={handlePaymentPaypal}
                     >
                       Pay with PayPal
                     </button>
                     <button
                       className='mt-3 what-card text-center mx-3'
-                      style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '100%', borderRadius: '10px' }}
+                      style={{ backgroundColor: '#121661', color: 'white', padding: '5px', width: '200px', borderRadius: '10px' }}
                       onClick={handlePaymentMpesa}
                     >
                       Pay with Mpesa

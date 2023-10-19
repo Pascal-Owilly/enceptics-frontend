@@ -87,7 +87,7 @@ const PlaceInfo = () => {
     
 
     return (
-        <div style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
+        <div style={{ minHeight: 'auto', backgroundColor: '#121661' }}>
             {placeInfo ? (
                 <div>
                     <div className="container-fluid" style={{ marginTop: '14vh', color: 'yellow' }}>
@@ -98,7 +98,7 @@ const PlaceInfo = () => {
 
                             <div className="col-md-8">
     <hr />
-    <Card style={{ height: '450px', background:'black' }}>
+    <Card className='place-info-slide' style={{ height: '450px', background:'black' }}>
     <Carousel
   fade={false}
   controls={true}
@@ -109,7 +109,7 @@ const PlaceInfo = () => {
   <Carousel.Item>
     <div className="position-relative">
       <img
-        className=""
+        className="place-info-slide"
         src={placeInfo.pictures}
         alt="img"
         style={{ width: '100%', height: '450px' }}
@@ -129,13 +129,13 @@ const PlaceInfo = () => {
           color: 'white',
         }}
       >
-        <p className='text-center' style={{width:'80%', top: '10%'}}>{placeInfo.weather_forecast}</p>
+        <p className='text-center text-secondary' style={{width:'80%', top: '10%', fontSize:'18px',letterSpacing:'1px'}}>{placeInfo.weather_forecast}</p>
       </div>
     </div>
   </Carousel.Item>
 
   <Carousel.Item style={{ width: '100%', position: 'relative' }}>
-    <video id="videoPlayer" width="100%" controls style={{ top: 0, display: 'block', width: '100%', height:'450px' }}>
+    <video className='place-info-slide mt-1 mb-1' id="videoPlayer" width="100%" controls style={{ top: 0, display: 'block', width: '100%', height:'450px' }}>
       <source src={placeInfo.videos} type="video/mp4" />
       <source src={placeInfo.videos} type="video/webm" />
       <source src={placeInfo.videos} type="video/ogg" />
@@ -172,7 +172,7 @@ const PlaceInfo = () => {
                                         <button
                                             onClick={() => handleNavigateToBooking(id, placeName, price)}
 
-                                            className="what-card-price btn mt-3  btn-sm"
+                                            className="what-card-btn btn mt-3  btn-sm"
                                             style={{
                                                 fontSize: '18px',
                                                 color: 'goldenrod',
@@ -185,9 +185,8 @@ const PlaceInfo = () => {
                                         </button>
 </div>
 
-
                             {loadWeather && (
-                                <div className="col-md-4 text-center" style={{}}>
+                                <div className="col-md-4 text-center mt-3" style={{}}>
                                     <div className="weather-widget">
                                        
                                         {isLoadingWeather ? (
@@ -195,7 +194,7 @@ const PlaceInfo = () => {
                                         ) : weatherData ? (
                                             <Card className="weather-card" style={{ background: '#121661' }}>
                                             <Card.Body>
-                                                <Card.Title style={{color:'#A9A9A9'}}>Weather info for {placeName}</Card.Title>
+                                                <Card.Title style={{color:'#A9A9A9'}}>Weather Forecast for {placeName}</Card.Title>
                                                 <table style={{ background: '#121661', color: 'greenyellow' }}>
                                                     <tbody>
                                                         <tr>

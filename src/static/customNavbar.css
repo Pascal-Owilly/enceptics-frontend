@@ -1,0 +1,22 @@
+/* Override the Bootstrap button color and background */
+.navbar-toggler-icon {
+    color: #fff;
+    background-color: transparent;
+  }
+  
+  /* Modify the toggle button animation duration (e.g., 0.5s) */
+  .navbar-toggler {
+    transition: transform 0.5s;
+  }
+  
+  /* Override the Bootstrap collapsed state */
+  .navbar-collapse.collapse.show {
+    display: block;
+  }
+  
+  /* Customize the collapsed menu background color and other styles */
+  .navbar-collapse.collapse {
+    background-color: #121661;
+    padding: 10px;
+  }
+  

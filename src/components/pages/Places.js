@@ -238,7 +238,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
     <>
       <Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
         <div className="" style={{marginTop:'10vh'}}>
-  <span className="" style={{ marginRight: '8rem', fontSize:'32px', color:'#a9a9a9', fontWeight:'500' }}>Adventure awaits. Let your vacay begin</span>
+  <h1 className="places-span" style={{  color:'#a9a9a9', fontWeight:'500' }}>Adventure awaits. Let your vacay begin</h1>
   <button className="mt-4 p-1 what-card" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
     <FaPlus /> Add New Destination
   </button>

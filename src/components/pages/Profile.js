@@ -137,17 +137,17 @@ const Profile = () => {
   
   return (
     <>
-      <div style={{ backgroundColor: '#121661', height: '100vh' }}>
+      <div style={{ backgroundColor: '#121661', height: '120vh' }}>
         {user && Object.keys(profile).length > 0 ? (
           <div className="container bootstrap snippets bootdey">
-            <div className="row" style={{ backgroundColor: '#121661', marginTop: '13vh' }}>
-              <div className='col-md-3'>
-                <h5 className='text-white mt-5 user-heading' style={{ textTransform: '' }}>
+            <div className="row" style={{ backgroundColor: '#121661', marginTop: '11vh' }}>
+              <div className='col-md-6'>
+                <h2 className='text-white mt-5 user-heading' style={{ textTransform: '' }}>
                   {user.username ? <span style={{ textTransform: 'capitalize' }}>{user.username}'s</span> : ''}
                   &nbsp; Profile
-                </h5>
+                </h2>
               </div>
-              <div className='col-md-3 '>
+              <div className='col-md-6 '>
                 <p style={{}} className='mt-5'>
                   <button onClick={() => setShowEditModal(true)} className="btn btn-link">
                     <i className="fa fa-edit"></i> Edit profile
@@ -157,34 +157,40 @@ const Profile = () => {
               <hr className='text-white' />
               <div className="profile-nav col-md-4">
                 <div className="panel" style={{width:'100%', borderRadius:'5px', border:'none'}}>
-                  <div className="user-heading" >
+                  <div className="user-heading">
+                    <div style={{borderRadius:'100%'}}>
                     <img
+                      className="rounded-circle text-center"
                       src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
-                      style={{width:'100%', borderRadius:'50%', border:'none'}}
-                    />
+                      style={{width:'200px', height:'200px', border:'none'}}
+                    />              <hr className='text-secondary' />
+  
+                                      <h3 className='text-white'  style={{fontFamily:'cursive', forntSize:'14px'}}> <span className='text-secondary' style={{fontFamily:'cursive', forntSize:'10px'}}>{user.email}</span></h3>
+
+
+                  </div>
                   </div>
                 </div>
               </div>
-              <div className="profile-info col-md-4 mx-2" style={{ color: '#d9d9d9' }}>
+              <div className="profile-info col-md-6 mx-2" style={{ color: '#d9d9d9' }}>
                 <div className="panel" style={{ backgroundColor: '#121661' }}>
                   <h4>
                     {user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : ''}
 
                   </h4>
-                  <span className='text-white'  style={{fontFamily:'cursive', forntSize:'14px'}}> <span className='text-secondary' style={{fontFamily:'cursive', forntSize:'10px'}}>{user.email}</span></span>
 
-                  <hr />  
                 </div>
                 <div className="panel" style={{ backgroundColor: '#121661' }}>
                   {/* <p className='text-white'>Username : &nbsp; <span className='text-secondary'>{user.username}</span></p> */}
 
                   {/* Display Bio */}
-                  <p className='bio-graph-heading'>Bio : &nbsp;</p>
+                  <p className='bio-graph-heading ' style={{fontWeight:'bold'}}>Bio  &nbsp;</p>
                   <span className=' bio-graph-info'>{profile.bio}</span>
                   {/* Display Current City */}
                 </div>
                 <ul className="text-secondary" style={{ listStyleType:'none' }}>
-                <hr />
+                <hr className='text-secondary' />
+
 
                   <p>
                     <span><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-user profile-activity"></i> Following <span className="label"></span></a>&nbsp; 12</span>
@@ -192,22 +198,21 @@ const Profile = () => {
 
                   </p>
                   <p>
-                    <hr />
-                    <p className='text-white summary-head'>Current City : &nbsp; <span className='text-secondary'>{profile.current_city}</span></p>
+                  <hr className='text-secondary' />
+
+                    <h5 className='text-white summary-head'>Current City : &nbsp; <span className='text-secondary' style={{fontSize:'20px'}}>{profile.current_city}</span></h5>
 
                   </p>
                 </ul>
               </div>
-              <div className='col-md-3'>
-              </div>
             </div>
           </div>
         ) : (
-          <p style={{ height: '100vh', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Hang tight...</p>
+          <p style={{ height: 'auto', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Hang tight...</p>
         )}
       </div>
 {/* Profile Edit Modal */}
-<Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+<Modal show={showEditModal} onHide={() => setShowEditModal(false)} style={{marginTop:'5vh', backgroundColor:'rgb(0,0,0,.7)'}}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>

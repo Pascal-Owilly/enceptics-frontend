@@ -14,23 +14,29 @@ const ImageCarousel = () => {
 
   const images = [
     {
-      src: require('../../images/Fw4epCKX0AAtaIW.jpeg'),
+      src: require('../../images/mombasa.jpg'),
       title: 'Beach Resorts',
       text: 'Enjoy your holidays at the most exquisite beach resorts',
       more: 'Read more',
     },
     {
-      src: require('../../images/Fw4epCLXsAEy3FC.jpeg'),
-      title: 'Holiday Destination',
-      text: 'Explore the world with our luxury holiday packages',
+      src: require('../../images/natpark.jpg'),
+      title: 'Wildlife Safari',
+      text: 'Embark on a journey to witness the beauty of the animal kingdom',
       more: 'Read more',
     },
     {
-      src: require('../../images/vace2.jpg'),
+      src: require('../../images/mountain-retreat.jpg'),
       title: 'Mountain Retreat',
       text: 'Find the best mountain retreats for a peaceful vacation',
       more: 'Read more',
     },
+    // {
+    //   src: require('../../images/vace2.jpg'),
+    //   title: 'Romantic Getaways',
+    //   text: 'Plan a romantic escape for you and your loved one',
+    //   more: 'Read more',
+    // },
   ]
 
   return (
@@ -54,13 +60,34 @@ const ImageCarousel = () => {
             margin: 0;
           }
 
+          @media (max-width: 767px) {
+
           .carousel-caption {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 50vh !important;
           }
+          .hero-carousel{
+            height: 50vh !important;
+
+          }
+          .hero-image{
+            height: 50vh !important;
+          }
+          h2 {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            margin-top: 5rem;
+          }
+          p{
+            font-size: 15px !important;
+            width: 80% !important;
+          }
+        }
+
+  
 
           @keyframes slideDown {
             0% {
@@ -87,7 +114,7 @@ const ImageCarousel = () => {
       </style>
       <Row>
         <Col>
-          <Carousel activeIndex={index} fade={true} controls={true} interval={5000} onSelect={handleSelect} style={{ backgroundColor: 'rgba(18, 22, 97)', position: 'relative', height: '100vh', pointerEvents: 'none', width:'100%' }}>
+          <Carousel className='hero-carousel' activeIndex={index} pause={false} fade={true} controls={true} indicators={true} interval={5000} onSelect={handleSelect} style={{ backgroundColor: 'rgba(18, 22, 97)', position: 'relative', height: '100vh', width:'100%', zIndex:'1'}}>
             {images.map((image, i) => (
               <Carousel.Item key={i}>
                 <img className="d-block w-100 hero-image" src={image.src} alt="Carousel Image" style={{ top: 0, height: '100vh', bottom: 0, width:'100%' }} />
