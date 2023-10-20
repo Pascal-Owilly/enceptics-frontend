@@ -5,7 +5,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'; // Import js-cookie library
 import './Profile.js';
 import { Button, Dropdown, Navbar, Nav, Container, Row, Col, NavLink, Form, FormControl } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 import { IoMdChatboxes } from 'react-icons/io';
 import dash from '../../images/three-dashes.svg';
 import SearchResults from './SearchResults';
@@ -30,9 +30,28 @@ function NavigationBar() {
   const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
   const [expanded, setExpanded] = useState(false);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const baseUrl = 'http://127.0.0.1:8000'
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
    const toggleExpanded = () => {
     setExpanded(!expanded);
   };
+
+  // Add an event handler to close the navbar when a nav link is clicked and scroll to the top
+  const handleNavigationLinkClick = () => {
+    setIsMenuOpen(false); // Close the navbar
+    // Use JavaScript to scroll to the top of the page smoothly
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+  
 
 
     // Add an event handler to close the navbar when a nav link is clicked
@@ -41,15 +60,6 @@ function NavigationBar() {
 
 // search
   const [searchQuery, setSearchQuery] = useState("");
-
-  // if (!user) {
-  //   // User data is not available, handle this case (e.g., show a loading indicator or login button)
-  //   return null; // or return an appropriate component
-  // }
-
-  // // Access user properties here
-  // const { username } = user;
-
 
 
  // Function to handle search input changes
@@ -64,6 +74,7 @@ function NavigationBar() {
     // Check if searchQuery is not empty before navigating
     if (searchQuery.trim() !== '') {
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      window.location.reload();
 
     }
   };
@@ -72,22 +83,11 @@ useEffect(() => {
   if (flashMessage) {
     const timer = setTimeout(() => {
       setFlashMessage(null); // Remove the flash message after 2 seconds
-    }, 4000); 
+    }, 2000); 
 
     return () => clearTimeout(timer);
   }
 }, [flashMessage]);
-
-// const search = async () => {
-//   try {
-//     const response = await axios.get(`http://127.0.0.1:8000/api/blogposts/?search=${query}`);
-//     const results = response.data;
-//     setResults(results);
-//   } catch (error) {
-//     console.error('Error searching:', error);
-//   }
-// };
-
 
 const [registrationData, setRegistrationData] = useState({
   username: '',
@@ -111,7 +111,7 @@ const login = async (e) => {
     e.preventDefault();
   }
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/auth/login/', loginData);
+    const response = await axios.post(`${baseUrl}/api/auth/login/`, loginData);
   
     const authToken = response.data.key;
 
@@ -139,7 +139,7 @@ useEffect(() => {
 
 const fetchUserData = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
+    const response = await axios.get(`${baseUrl}/api/auth/user/`, {
       headers: {
         Authorization: `Token ${authToken}`,
       },
@@ -153,7 +153,7 @@ const fetchUserData = async () => {
 
 const fetchProfile = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
+    const response = await axios.get(`${baseUrl}/api/profile/`, {
       headers: {
         Authorization: `Token ${authToken}`,
       },
@@ -185,7 +185,7 @@ const signUp = async (e) => {
     e.preventDefault();
   }
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', registrationData);
+    const response = await axios.post(`${baseUrl}/api/auth/register/`, registrationData);
     setFlashMessage({ message: `Welcome ${registrationData.username} !`, type: 'success' }); // Set flash message
     closeModal();
     navigate('/login')
@@ -207,7 +207,7 @@ const handleRegistrationSubmit = (e) => {
 
 const logout = async () => {
   try {
-    await axios.post('http://127.0.0.1:8000/api/auth/logout/');
+    await axios.post(`${baseUrl}/api/auth/logout/`);
     setIsLoggedIn(false);
     
     // Remove the authToken cookie
@@ -266,83 +266,248 @@ const handleRegistrationChange = (e) => {
 
   };
 
- 
-  
   return (
 <>
-<Navbar className='mx-2 what-card-navbar' variant="primary" expand="md" style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '98.5%', top: '0.4rem', borderRadius:'0' }}>
-        <Container fluid>
-          <Navbar.Brand className='text-white mx-2' as={Link} to="/">
-          <span style={{fontFamily:'CustomFont', fontSize:'28px', letterSpacing:'3px'}} className="brand-first-letter">E</span>
-            <sub style={{fontFamily:'cursive', fontWeight:'bold', letterSpacing:'2px', fontSize:'16px'}} className="brand-text">nceptics</sub>
-        
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: '1rem', fontSize: '14px'}} />
-          <Navbar.Collapse id="basic-navbar-nav text-center" style={{transition:'1s ease', zIndex: 999}}>
-            <Nav className="mx-auto text-center" >
-            <Form inline className="container h-100">
-  <FormControl
-    type="text"
-    className="search_input" // Apply the same class as in the li element
-    placeholder="Search in places..."
-    value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
-  />
-  <FaSearch
-    className="search_icon"
-    onClick={handleSearch}
-  />
-</Form>
+<Navbar className={`what-card-navbar ${expanded ? 'collapsed-navbar' : ''}`} variant="primary" expand="md" style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', borderRadius: '0',}}>
+  <Container fluid>
+    <Navbar.Brand className="text-white" as={Link} to="/" >
+      <span style={{ fontFamily: 'CustomFont', fontSize: '28px', letterSpacing: '3px' }} className="brand-first-letter">E</span>
+      <sub style={{ fontFamily: 'cursive', fontWeight: 'bold', letterSpacing: '2px', fontSize: '16px' }} className="brand-text">nceptics</sub>
+    </Navbar.Brand>
+    <Navbar.Toggle
+       aria-controls="basic-navbar-na"
+       style={{ marginRight: '0.5rem', fontSize: '18px', border:'1px solid #a9a9a9', padding:'5px' }}
+       onClick={toggleExpanded}
+    >     
+  {expanded ? <FaTimes style={{fontSize:'20px', color:'#a9a9a9'}}/> : <FaBars style={{fontSize:'20px', color:'#a9a9a9', border:'none', fontWeight:'200'}} />}
+</Navbar.Toggle>
+    <Navbar.Collapse id="basic-navbar-nav text-center" style={{ zIndex: 999 }}>
+    <hr style={{color:'#a9a9a9'}}/>
+      <Nav className="mx-auto text-center">
+      <li className="nav-items nav-border mx-5">
+                <div className="container h-100"> 
+                  <div className="d-flex justify-content-center h-100 toggled-link">
+                    <div className="searchbar " onClick={handleSearch}>
+                      <input className="search_input" type="text" name="" placeholder="Search in places..."
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
+                       />
+              <a className="search_icon"><FaSearch /></a>
+                </div>
+                </div>
+            </div>
 
-              <Nav.Link as={Link} to="/" exact className='text-white' style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }}>
-
+              </li> 
+        <li className="nav-items mx-3">
+              {/* Close the navbar when this link is clicked */}
+              <a style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/">
                 Home
-              </Nav.Link>
-              <Nav.Link as={Link} to="/about" style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px', color:'white' }}>
+              </a>
+            </li>
+            <li className="nav-items mx-3">
+              {/* Close the navbar when this link is clicked */}
+              <a style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/about">
                 About Us
-              </Nav.Link>
-              <Nav.Link as={Link} to="/places" style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px', color:'white' }}>
-              <button className='btn btn-sm what-card-btn ' style={{ backgroundColor: 'green', color: '#fff', fontWeight: 'bolder', padding: '' }}>
-                  <span style={{ padding: '10px' }}> Book Now</span>
-                </button>              
-                </Nav.Link>
-              <Nav.Link as={Link} to="/currencyconverter" style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px', color:'goldenrod' }}>
-                Currency
-              </Nav.Link>
-            </Nav>
+              </a>
+            </li>
+        <li className="nav-items">
+          {/* Close the navbar when this link is clicked */}
+          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin" href="/places">
+                <button className='btn btn-sm what-card-btn mx-3' style={{ backgroundColor: 'green', color: '#fff', fontWeight: 'bolder', padding: '' }}>
+                  <span className='mx-2' style={{ padding: '' }}> Book Now </span>
+                </button>
+              </a>
+        </li>
+        <li className="nav-items mx-3 ">
+          <a onClick={handleNavigationLinkClick} style={{ fontFamily: 'arial', fontWeight: '500px', letterSpacing: '2px', fontSize: '16px', color: 'goldenrod',textDecoration:'none' }} className="nav-link toggled-lik" href="/currencyconverter">
+            Currency
+          </a>
+        </li>
+        {isLoggedIn ? (
+          <>
+                        
+                        <li className='nav-items ' style={{listStyleType:'none'}}>
+              <a href="/blog">
+              <button className="btn btn-sm mt-2 what-card-btn" 
+                    style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
+                    >
+                      <span style={{padding:'10px'}}>
+                    <IoMdChatboxes style={{fontSize:'19px'}} /> chat
+                    </span>
+                    
+                  </button> </a>
+              </li>
+            <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-17px' }}>
+  <a className="nav-link text-white" href="/profile">
+    {profile && profile.profile_pic && (
+      <>
+        <img
+          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          style={{ width: '40px', height: '40px', borderRadius: '100%' }}
+          alt=""
+        />
+        <div style={{ maxWidth: '30px' }}>
+          <span style={{ fontSize: '14px', fontWeight: '500', opacity: '.9', fontFamily: 'cursive', letterSpacing: '1px', lineHeight: '1px' }} className='text-white text-center'>{profile && user.username}</span>
+        </div>
+      </>
+    )}
+  </a>
+</li>
+            <li className="nav-items">
+          {/* Close the navbar when this link is clicked */}
+          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin">
+                <button onClick={logout} className='btn btn-sm what-card-btn mx-4' style={{ backgroundColor: '#121661', color: '#fff', fontWeight: 'bolder', padding: '' }}>
+                  <span className='mx-2' style={{ padding: '', right: 0 }}>Logout</span>
+                </button>
+              </a>
+        </li>
+          </>
+        ) : (
+          <>
+                    <span className="nav-items">
+          {/* Close the navbar when this link is clicked */}
+          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin">
+                <button onClick={openSignUpModal} className='btn btn-sm what-card-btn' style={{ backgroundColor: '#121661', color: '#fff', fontWeight: 'bolder', padding: '' }}>
+                  <span className='mx-2' style={{ padding: '' }}>Sign Up</span>
+                </button>
+              </a>
+      </span>
+        <span className="nav-items">
+          {/* Close the navbar when this link is clicked */}
+          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin">
+                <button onClick={openLoginModal} className='btn btn-sm what-card-btn ' style={{ backgroundColor: '#121661', color: '#fff', fontWeight: 'bolder', padding: '' }}>
+                  <span className='mx-2' style={{ padding: '', right:0 }}>Login</span>
+                </button>
+              </a>
+        </span>
+          </>
+        )}
 
-            {isLoggedIn ? (
-              <>
-                <Nav.Link as={NavLink} to="/blog">
-                  <Button variant="info">
-                    <IoMdChatboxes /> Chat
-                  </Button>
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/profile">
-                  <img
-                    src={`http://localhost:8000${profile.profile_pic}`}
-                    alt=""
-                    style={{ width: '40px', height: '40px', borderRadius: '100%' }}
-                  />
-                  <span className="text-white">{profile && user.username}</span>
-                </Nav.Link>
-                <Button variant="outline-light" onClick={logout}>
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button variant="outline-light" onClick={openSignUpModal}>
-                  Sign Up
-                </Button>
-                <Button variant="outline-light" onClick={openLoginModal}>
-                  Login
-                </Button>
-              </>
-            )}
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+        {showModal && (
+          <div className="modal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
+            <div className="modal-dialog">
+              <div className="modal-content what-card-bt text-secondary" style={{ background: '#121661', width: '300px' }}>
+                <div className="modal-header">
+                  <h5 className="modal-title text-secondary">{isSignUpModal ? 'Sign Up' : 'Login'}</h5>
+                  <button style={{ backgroundColor: '', border: 'none', color: 'white', width: '40px', borderRadius: '4px' }} type="button" className="close" onClick={closeModal}>
+                    <span className="text-dark" aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body ">
+                  {isSignUpModal ? (
+                    <form className="m-1" onSubmit={handleRegistrationSubmit}>
+                      <div className="form-group">
+                        <label className="mt-4" htmlFor="username">Username</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="username"
+                          name="username"
+                          value={registrationData.username}
+                          placeholder="Enter username"
+                          onChange={handleRegistrationChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="mt-4" htmlFor="email">Email</label>
+                        <input
+                          type="email"
+                          className="form-control "
+                          id="email"
+                          name="email"
+                          placeholder="Enter email"
+                          value={registrationData.email}
+                          onChange={handleRegistrationChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="mt-4" htmlFor="password">Password</label>
+                        <input
+                          type="password"
+                          placeholder="Enter password"
+                          className="form-control"
+                          id="password1"
+                          name="password1"
+                          value={registrationData.password1}
+                          onChange={handleRegistrationChange}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="mt-4" htmlFor="confirm_password">Confirm Password</label>
+                        <input
+                          type="password"
+                          placeholder="Confirm password"
+                          className="form-control"
+                          id="password2"
+                          name="password2"
+                          value={registrationData.password2}
+                          onChange={handleRegistrationChange}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-sm mt-3"
+                        style={{ backgroundColor: '#000092', borderColor: '#000092', width: '100%' }}
+                      >
+                        Sign Up
+                      </button>
+                      <hr />
+                      <p>Already have an account? <a href="/login">Login</a></p>
+                    </form>
+                  ) : (
+                    <>
+                      <form onSubmit={handleLoginSubmit} >
+                        <div className="form-group">
+                          <label className="mt-4" htmlFor="username">Username</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="username"
+                            name="username"
+                            value={loginData.username}
+                            placeholder="Enter username"
+                            onChange={handleLoginChange}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="mt-4" htmlFor="password">Password</label>
+                          <input
+                            type="password"
+                            placeholder="Enter password"
+                            className="form-control "
+                            id="password"
+                            name="password"
+                            value={loginData.password}
+                            onChange={handleLoginChange}
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn btn-primary btn-sm mt-4"
+                          style={{ backgroundColor: '#121661', borderColor: '#000092', width: '100%' }}
+                        >
+                          Login
+                        </button>
+                        <hr />
+                        <p>Don't have an account? <a href="/signup">SignUp</a></p>
+                        <p className="mb-2 text-secondary">
+                          <a href="/forgot-password" onClick={closeModal}>Forgot your password?</a>
+                        </p>
+                      </form>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </Nav>
+    </Navbar.Collapse>
+  </Container>
+</Navbar>
+
       {flashMessage && (
         <div className={`flash-message ${flashMessage.type}`}>{flashMessage.message}</div>
       )}

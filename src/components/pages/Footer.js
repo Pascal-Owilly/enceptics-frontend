@@ -70,7 +70,7 @@ function Footer() {
       )}
       {subscriptionStatus === 'error' && (
         <div style={{backgroundColor:'transparent', color:'red', fontWeight:'500', fontSize:'18px', border:'none', transition:'2s easeIn'}} className="alert alert-danger text-center" role="alert">
-          Oops!, that didn't work, try again
+         Keep tight, coming soon !
         </div>
 )}
         {subscriptionStatus === 'already-subscribed' && (

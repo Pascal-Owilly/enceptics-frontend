@@ -15,6 +15,8 @@ const Booking = () => {
   const priceFromURL = searchParams.get("price");
   const price = parseFloat(priceFromURL) || 0; // Ensure it's a number, default to 0 if parsing fails
 
+  const baseUrl = 'http://127.0.0.1:8000'
+
   const id = queryParams.get('id');
 
 
@@ -91,7 +93,7 @@ const Booking = () => {
 
   useEffect(() => {
     if (authToken) {
-      axios.get('http://127.0.0.1:8000/api/auth/user/', {
+      axios.get(`${baseUrl}/api/auth/user/`, {
         headers: {
           Authorization: `Token ${authToken}`,
         },
@@ -113,7 +115,7 @@ const Booking = () => {
   
       if (state && state.placeId) {
         axios
-          .get(`http://127.0.0.1:8000/api/places/${state.placeId}/`)
+          .get(`${baseUrl}/api/places/${state.placeId}/`)
           .then((placeResponse) => {
             setPlaceData(placeResponse.data);
   
@@ -194,7 +196,7 @@ const Booking = () => {
       console.log('placeData.id is ' + placeData.id);
       // console.log('place state  is' + state.placeId)        
 
-      axios.post('http://127.0.0.1:8000/api/book-place/', orderPlace, {
+      axios.post(`${baseUrl}/api/book-place/`, orderPlace, {
         headers: {
           Authorization: `Token ${authToken}`,
         },
@@ -250,9 +252,8 @@ const Booking = () => {
 
   
     try {
-      // const paypalEndpoint = 'http://127.0.0.1:8000/paypal/create/order';
           // const paypalEndpoint = `http://localhost:8000/paypal/create/order?placeId=${placeId}`; // Include the placeId in the URL
-          const paypalEndpoint = "http://127.0.0.1:8000/api/auth/paypal/create/"; // Include the placeId in the URL
+          const paypalEndpoint = `${baseUrl}/api/auth/paypal/create/`; // Include the placeId in the URL
           const user_id = user ? user.id : null;
 
   
@@ -291,7 +292,7 @@ const Booking = () => {
   // capture the response from paypal validation endpoint
   const handlePaymentValidation = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/auth/paypal/validate/');
+      const response = await axios.get(`${baseUrl}/api/auth/paypal/validate/`);
   
       if (response.data.success) {
         // Payment was successful
@@ -345,7 +346,7 @@ const handlePaymentMpesa = async (e) => {
   
   try {
     // Define the endpoint for initiating the M-Pesa payment request
-    const mpesaEndpoint = 'http://localhost:8000/mpesa-payments/daraja/'; // Adjust the URL as needed
+    const mpesaEndpoint = `${baseUrl}/mpesa-payments/daraja/`; // Adjust the URL as needed
 
     const user_id = user ? user.pk : null;
     const mpesaData = {
@@ -421,7 +422,7 @@ const handlePaymentMpesa = async (e) => {
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/paypal/create/order', {
+      const response = await axios.post(`${baseUrl}/api/auth/paypal/create/order`, {
 
       });
 
@@ -439,7 +440,7 @@ const handlePaymentMpesa = async (e) => {
 
   const checkDestination = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/paypal/capture/order', bookingData);
+      const response = await axios.post(`${baseUrl}/api/auth/paypal/capture/order`, bookingData);
       console.log('Booking successful! Have a nice travel!');
     } catch (error) {
       console.log("Oops! Booking didn't work");
@@ -455,7 +456,7 @@ const handlePaymentMpesa = async (e) => {
   return (
     <>
 
-      <div className="booking pt-2 " style={{ backgroundColor: '#121661', height: 'auto', color: 'white', margin:'auto', marginTop:'13vh' }}>
+      <div className="booking pt-2 " style={{ backgroundColor: '#121661', height: 'auto', color: 'white'}}>
 
         <br />
         <div className='container m-auto'>
@@ -464,21 +465,21 @@ const handlePaymentMpesa = async (e) => {
           <div className='col-md-3'>
 
           </div>
-          <div className='col-md-6'>
-          <div className='row what-card-btn mb-5 m-auto' style={{width:'100%', borderRadius:'10px'}}>
+          <div className='col-md-6' style={{ marginTop:'13vh' }}>
+          <div className='row what-card-navbar mb-5 m-auto' style={{width:'100%', borderRadius:'10px'}}>
           <div className='col-md-6'>
 {/* Content for the second column */}
-<h5 className='mt-1' style={{ color: 'goldenrod', fontFamily:'cursive' }}>Booking for {placeName}</h5>
+<h5 className='mt-1 p-3' style={{ color: 'goldenrod', fontFamily:'cursive', fontWeight:'750' }}>Booking for {placeName}</h5>
   </div>
   <div className='col-md-1'>
   
      </div>
   <div className='col-md-5'>
     {/* Content for the third column */}
-   <p  className='mt-1' style={{ color: '#d9d9d9' }}>Price for 2: <span className='' style={{color:'goldenrod', fontWeight:'bold'}}> &nbsp; Ksh {price}</span></p>
+   <p  className='mt-1 p-3' style={{ color: '#d9d9d9' }}>Price for 2: <span className='' style={{color:'goldenrod', fontWeight:'bold'}}> &nbsp; Ksh {price}</span></p>
   </div>
           <hr style={{ color: 'white', height: '0rem' }} />
-          <div className='col-md-6 mb-3 mt-2 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
+          <div className='col-md-6 mb-3 mt-2  p-3 mx-auto' style={{ border: 'none', padding: '20px', borderRadius: '5px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.3)' }}>
 
 
    <div className="form-group">

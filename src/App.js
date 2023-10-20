@@ -87,14 +87,7 @@ function App() {
           <Route path="/payment/status/:status" element={<PaymentStatus />} />
 
           <Route path="/payment/response" element={<PaymentResponsePage paymentResponse={response} />} />
-
-     
-{/* 
-          <Route path="/payment/status/success" element={<PaymentStatus status="success" />} />
-          <Route path="/payment/status/cancel" element={<PaymentStatus status="cancel" />} />
-          <Route path="/payment/status/failed" element={<PaymentStatus status="failure" />} />     */}
-
-        
+                  
           <Route path="/bookingexample" element={<BookingExample />} />          
 
         </Routes>

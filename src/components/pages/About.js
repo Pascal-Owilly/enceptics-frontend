@@ -11,7 +11,7 @@ import Login from './authenticate/Login';
 const About = () => {
 
   const [about, setAbout] = useState([]);
-
+  const baseUrl= 'http://127.0.0.1:8000'
 
   useEffect(() => {
     fetchAbout();
@@ -19,7 +19,7 @@ const About = () => {
 
   const fetchAbout = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/auth/about/', {
+      const response = await axios.get(`${baseUrl}/api/auth/about/`, {
 
       });
       setAbout(response.data);

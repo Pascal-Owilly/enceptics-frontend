@@ -11,10 +11,10 @@ const AboutUs = () => {
 
   return (
     <div style={{backgroundColor:'#121661'}}>
-      <Container fluid>
+      <Container >
       <Row >
         <Col md={8}>
-          <Card
+          <div
               
              style={{
               backgroundImage: `linear-gradient(rgba(18, 22, 97,0.8), rgba(18, 22, 97,0.8)), url(${natpark})`,
@@ -27,18 +27,20 @@ const AboutUs = () => {
           >
             <Card.Body>
               <Card.Title className="text-center" style={{fontSize:'25px', color:'rgb(18, 187, 18)'}}><h1>Welcome to Enceptics</h1></Card.Title>
+              <hr />
+
               <Card.Text style={{ height: "auto" }}>
               <header>
         
     </header>
     <main>
         <section>
-            <h3>Explore, Book, Relax</h3>
+            <h4>Explore, Book, Relax</h4>
             <p>At Enceptics, we make your dream vacations a reality. We understand that planning a trip can be overwhelming, so we've simplified the entire process for you.</p>
             <p>Discover a world of stunning destinations, handpicked for you. Explore and select your favorite place, and we'll take care of the rest.</p>
         </section>
         <section>
-            <h3>What We Offer</h3>
+            <h4>What We Offer</h4>
             <ul>
                 <li>Curated Destinations: We offer a selection of the most enchanting places for you to explore.</li>
                 <li>All-Inclusive Packages: Relax and let us handle transportation, accommodation, and expert tour guides.</li>
@@ -49,34 +51,34 @@ const AboutUs = () => {
             </ul>
         </section>
         <section>
-            <h3>Join Our Community</h3>
+            <h4>Join Our Community</h4>
             <p>Enceptics is more than an app; it's a community of travelers sharing their journeys and experiences. Connect with like-minded individuals, exchange tips, and inspire each other.</p>
             <p>Whether you're an avid globetrotter or a first-time traveler, you're welcome here. Let's explore the world together.</p>
         </section>
     </main>
               </Card.Text>
               </Card.Body>
-              </Card>
+              </div>
         </Col>
-        <Col md={4}>
-          <Row>
-            <Col>
-            <Card className="what-card-btn text-white p-2 mx-auto" style={{marginTop:'14vh', backgroundColor:'transparent'}}>  
+        <Col md={4} className=' mt-2'>
+          <Row >
+            <Col className='text-right'>
+            <div className="what-card-btn text-white p-2 mx-auto" style={{marginTop:'14vh', backgroundColor:'transparent'}}>  
      
-              <h3 style={{fontSize:'25px', color: "rgb(18, 187, 18)"}}>Mission</h3>
-              <p>
+              <h5 style={{color: "rgb(18, 187, 18)"}}>Mission</h5>
+              <p className="text-sm" style={{fontSize:'14px'}}>
               At Enceptics, our mission is to create unforgettable travel experiences for our customers. We strive to simplify the journey from dreaming to exploring by offering hassle-free bookings, expertly curated tours, and reliable services. We are dedicated to taking care of the details, so you can focus on creating memories.              </p>
-              </Card>
+              </div>
             </Col>
           </Row>
           <Row>
             <Col>
-            <Card className="what-card-btn text-white p-2 mx-auto" style={{backgroundColor:'transparent'}}>  
-              <h3 style={{fontSize:'25px', color: 'rgb(18, 187, 18)'}}>Vision</h3>
-              <p>
+            <div className="what-card-btn mt-4 text-white p-2 mx-auto" style={{backgroundColor:'transparent'}}>  
+              <h5 style={{color: 'rgb(18, 187, 18)'}}>Vision</h5>
+              <p className="text-sm" style={{fontSize:'14px'}}>
               Our vision at Enceptics is to become the go-to platform for stress-free and immersive travel adventures. We aim to connect travelers with their dream destinations, providing seamless transportation, comfortable accommodations, and insightful tour guides. We envision a world where everyone can explore the world without worry, enabled by our innovative and reliable services. 
               </p>
-              </Card>
+              </div>
             </Col>
           </Row>
         </Col>

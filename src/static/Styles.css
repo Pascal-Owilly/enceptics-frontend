@@ -1,16 +1,28 @@
 /* START NAVBAR */
-
-
-/* Define a class for the search link */
-.toggled-link {
-  /* margin-top: 1.254rem !important;
-  border-top: 1px solid green; Add a top border for the line
-  padding: .6rem !important; Add some padding to separate the line from the link text */
+/* Styles for the collapsed Navbar */
+.collapsed-navbar .nav-items {
+  height: 10vh;
+  margin-top: 0.3rem;
 }
 
-.toggled-link-bottom{
-  margin-bottom: 1.254rem !important;
-}
+
+/* .naviation-links{
+left: 0;
+} */
+
+
+/* .collapsed-navbar .navbar-nav .nav-item {
+  margin-top: 4rem;
+} */
+
+/* Other styles for the collapsed Navbar, e.g., background color, text color, etc. */
+
+/* Styles for the Navbar on large screens */
+
+
+
+
+
 
 /* END NAVBAR */
 /* Weather  */
@@ -24,26 +36,26 @@
   height: 450px; /* Fixed height */
   /* Add any other custom styles as needed */
 }
-
+/* 
 .nav-item {
   position: relative;
-  text-decoration: none; /* Remove the default underline */
-}
+  text-decoration: none;
+} */
 
-.nav-item ::before {
+/* .nav-item ::before {
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0; /* Initially set the width to 0 */
-  height: 2px; /* You can adjust the thickness of the underline */
-  background-color: goldenrod; /* Set the color of the underline */
-  transition: width 0.5s ease; /* Add a transition effect for width */
-}
+  width: 0; 
+  height: 2px; 
+  background-color: goldenrod; 
+  transition: width 0.5s ease; 
+} */
 
-.nav-item :hover::before {
-  width: 100%; /* Increase the width to 100% on hover */
-}
+/* .nav-item :hover::before {
+  width: 100%; 
+} */
 
 /* Mobile devices */
 /* @media only screen and (max-width: 576px) and (max-width: 767px) { */
@@ -120,7 +132,7 @@
 
 /* Search */
 
-#search-form {
+/* #search-form {
     display: none;
     position: absolute;
     top: 60px;
@@ -129,13 +141,13 @@
     transition: opacity 1s ease-in-out;
     border: #ffffff;
     border: 1px solid #ffffff !important;
-  }
+  } */
   
-  #search-form.visible {
+  /* #search-form.visible {
     display: inline;
     opacity: 1;
   }
-  
+   */
   .p-1{
     padding: 0.15 !important;
     margin-left: 1rem !important;
@@ -161,18 +173,16 @@
   .search-form > input::placeholder{
     color: #666666;
     background-color: transparent;
-    padding: 10px;
+    /* padding: 10px; */
     font-size: 12px;
   
    
   }
   
-  input{
+  .search-input{
     width: 150px;
-    border: 1px solid #666666;
-    border-radius: 30px;
-    padding: 3px;
     align-items: center;
+    background-color: transparent;
   }
  
   
@@ -374,11 +384,8 @@
 
 .what-card-navbar{
   font-family: 'Nunito', sans-serif;
-  padding: 2px;
-  box-shadow: 0 6px 10px 
-  #6d6d6d, 0 0 6px ;
-    transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
-padding: 10px 10px 10px 10px;
+  box-shadow: 0 10px 20px rgba(243, 241, 241, 0.12), 0 4px 8px rgba(238, 227, 227, 0.06);
+
 }
 
   .what-card-price{
@@ -761,22 +768,22 @@ button,
   border: 0;
   outline: 0;
   background: none;
-  width: 0;
+  width: 150px;
   caret-color:transparent;
   line-height: 30px;
   transition: width 0.4s linear;
   }
 
-  .searchbar:hover > .search_input{
+  /* .searchbar:hover > .search_input{
   padding: 3px;
   width: 200px;
   caret-color: #a9a9a9;
   transition: width 0.4s linear;
-  }
+  } */
 
   .searchbar:hover > .search_icon{
-  background: white;
-  color: green;
+  background: green;
+  color: white;
   cursor: pointer;
   }
 

@@ -10,6 +10,8 @@ const PlaceInfo = () => {
 
     const navigate = useNavigate();
 
+    const baseUrl = 'http://127.0.0.1:8000'
+
 
     console.log('Place ID:', id);
 
@@ -31,7 +33,7 @@ const PlaceInfo = () => {
 
     const fetchPlaceInfo = (id) => {
         axios
-            .get(`http://127.0.0.1:8000/api/place-info/${id}/`)
+            .get(`${baseUrl}/api/place-info/${id}/`)
             .then((response) => {
                 setPlaceInfo(response.data);
                 if (!placeName && response.data.name) {
@@ -57,7 +59,7 @@ const PlaceInfo = () => {
     const fetchWeatherData = () => {
         setIsLoadingWeather(true);
         axios
-            .get(`http://127.0.0.1:8000/weather/weather-forecast/${placeName}/`)
+            .get(`${baseUrl}/weather/weather-forecast/${placeName}/`)
             .then((response) => {
                 setWeatherData(response.data);
                 setIsLoadingWeather(false);
@@ -70,8 +72,11 @@ const PlaceInfo = () => {
 
 
     const handleNavigateToBooking = (id, placeName, price) => {
-        navigate(`/booking?id=${id}&placeName=${encodeURIComponent(placeName)}&price=${price}`, { state: { placeId: id } });
+        navigate(`/booking?id=${id}&placeName=${encodeURIComponent(placeName)}&price=${price}`, {
+          state: { placeId: id, placeName, price }, // Pass placeName and price in the state
+        });
       };
+      
 
       function toggleVideoPlayback() {
         const videoPlayer = document.getElementById('videoPlayer');
@@ -90,9 +95,9 @@ const PlaceInfo = () => {
         <div style={{ minHeight: 'auto', backgroundColor: '#121661' }}>
             {placeInfo ? (
                 <div>
-                    <div className="container-fluid" style={{ marginTop: '14vh', color: 'yellow' }}>
+                    <div className="container-fluid" style={{ marginTop: '', color: 'yellow' }}>
                         <div className="row">
-                            <h2 className="mt-4" style={{ marginTop: 'vh' }}>
+                            <h2 className="" style={{ marginTop: '14vh' }}>
                                 {placeName} <span style={{fontSize:'16px', fontFamily:'cursive'}}>{price && `Price: ${price}`} </span>
                             </h2>
 
@@ -149,15 +154,15 @@ const PlaceInfo = () => {
           background: 'rgba(0, 0, 0, 0.7)',
           border: 'none',
           borderRadius: '50%',
-          width: '55px',
-          height: '55px',
+          width: '80px',
+          height: '80px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           color: 'white',
           fontSize: '32px',
           cursor: 'pointer',
-          padding: '5px',
+          padding: '10px',
         }}
         onClick={() => toggleVideoPlayback()}
       >
@@ -172,7 +177,7 @@ const PlaceInfo = () => {
                                         <button
                                             onClick={() => handleNavigateToBooking(id, placeName, price)}
 
-                                            className="what-card-btn btn mt-3  btn-sm"
+                                            className="what-card-btn btn mt-3 mb-5  btn-sm"
                                             style={{
                                                 fontSize: '18px',
                                                 color: 'goldenrod',

@@ -46,6 +46,7 @@ const Destination = () => {
     };
   }
  
+  const baseUrl = 'http://127.0.0.1:8000'
 
   const [destinations, setDestinations] = useState([]);
   const [newDestination, setNewDestination] = useState({
@@ -72,7 +73,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
 
 
   const fetchPlaceInfo = (destinationId) => {
-    axios.get(`http://127.0.0.1:8000/api/place-info/${destinationId}/`)
+    axios.get(`${baseUrl}/api/place-info/${destinationId}/`)
       .then(response => {
         setPlaceInfo(response.data);
         setIsLoading(false);
@@ -116,7 +117,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
   }, []);
 
   const fetchDestinations = () => {
-    axios.get('http://127.0.0.1:8000/api/places/')
+    axios.get(`${baseUrl}/api/places/`)
       .then(response => {
         setDestinations(response.data);
         setIsLoading(false);
@@ -135,7 +136,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       formData.append('price', newDestination.price);
       formData.append('cover_image', newDestination.cover_image);
 
-      const response = await axios.post('http://127.0.0.1:8000/api/places/', formData);
+      const response = await axios.post(`${baseUrl}/api/places/`, formData);
       setDestinations([response.data, ...destinations]);
       console.log('Cover Image:', newDestination.cover_image);
 
@@ -175,7 +176,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       formData.append('price', newDestination.price);
       formData.append('cover_image', newDestination.cover_image);
   
-      const response = await axios.put(`http://127.0.0.1:8000/api/places/${destinationToUpdate.id}/`, formData);
+      const response = await axios.put(`${baseUrl}/api/places/${destinationToUpdate.id}/`, formData);
       closeModal();
       fetchDestinations();
       console.log('Cover Image:', newDestination.cover_image);
@@ -225,7 +226,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
 
 
   const deleteDestination = (id) => {
-    axios.delete(`http://127.0.0.1:8000/api/places/${id}/`)
+    axios.delete(`${baseUrl}/api/places/${id}/`)
       .then(response => {
         fetchDestinations();
       })
@@ -239,7 +240,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       <Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
         <div className="" style={{marginTop:'10vh'}}>
   <h1 className="places-span" style={{  color:'#a9a9a9', fontWeight:'500' }}>Adventure awaits. Let your vacay begin</h1>
-  <button className="mt-4 p-1 what-card" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
+  <button className="mt-4 p-1 what-card-btn" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
     <FaPlus /> Add New Destination
   </button>
   <hr className="text-secondary"/>
@@ -274,8 +275,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                       >
                         See description
                       </button> 
-                      {/* <hr className="text-white" /> */}
-                      <br />
+                      <hr className="text-secondary"/>
                       <div className="d-flex">
                         <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
                           <FaEdit /> Edit
@@ -316,7 +316,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
           <Modal.Body className=" text-secondary m-1" style={{ height: '100%', width:'auto', backgroundColor: '#121661', borderRadius:'10px' }}>
             <div className="container">
               <div className="row">
-              <p>Includes place description and more information about that place</p>
+              <p>Add place info with a short description</p>
          
               <div className='col-md-8 m-auto'>
 

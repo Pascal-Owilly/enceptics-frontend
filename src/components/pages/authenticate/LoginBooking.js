@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { Button } from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import authService from './authService'; // Import the authService
 
 const LoginTest = () => {
@@ -22,17 +22,18 @@ const LoginTest = () => {
     const storedToken = Cookies.get('authToken');
     if (storedToken) {
       setIsLoggedIn(true);
-      // Redirect to another page if the user is already logged in
-      navigate('/booking'); // Replace '/dashboard' with your desired route
-  
+
       // Check if there's placeName and price data in the location state
       const locationState = location.state;
       if (locationState && locationState.placeName && locationState.price) {
         // Do something with placeName and price here
         const { placeName, price } = locationState;
-        console.log('Place Name:', placeName);
-        console.log('Price:', price);
+        setPlaceName(placeName);
+        setPrice(price);
       }
+
+      // Redirect to another page if the user is already logged in
+      navigate('/places');
     }
   }, []);
   
@@ -87,7 +88,7 @@ const LoginTest = () => {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '' }}>
-      <form className='what-card ' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
+      <form className='what-card ' onSubmit={handleLoginSubmit} style={{ width: '350px', height: 'auto', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
         <h3 className='text-center text-white'>Login</h3>
         <hr style={{ color: '#d9d9d9' }} />
         <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
@@ -123,11 +124,18 @@ const LoginTest = () => {
         </div> 
         <button
           type="submit"
-          className="btn btn-outline-secondary text-center mt-5 what-card-price btn-sm mt-4"
+          className="btn btn-outline-secondary text-center mt-3 mb-3 what-card-btn btn-sm mt-4"
           style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%', margin:'auto', float:'right' }}
         >
           Login
         </button>
+        <hr />
+         <p className='mb-2  mt-2 text-secondary'>
+         Don't have an account? <Link to='/signup'>Signup</Link>
+         </p>  
+         <p className='mb-2 text-secondary'>
+         <Link to='/forgot-password'>Forgot your password?</Link>
+        </p>
       </form>
     </div>
   );

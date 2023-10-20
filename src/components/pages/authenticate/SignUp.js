@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 function SignUpForm() {
   const navigate = useNavigate();
 
+  const baseUrl = 'http://127.0.0.1:8000'
+
   const [registrationData, setRegistrationData] = useState({
 
     username: '',
@@ -20,7 +22,7 @@ function SignUpForm() {
   const signUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', registrationData);
+      const response = await axios.post(`${baseUrl}/api/auth/register/`, registrationData);
       navigate('/login')
       // Handle successful sign-up here, e.g., show a success message or redirect to login.
     } catch (error) {
@@ -32,9 +34,9 @@ function SignUpForm() {
   return (
     <div style={{ height: '100vh' }}>
       <div className='container'>
-        <div className='row'>
+        <div className='row' >
           <div className='col-md-4'></div>
-          <div className='col-md-4'>
+          <div className='col-md-4' style={{marginTop:'17vh'}}>
             <h3 className='mt-4'>Sign Up</h3>
             <form className='card p-3' onSubmit={signUp}>
               <div className='form-group'>

@@ -22,6 +22,8 @@ const Profile = () => {
   });
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const baseUrl = 'http://127.0.0.1:8000'
+
   const handleEditProfilePic = (file) => {
     resizeAndSetProfilePic(file);
   };
@@ -72,7 +74,7 @@ const Profile = () => {
       formData.append('last_name', editedProfile.last_name);
 
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/profile/${profile.id}/`,
+        `${baseUrl}/api/profile/${profile.id}/`,
         formData,
         {
           headers: {
@@ -94,7 +96,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/auth/user/`, {
+      const response = await axios.get(`${baseUrl}/api/auth/user/`, {
         headers: {
           Authorization: `Token ${authToken}`,
         },
@@ -108,7 +110,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/profile/`, {
+      const response = await axios.get(`${baseUrl}/api/profile/`, {
         headers: {
           Authorization: `Token ${authToken}`,
           'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
@@ -140,20 +142,15 @@ const Profile = () => {
       <div style={{ backgroundColor: '#121661', height: '120vh' }}>
         {user && Object.keys(profile).length > 0 ? (
           <div className="container bootstrap snippets bootdey">
-            <div className="row" style={{ backgroundColor: '#121661', marginTop: '11vh' }}>
-              <div className='col-md-6'>
-                <h2 className='text-white mt-5 user-heading' style={{ textTransform: '' }}>
+            <div className="row" >
+              
+              <div className='col-md-6' style={{ backgroundColor: '#121661', marginTop:'13vh' }}>
+                <h2 className='text-white mt- user-heading' style={{fontFamily:'cursive', fontSize:'25px', fontWeight:'300'}} >
                   {user.username ? <span style={{ textTransform: 'capitalize' }}>{user.username}'s</span> : ''}
                   &nbsp; Profile
                 </h2>
               </div>
-              <div className='col-md-6 '>
-                <p style={{}} className='mt-5'>
-                  <button onClick={() => setShowEditModal(true)} className="btn btn-link">
-                    <i className="fa fa-edit"></i> Edit profile
-                  </button>
-                </p>
-              </div>
+
               <hr className='text-white' />
               <div className="profile-nav col-md-4">
                 <div className="panel" style={{width:'100%', borderRadius:'5px', border:'none'}}>
@@ -161,7 +158,7 @@ const Profile = () => {
                     <div style={{borderRadius:'100%'}}>
                     <img
                       className="rounded-circle text-center"
-                      src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+                      src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
                       style={{width:'200px', height:'200px', border:'none'}}
                     />              <hr className='text-secondary' />
   
@@ -195,7 +192,9 @@ const Profile = () => {
                   <p>
                     <span><a href="#" onClick={() => console.log('/recent-activity')}> <i className="fa fa-user profile-activity"></i> Following <span className="label"></span></a>&nbsp; 12</span>
                     <span className="active mx-4"><a href="#" onClick={() => console.log('Profile page')}> <i className="fa fa-calendar "></i> Wishlist</a></span>
-
+                    <button onClick={() => setShowEditModal(true)} className="btn btn-link">
+                    <i className="fa fa-edit"></i> Edit profile
+                  </button>
                   </p>
                   <p>
                   <hr className='text-secondary' />
@@ -212,7 +211,7 @@ const Profile = () => {
         )}
       </div>
 {/* Profile Edit Modal */}
-<Modal show={showEditModal} onHide={() => setShowEditModal(false)} style={{marginTop:'5vh', backgroundColor:'rgb(0,0,0,.7)'}}>
+<Modal show={showEditModal} onHide={() => setShowEditModal(false)} style={{ backgroundColor:'rgb(0,0,0,.7)'}}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>

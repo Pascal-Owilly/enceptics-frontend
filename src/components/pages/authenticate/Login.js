@@ -103,7 +103,7 @@ const LoginTest = () => {
     </button>
   <hr />
   <p className='mb-2 text-secondary'>
-  Don't have an account? <Link to='/signup'>Login</Link>
+  Don't have an account? <Link to='/signup'>Signup</Link>
   </p>  
   <p className='mb-2 text-secondary'>
   <Link to='/forgot-password'>Forgot your password?</Link>

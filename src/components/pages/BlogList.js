@@ -28,11 +28,13 @@ function BlogList() {
   const [commentText, setCommentText] = useState('');
   const [likes, setLikes] = useState({});
 
+  const baseUrl = 'http://127.0.0.1:8000'
+
   useEffect(() => {
     if (authToken) {
       // Fetch user data
       axios
-        .get(`http://127.0.0.1:8000/api/auth/user/`, {
+        .get(`${baseUrl}/api/auth/user/`, {
           headers: {
             Authorization: `Token ${authToken}`,
           },
@@ -43,7 +45,7 @@ function BlogList() {
 
           // Fetch user's profile including profile pic
           axios
-            .get(`http://127.0.0.1:8000/api/profile/`, {
+            .get(`${baseUrl}/api/profile/`, {
               headers: {
                 Authorization: `Token ${authToken}`,
               },
@@ -59,7 +61,7 @@ function BlogList() {
 
           // Fetch blog posts and comments
           axios
-            .get('http://127.0.0.1:8000/api/blogposts/', {
+            .get(`${baseUrl}/api/blogposts/`, {
               headers: {
                 Authorization: `Token ${authToken}`,
               },
@@ -87,7 +89,7 @@ function BlogList() {
               // Fetch comments and profile pictures for each post
             const fetchPostsData = postsData.map((post) => {
               const fetchProfilePic = axios.get(
-                `http://127.0.0.1:8000/api/profile/${post.author}/`,
+                `${baseUrl}/api/profile/${post.author}/`,
                 {
                   headers: {
                     Authorization: `Token ${authToken}`,
@@ -138,7 +140,7 @@ function BlogList() {
     }
     const fetchCommentsData = posts.map((post) => {
       axios
-        .get(`http://127.0.0.1:8000/api/comments/?post=${post.id}`, {
+        .get(`${baseUrl}/api/comments/?post=${post.id}`, {
           headers: {
             Authorization: `Token ${authToken}`,
           },
@@ -163,7 +165,7 @@ function BlogList() {
 // Inside your useEffect block
 const fetchLikesData = posts.map((post) => {
   axios
-    .get(`http://127.0.0.1:8000/api/likes/${post.id}/`, {
+    .get(`${baseUrl}/api/likes/${post.id}/`, {
       headers: {
         Authorization: `Token ${authToken}`,
       },
@@ -189,7 +191,7 @@ Promise.all(fetchLikesData)
 
   const deletePost = (id) => {
     axios
-      .delete(`http://127.0.0.1:8000/api/blogposts/${id}/`)
+      .delete(`${baseUrl}/api/blogposts/${id}/`)
       .then(() => {
         setPosts(posts.filter((post) => post.id !== id));
       })
@@ -259,7 +261,7 @@ Promise.all(fetchLikesData)
     };
 
     axios
-      .post('http://127.0.0.1:8000/api/blogposts/', formData, config)
+      .post(`${baseUrl}/api/blogposts/`, formData, config)
       .then((response) => {
         window.location.reload();
 
@@ -300,7 +302,7 @@ Promise.all(fetchLikesData)
     };
   
     axios
-      .post('http://127.0.0.1:8000/api/comments/', newComment, config)
+      .post(`${baseUrl}/api/comments/`, newComment, config)
       .then((response) => {
         // Make a copy of the selectedPost and initialize 'comments' if it doesn't exist
         const updatedPost = {
@@ -342,7 +344,7 @@ Promise.all(fetchLikesData)
     };
   
     axios
-      .post('http://127.0.0.1:8000/api/likes/', { post: postId }, config)
+      .post(`${baseUrl}/api/likes/`, { post: postId }, config)
       .then(() => {
         // Update likes state immutably by creating a new object
         setLikes((prevLikes) => ({
@@ -391,7 +393,7 @@ Promise.all(fetchLikesData)
           <div className="input-group blogpost-input mb-3">
   {profile && profile.profile_pic && (
     <img
-      src={`http://localhost:8000${profile.profile_pic}`}
+      src={`${baseUrl}${profile.profile_pic}`}
       style={{
         width: '43px',
         height: '43px',
@@ -482,7 +484,7 @@ Promise.all(fetchLikesData)
     {profile && profile.profile_pic && (
                         <div className="d-flex align-items-center">
                           <img
-          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
           alt="img"
                             className="rounded-circle author-avatar"
                             style={{ width: '40px', height: '40px', marginRight: '10px' }}

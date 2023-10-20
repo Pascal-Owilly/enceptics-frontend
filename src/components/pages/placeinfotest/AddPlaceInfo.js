@@ -14,9 +14,11 @@ const PlaceInfoForm = () => {
 
   const [destinations, setDestinations] = useState([]);
 
+  const baseUrl = 'http://127.0.0.1:8000'
+
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/places/")
+      .get(`${baseUrl}/api/places/`)
       .then((response) => {
         setDestinations(response.data);
       })
@@ -60,7 +62,7 @@ const PlaceInfoForm = () => {
     placeInfoData.append("destination", selectedDestination.id);
 
     axios
-      .post("http://127.0.0.1:8000/api/place-info/", placeInfoData)
+      .post(`${baseUrl}/api/place-info/`, placeInfoData)
       .then((response) => {
         console.log("Place info created successfully", response.data);
         navigate("/places");
@@ -71,11 +73,11 @@ const PlaceInfoForm = () => {
   };
 
   return (
-    <div className="container-fluid" style={{ paddingTop: "50px", backgroundColor: "#121661",height:'100vh', marginTop:'14vh' }}>
+    <div className="container-fluid" style={{ paddingTop: "50px", backgroundColor: "#121661",height:'100vh'}}>
       <div className="row justify-content-center">
-        <div className="col-md-6">
+        <div className="col-md-6" style={{ marginTop:'10vh' }}>
           <form className=" p-4 what-card-price" style={{ borderRadius: "10px", backgroundColor:'#121661' }}>
-            <h4 className="text-secondary mb-4">Add more description for this place</h4>
+            <h4 className="text-secondary mb-4">Add detailed description for this place</h4>
             <hr className="text-secondary" />
             <div className="form-group">
               <label className="text-secondary">Details</label>
