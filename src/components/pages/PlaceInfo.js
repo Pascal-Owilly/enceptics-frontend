@@ -252,33 +252,55 @@ const PlaceInfo = () => {
                     </div>
                 </div>
             ) : placeInfo === 0 ? (
+                <div className='container'>
+                <div className='row'>
+                    <div className='col-md-2'></div>
+                    <div className='col-md-8'>
                 <p
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        height: '50vh',
+                        height: '100vh',
                         justifyContent: 'space-around',
                         color: 'white',
                         fontSize: '22px',
+                        marginTop:'15vh',
+
                     }}
                 >
                     Nothing here yet
                 </p>
+                <div className='col-md-2'></div>
+                </div>
+                </div>
+                </div>
             ) : (
-                <p
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-md-2'></div>
+                        <div className='col-md-8'>
+                        <p
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        height: '50vh',
+                        height: '100vh',
                         justifyContent: 'space-around',
                         color: 'white',
                         fontSize: '22px',
+                        marginTop:'15vh',
                     }}
                 >
                     Hang tight ...
                 </p>
+                        </div>
+                        <div className='col-md-2'></div>
+
+
+                    </div>
+                </div>
             )}
         </div>
+        
     );
 };
 

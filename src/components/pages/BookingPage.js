@@ -13,6 +13,7 @@ const Booking = () => {
   const queryParams = new URLSearchParams(location.search);
   const placeName = searchParams.get("placeName");
   const priceFromURL = searchParams.get("price");
+  
   const price = parseFloat(priceFromURL) || 0; // Ensure it's a number, default to 0 if parsing fails
 
   const baseUrl = 'http://127.0.0.1:8000'

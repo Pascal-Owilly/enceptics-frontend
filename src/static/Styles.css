@@ -388,6 +388,19 @@ left: 0;
 
 }
 
+.what-card-places{
+  font-family: 'Nunito', sans-serif;
+  box-shadow: 0 10px 20px rgba(243, 241, 241, 0.12), 0 4px 8px rgba(238, 227, 227, 0.06);
+
+}
+
+.what-card-places:hover{
+  transform: scale(1.01);
+
+  transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+
+}
+
   .what-card-price{
     font-family: 'Nunito', sans-serif;
     padding: 2px;

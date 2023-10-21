@@ -256,16 +256,16 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
             <div className="places-cards-grid">
               {destinations.map((destination) => (
                 <div key={destination.id}>
-                  <Card className="places-cards" style={{ backgroundColor: '#121661', width:'100%', height:'470px'}}>
+                  <Card className="what-card-places" style={{ backgroundColor: '#121661', width:'100%', height:'480px'}}>
                     <Card.Img src={destination.cover_image} style={{ width: '100%', height:'180px' }} />
                     <Card.Body style={{ color: 'black' }}>
                       <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
                         {destination.name}
                       </h5>
                       <p style={{ color: '#fff', fontWeight: 500,width:'100%' }}>{destination.description}</p>
-                      <p className="what-card-price btn btn-sm " style={{ fontSize: '13px', color:'goldenrod', float:'right', fontWeight:'bold' }}>
+                      <span className="what-card-navbar btn btn-sm" style={{ fontSize: '13px', color:'goldenrod', float:'right', fontWeight:'bold' }}>
                         Ksh {destination.price}
-                      </p>
+                      </span>
                     </Card.Body>
                     <Card.Footer>
                       <button
@@ -275,8 +275,8 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                       >
                         See description
                       </button> 
-                      <hr className="text-secondary"/>
-                      <div className="d-flex">
+                      {/* <hr className="text-secondary"/> */}
+                      <div className="d-flex mb-1 mt-1">
                         <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
                           <FaEdit /> Edit
                         </button>
@@ -354,7 +354,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
               placeholder="Example, Salar De Uyuni"
               value={newDestination.description}
               onChange={handleNewDestinationChange}
-              maxLength={72} // 12 words x 5 characters per word (adjust this based on your typical word length)
+              maxLength={106} // 12 words x 5 characters per word (adjust this based on your typical word length)
             />
 
             </p>

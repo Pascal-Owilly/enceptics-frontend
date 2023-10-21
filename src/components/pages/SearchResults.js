@@ -58,17 +58,22 @@ function SearchResults() {
 
       <ul>
 
-         {results.map((result) => (
+{results.map((result) => (
+  <li className="" key={result.id}>
+    <Link
+      to={{
+        pathname: `/result/${result.id}`,
+        search: `?placeName=${encodeURIComponent(result.name)}&price=${result.price}`,
+      }}
+      style={{ listStyleType: 'none', textDecoration: 'none' }}
+    >
+      <h5 style={{ color: 'gold' }}>{result.name}</h5>
+    </Link>
+    <p className="text-secondary">{result.description}</p>
+    <p className="text-secondary">Price: KES {result.price}</p>
+  </li>
+))}
 
-    <li className="" key={result.id} >
-      <Link to={`/result/${result.id}`} style={{listStyleType:'none', textDecoration:'none'}} >
-
-        <h5 style={{color:'gold'}}>{result.name}</h5>
-        </Link>
-        <p className="text-secondary">{result.description}</p>
-        <p className="text-secondary">Price: KES {result.price}</p>
-    </li>
-  ))}
       </ul>
     )}
   </div>
