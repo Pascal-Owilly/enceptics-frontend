@@ -379,6 +379,7 @@ Promise.all(fetchLikesData)
     },
   ];
 
+
   return (
     <div style={{ backgroundColor: '#121661', color: 'white' }}>
       <div className="container" style={{ minHeight: '100vh' }}>
@@ -392,14 +393,14 @@ Promise.all(fetchLikesData)
           <div className="input-group blogpost-input mb-3">
   {profile && profile.profile_pic && (
     <img
-      src={`${baseUrl}/${profile.profile_pic}`}
+      src={`${baseUrl}${profile.profile_pic}`}
       style={{
         width: '43px',
         height: '43px',
         borderRadius: '50%',
         objectFit: 'cover', // To maintain the aspect ratio of the profile picture
       }}
-      alt="pic"
+      alt="Profile Pic"
     />
   )}
   &nbsp;
@@ -456,7 +457,7 @@ Promise.all(fetchLikesData)
                   <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
                     <div className="d-flex align-items-center">
                       <img
-                        src={`${baseUrl}${profile.profile_pic}`}
+                        src={post.profilePic}
                         alt="Profile Pic"
                         className="rounded-circle author-avatar"
                         style={{ width: '50px', height: '50px', marginRight: '10px' }}
