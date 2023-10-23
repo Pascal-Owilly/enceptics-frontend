@@ -456,7 +456,7 @@ Promise.all(fetchLikesData)
                   <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
                     <div className="d-flex align-items-center">
                       <img
-                        src={post.profilePic}
+                        src={`${baseUrl}${profile.profile_pic}`}
                         alt="Profile Pic"
                         className="rounded-circle author-avatar"
                         style={{ width: '50px', height: '50px', marginRight: '10px' }}
