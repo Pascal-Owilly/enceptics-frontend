@@ -402,8 +402,8 @@ Promise.all(fetchLikesData)
           <div className="input-group blogpost-input mb-3">
   {profile && profile.profile_pic && (
     <img
-    src={`&{baseUrl}${profile.profile_pic}`}
-    style={{
+      src={`${baseUrl}${profile.profile_pic}`}
+      style={{
         width: '43px',
         height: '43px',
         borderRadius: '50%',
