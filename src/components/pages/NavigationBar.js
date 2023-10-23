@@ -296,8 +296,7 @@ const handleRegistrationChange = (e) => {
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                        />
-              <a className="search_icon"><FaSearch onClick={handleSearch}
-          /></a>
+              <a className="search_icon" onClick={handleSearch}><FaSearch /></a>
         </div>
       </div>
     </div>
