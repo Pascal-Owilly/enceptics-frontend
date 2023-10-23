@@ -337,18 +337,6 @@ Promise.all(fetchLikesData)
       return;
     }
   
-    // Assuming likes are returned as an array
-    const updatedPosts = posts.map((p) => {
-      if (p.id === postId) {
-        const newLikesCount = (likes[postId] || 0) + 1;
-        return { ...p, likes: newLikesCount };
-      }
-      return p;
-    });
-  
-    setPosts(updatedPosts);
-  
-    // Now, you can also send the like to the server if needed.
     const config = {
       headers: {
         Authorization: `Token ${authToken}`,
@@ -358,13 +346,16 @@ Promise.all(fetchLikesData)
     axios
       .post(`${baseUrl}/api/likes/`, { post: postId }, config)
       .then(() => {
-        // Like sent successfully (you can add error handling here if needed)
+        // Update likes state immutably by creating a new object
+        setLikes((prevLikes) => ({
+          ...prevLikes,
+          [postId]: (prevLikes[postId] || 0) + 1,
+        }));
       })
       .catch((error) => {
         console.error('Error liking post:', error);
       });
   };
-  
   
   const formatTimeDifference = (timestamp) => {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
