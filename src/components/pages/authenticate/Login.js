@@ -21,15 +21,16 @@ const LoginTest = () => {
       const authToken = await authService.login(loginData);
       setIsLoggedIn(true);
       Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
-
-      // Redirect to another page after successful login if needed
-      navigate('/'); // Replace '/dashboard' with your desired route
-
+  
+      // Reload the page after successful login
+      window.location.reload();
+  
     } catch (error) {
       // Handle login error
       console.error('Login failed:', error);
     }
   };
+  
 
   useEffect(() => {
     const storedToken = Cookies.get('authToken');
@@ -62,7 +63,12 @@ const LoginTest = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '' }}>
+    <>
+    <div className='container'>
+      <div className='row'>
+        <div className='col-md-3'></div>
+        <div className='col-md-6'>
+        <div style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '' }}>
       <form className='what-card-nav' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
         <h3 className='text-center text-white'>Login</h3>
         <hr style={{ color: '#d9d9d9' }} />
@@ -110,7 +116,14 @@ const LoginTest = () => {
         </p>
       </form>
     </div>
-  );
+
+        </div>
+        <div className='col-md-3'></div>
+
+      </div>
+      </div>
+      </>
+      );
 };
 
 export default LoginTest;
