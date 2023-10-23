@@ -11,7 +11,7 @@ import Login from './authenticate/Login';
 const About = () => {
 
   const [about, setAbout] = useState([]);
-  const baseUrl= 'http://127.0.0.1:8000'
+  const baseUrl= 'https://enc.pythonanywhere.com'
 
   useEffect(() => {
     fetchAbout();

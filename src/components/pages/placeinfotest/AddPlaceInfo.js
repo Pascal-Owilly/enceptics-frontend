@@ -14,7 +14,7 @@ const PlaceInfoForm = () => {
 
   const [destinations, setDestinations] = useState([]);
 
-  const baseUrl = 'http://127.0.0.1:8000'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
   useEffect(() => {
     axios

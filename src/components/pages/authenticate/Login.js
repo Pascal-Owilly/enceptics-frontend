@@ -20,7 +20,7 @@ const LoginTest = () => {
     try {
       const authToken = await authService.login(loginData);
       setIsLoggedIn(true);
-      Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });
+      Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
 
       // Redirect to another page after successful login if needed
       navigate('/booking'); // Replace '/dashboard' with your desired route
@@ -63,7 +63,7 @@ const LoginTest = () => {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '' }}>
-      <form className='what-card' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
+      <form className='what-card-nav' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
         <h3 className='text-center text-white'>Login</h3>
         <hr style={{ color: '#d9d9d9' }} />
         <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>

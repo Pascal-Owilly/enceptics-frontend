@@ -11,6 +11,67 @@
   text-decoration-thickness: 2px;
 }
 
+/* nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+} */
+
+
+nav .decorated {
+  transition: 0.3s; /* Add a 1-second transition effect */
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: -0.5rem; /* Push the line 1rem down */
+  left: 0;
+  background-color: green; /* Green underline color */
+  display: block;
+  transform: scaleX(0); /* Start with no width (hidden) */
+  transform-origin: left; /* Set the transform origin to the left */
+  transition: transform 0.5s; /* Add a 1-second transition effect for transform */
+}
+
+nav a:hover::after {
+  transform: scaleX(1); /* Expand the underline to full width on hover */
+}
+
+.custom-navbar .navbar-toggler-icon {
+  border: none;
+  /* transition: all 0.5s; */
+}
+
+.custom-navbar .navbar-toggler-icon:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.custom-navbar .navbar-toggler {
+  border: none;
+  transition: all 0.5s;
+}
+
+.custom-navbar .navbar-toggler:focus {
+  outline: none;
+  box-shadow: none;
+}
+.custom-navbar .navbar-toggler-icon:hover {
+  color: green;
+}
+
+@media (max-width: 767px) {
+ nav li{
+  margin-top: 1rem;
+ }
+ nav button{
+  margin-bottom: 1rem;
+ }
+}
+
 @font-face {
   font-family: 'Great_Vibes';
   src: url('../fonts/Great_Vibes/GreatVibes-Regular.ttf') format('truetype');

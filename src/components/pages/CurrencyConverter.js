@@ -8,7 +8,7 @@ const containerStyle = {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'rgba(18, 22, 97)',
+  backgroundColor: '#121661',
   height: '100vh',
   color: 'white',
 };
@@ -28,9 +28,11 @@ const formStyle = {
 const inputStyle = {
   padding: '5px',
   border: 'none',
+  borderRadius: '30px',
+  paddingLeft:'2rem',
   backgroundColor: 'rgb(255,255,255,0.7)',
   color: 'green',
-  width: '100%',
+  width: '250px',
   marginBottom: '20px',
 };
 
@@ -48,22 +50,24 @@ const dropdownStyle = {
 };
 
 const switchStyle = {
-  color: 'goldenrod',
+  color: '#a9a9a9',
+  cursor:'pointer',
   background:'#121661',
   padding: '5px',
   borderRadius:'50%',
-  margin:'1rem',
+  marginTop:'1rem',
 };
 
 const resultsContainerStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  color: 'white',
+  color: 'green',
 };
 
 const convertButtonStyle = {
-  backgroundColor: '#121661',
+  backgroundColor: 'green',
+  borderRadius:'5px',
   color: 'white',
   border: 'none',
   padding: '5px 20px',
@@ -105,17 +109,16 @@ function CurrencyConverter() {
   return (
     <div style={containerStyle}  >
 		      <div style={headingStyle} >
-        <h1 className='mt-5' style={{color:'green'}}>Convert Currency</h1>
-		<hr className='text-secondary'/>
+        <h1 className='' style={{color:'green', marginTop:'17vh'}}>Convert to your desired currency</h1>
 
       </div>
-<div className=' p-4 m-3 ' style={{background:'green', transition:'none', borderRadius:'5px', height:'400px'}}>
+<div className=' p-4 m-3 ' style={{background:'', transition:'none', borderRadius:'0', height:'400px', border:'1px solid #a9a9a9', width:'80%'}}>
 
-      <form style={formStyle} >
-        <h3>Amount</h3>
+      <div style={formStyle}>
+        <h4 style={{fontFamily:'cursive', fontWeight:'300'}}>Enter Amount</h4>
         <input
-          type="text"
-          placeholder="Enter the amount"
+          type="number"
+          placeholder="Enter amount"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           style={inputStyle}
@@ -124,7 +127,7 @@ function CurrencyConverter() {
 		<div className='d-flex'>
 
 		
-        <h5 style={{fontWeight:'300'}} className='mx-3'>From</h5>
+        <h6 style={{fontWeight:'300', fontFamily:'cursive'}} className='mx-3'>From</h6>
         <select
           value={from}
           onChange={(e) => setFrom(e.target.value)}
@@ -136,7 +139,7 @@ function CurrencyConverter() {
             </option>
           ))}
         </select>
-        <h5 style={{fontWeight:'300'}} className='mx-3'>To</h5>
+        <h6 style={{fontWeight:'300', fontFamily:'cursive'}} className='mx-3'>To</h6>
 		
         <select
           value={to}
@@ -150,19 +153,20 @@ function CurrencyConverter() {
           ))}
         </select>
 		</div>
-      </form>
+      </div>
 
       <div style={resultsContainerStyle}>
-	  <div style={switchStyle}>
-        <HiSwitchHorizontal size="30px" onClick={() => flip()} />
-      </div>
-        <button onClick={() => convert()} style={convertButtonStyle}>
-          Convert
+
+        <button className='what-card-btn' onClick={() => convert()} style={convertButtonStyle}>
+          Enter
         </button>
 		<hr />
         <h4 style={{ textTransform: 'uppercase'}}>
           {input + ' ' + from + ' = ' + output.toFixed(2) + ' ' + to}
         </h4>
+        <div style={switchStyle}>
+        <span className='what-card-navbar' size="18px" style={{fontWeight:'100', padding:'4px'}} onClick={() => flip()}>flip</span>
+      </div>
       </div>
     </div>
 	</div>

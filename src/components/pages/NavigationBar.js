@@ -32,7 +32,7 @@ function NavigationBar() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const baseUrl = 'http://127.0.0.1:8000'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -268,67 +268,129 @@ const handleRegistrationChange = (e) => {
 
   return (
 <>
-<Navbar className={`what-card-navbar ${expanded ? 'collapsed-navbar' : ''}`} variant="primary" expand="md" style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', borderRadius: '0',}}>
-  <Container fluid>
-    <Navbar.Brand className="text-white" as={Link} to="/" >
-      <span style={{ fontFamily: 'CustomFont', fontSize: '28px', letterSpacing: '3px' }} className="brand-first-letter">E</span>
-      <sub style={{ fontFamily: 'cursive', fontWeight: 'bold', letterSpacing: '2px', fontSize: '16px' }} className="brand-text">nceptics</sub>
-    </Navbar.Brand>
-    <Navbar.Toggle
-       aria-controls="basic-navbar-na"
-       style={{ marginRight: '0.5rem', fontSize: '18px', border:'1px solid #a9a9a9', padding:'5px' }}
-       onClick={toggleExpanded}
-    >     
-  {expanded ? <FaTimes style={{fontSize:'20px', color:'#a9a9a9'}}/> : <FaBars style={{fontSize:'20px', color:'#a9a9a9', border:'none', fontWeight:'200'}} />}
+<Navbar className={`what-card-navbar ${expanded ? 'collapsed-navbar' : ''} custom-navbar`} variant="primary" expand="md" style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', borderRadius: '0' }}>
+
+        <div className="container-fluid">
+          <a className="navbar-brand text-white mx-2" href="/">
+            <span style={{fontFamily:'CustomFont', fontSize:'28px', letterSpacing:'3px'}} className="brand-first-letter">E</span>
+            <sub style={{fontFamily:'cursive', fontWeight:'bold', letterSpacing:'2px', fontSize:'16px'}} className="brand-text">nceptics</sub>
+          </a>
+
+<Nav className="" style={{textAlign:'center'}}>
+<Navbar.Toggle
+    aria-controls="basic-navbar-na"
+    style={{ marginRight: '0.5rem', fontSize: '18px', border:'1px solid #a9a9a9', padding:'5px' }}
+    onClick={toggleExpanded}
+ >     
+{expanded ? <FaTimes style={{fontSize:'20px', color:'#a9a9a9'}}/> : <FaBars style={{fontSize:'20px', color:'#a9a9a9', border:'none', fontWeight:'200'}} />}
 </Navbar.Toggle>
-    <Navbar.Collapse id="basic-navbar-nav text-center" style={{ zIndex: 999 }}>
+<Navbar.Collapse id="basic-navbar-nav" style={{ zIndex: 999}}>
     <hr style={{color:'#a9a9a9'}}/>
-      <Nav className="mx-auto text-center">
-      <li className="nav-items nav-border mx-5">
-                <div className="container h-100"> 
-                  <div className="d-flex justify-content-center h-100 toggled-link">
-                    <div className="searchbar " onClick={handleSearch}>
+
+         <ul className="navbar-nav">
+              <li className="nav-items">
+                <div className="container h-100">
+                  <div className="d-flex justify-content-center h-100">
+                    <div className="searchbar mx-5">
                       <input className="search_input" type="text" name="" placeholder="Search in places..."
                         value={searchQuery}
                         onChange={handleSearchInputChange}
                        />
-              <a className="search_icon"><FaSearch /></a>
-                </div>
-                </div>
-            </div>
+              <a className="search_icon"><FaSearch onClick={handleSearch}
+          /></a>
+        </div>
+      </div>
+    </div>
 
-              </li> 
-        <li className="nav-items mx-3">
-              {/* Close the navbar when this link is clicked */}
-              <a style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/">
-                Home
-              </a>
-            </li>
-            <li className="nav-items mx-3">
-              {/* Close the navbar when this link is clicked */}
-              <a style={{ fontFamily: 'sanserif', fontWeight: '200px', letterSpacing: '2px', fontSize: '16px' }} className="nav-link text-white toggled-link" href="/about">
-                About Us
-              </a>
-            </li>
-        <li className="nav-items">
-          {/* Close the navbar when this link is clicked */}
-          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin" href="/places">
-                <button className='btn btn-sm what-card-btn mx-3' style={{ backgroundColor: 'green', color: '#fff', fontWeight: 'bolder', padding: '' }}>
-                  <span className='mx-2' style={{ padding: '' }}> Book Now </span>
-                </button>
-              </a>
-        </li>
-        <li className="nav-items mx-3 ">
-          <a onClick={handleNavigationLinkClick} style={{ fontFamily: 'arial', fontWeight: '500px', letterSpacing: '2px', fontSize: '16px', color: 'goldenrod',textDecoration:'none' }} className="nav-link toggled-lik" href="/currencyconverter">
-            Currency
-          </a>
-        </li>
-        {isLoggedIn ? (
-          <>
-                        
-                        <li className='nav-items ' style={{listStyleType:'none'}}>
+          </li> 
+            <li className="nav-item">
+                <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/">
+                  Home
+                </a>
+              </li>
+              <li className="nav-item mx-3">
+              <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/about">
+                  About Us
+                </a>
+              </li>
+              <li className="nav-items">
+
+              <a style={{fontFamily:'arial', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/places">
+
+                <button className='btn btn-sm what-card-btn ' style={{backgroundColor:'green', color:'#fff', fontWeight:'bolder', padding:''}}>
+                 <span style={{padding:'10px'}}> Book Now</span>
+                  </button>
+                  </a>
+
+              </li>
+
+              <li>
+
+{/* <SearchBar /> */}
+
+              </li>   
+
+  
+
+              <li className="nav-item mx-2 ">
+              <a style={{fontFamily:'cursive', fontWeight:'400', letterSpacing:'1px', fontSize:'16px', color:'goldenrod'}} className="nav-link" href="/currencyconverter">
+                  Currency
+                </a>
+              </li>
+
+              <li>
+
+              </li>
+
+
+            </ul>
+
+            {!isLoggedIn && ( // Render only if not logged in
+          <div>
+            {/* <Link to='/signup'> */}
+            <button
+              type="button"
+              className="btn btn-sm m-1 what-card-btn"
+              style={{color: '#d9d9d9', border: 'none' }}
+              onClick={openSignUpModal}
+
+            >
+                                          <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
+
+              <span style={{padding:'5px'}}>
+              Sign Up 
+              </span>
+              </span>
+            </button>
+            {/* </Link> */}
+
+            {/* <Link to='/login'> */}
+            <button
+              type="button"
+              className="btn btn-sm m-1 what-card-btn"
+              style={{color: '#d9d9d9', border: 'none' }}
+              onClick={openLoginModal}
+            >
+                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
+
+              <span style={{padding:'5px'}}>
+
+              Login
+                            </span>
+
+              </span>
+            </button>
+            {/* </Link> */}
+          </div>
+        )} 
+
+      {isLoggedIn && ( 
+            
+<>
+
+<li>
               <a href="/blog">
-              <button className="btn btn-sm mt-2 what-card-btn" 
+              <button className="btn btn-sm  mt-2 what-card-btn" 
                     style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
                     >
                       <span style={{padding:'10px'}}>
@@ -337,12 +399,13 @@ const handleRegistrationChange = (e) => {
                     
                   </button> </a>
               </li>
-            <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-17px' }}>
-  <a className="nav-link text-white" href="/profile">
+
+              <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-33px' }}>
+  <a className="nav-link text-white" href="/profile" >
     {profile && profile.profile_pic && (
       <>
         <img
-          src={`http://localhost:8000${profile.profile_pic}`} // Use the full URL
+          src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
           style={{ width: '40px', height: '40px', borderRadius: '100%' }}
           alt=""
         />
@@ -353,49 +416,39 @@ const handleRegistrationChange = (e) => {
     )}
   </a>
 </li>
-            <li className="nav-items">
-          {/* Close the navbar when this link is clicked */}
-          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin">
-                <button onClick={logout} className='btn btn-sm what-card-btn mx-4' style={{ backgroundColor: '#121661', color: '#fff', fontWeight: 'bolder', padding: '' }}>
-                  <span className='mx-2' style={{ padding: '', right: 0 }}>Logout</span>
-                </button>
-              </a>
-        </li>
-          </>
-        ) : (
-          <>
-                    <span className="nav-items">
-          {/* Close the navbar when this link is clicked */}
-          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin">
-                <button onClick={openSignUpModal} className='btn btn-sm what-card-btn' style={{ backgroundColor: '#121661', color: '#fff', fontWeight: 'bolder', padding: '' }}>
-                  <span className='mx-2' style={{ padding: '' }}>Sign Up</span>
-                </button>
-              </a>
-      </span>
-        <span className="nav-items">
-          {/* Close the navbar when this link is clicked */}
-          <a style={{ fontFamily: 'arial', fontWeight: '200px', letterSpacing: 'px', fontSize: '16px' }} className="nav-link text-white toggled-lin">
-                <button onClick={openLoginModal} className='btn btn-sm what-card-btn ' style={{ backgroundColor: '#121661', color: '#fff', fontWeight: 'bolder', padding: '' }}>
-                  <span className='mx-2' style={{ padding: '', right:0 }}>Login</span>
-                </button>
-              </a>
-        </span>
-          </>
-        )}
 
-        {showModal && (
-          <div className="modal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
+
+                <button
+                                type="button"
+                                className="btn btn-sm mx-4 what-card-btn"
+                                style={{  color: '#d9d9d9', border: 'none'}}
+                                onClick={logout}
+                              >
+ <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white">
+
+<span style={{padding:'5px'}}>
+
+Logout
+              </span>
+
+</span>                                  
+                                </button>
+                                </>
+                              )} 
+      {showModal && (
+          <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh', backgroundColor:'rgb(0, 0, 0, 0.8)' }}>
             <div className="modal-dialog">
-              <div className="modal-content what-card-bt text-secondary" style={{ background: '#121661', width: '300px' }}>
+              <div className="modal-content what-card-nav mx-2 text-secondary" style={{background:'#121661', width:'360px'}}>
                 <div className="modal-header">
                   <h5 className="modal-title text-secondary">{isSignUpModal ? 'Sign Up' : 'Login'}</h5>
-                  <button style={{ backgroundColor: '', border: 'none', color: 'white', width: '40px', borderRadius: '4px' }} type="button" className="close" onClick={closeModal}>
-                    <span className="text-dark" aria-hidden="true">&times;</span>
+                  <button style={{backgroundColor:'', border:'none', color:'white', width:'40px', borderRadius:'4px'}} type="button" className="close" onClick={closeModal}>
+                    <span className='text-dark' aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div className="modal-body ">
                   {isSignUpModal ? (
-                    <form className="m-1" onSubmit={handleRegistrationSubmit}>
+                    <form onSubmit={handleRegistrationSubmit}>
+               
                       <div className="form-group">
                         <label className="mt-4" htmlFor="username">Username</label>
                         <input
@@ -446,71 +499,76 @@ const handleRegistrationChange = (e) => {
                           onChange={handleRegistrationChange}
                         />
                       </div>
+                      
                       <button
                         type="submit"
                         className="btn btn-primary btn-sm mt-3"
-                        style={{ backgroundColor: '#000092', borderColor: '#000092', width: '100%' }}
+                        style={{ backgroundColor: '#000092', borderColor: '#000092' , width:'100%'}}
                       >
                         Sign Up
-                      </button>
-                      <hr />
-                      <p>Already have an account? <a href="/login">Login</a></p>
-                    </form>
+                      </button> <hr />
+                      <p>Already have an account? <a href='/login'>Login</a></p>
+                    </form> 
                   ) : (
                     <>
-                      <form onSubmit={handleLoginSubmit} >
-                        <div className="form-group">
-                          <label className="mt-4" htmlFor="username">Username</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="username"
-                            name="username"
-                            value={loginData.username}
-                            placeholder="Enter username"
-                            onChange={handleLoginChange}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label className="mt-4" htmlFor="password">Password</label>
-                          <input
-                            type="password"
-                            placeholder="Enter password"
-                            className="form-control "
-                            id="password"
-                            name="password"
-                            value={loginData.password}
-                            onChange={handleLoginChange}
-                          />
-                        </div>
-                        <button
-                          type="submit"
-                          className="btn btn-primary btn-sm mt-4"
-                          style={{ backgroundColor: '#121661', borderColor: '#000092', width: '100%' }}
-                        >
-                          Login
-                        </button>
-                        <hr />
-                        <p>Don't have an account? <a href="/signup">SignUp</a></p>
-                        <p className="mb-2 text-secondary">
-                          <a href="/forgot-password" onClick={closeModal}>Forgot your password?</a>
-                        </p>
-                      </form>
+                    
+                    <form onSubmit={handleLoginSubmit} >
+                      <div className="form-group">
+                        <label className="mt-4" htmlFor="username">Username</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="username"
+                          name="username"
+                          value={loginData.username}
+                          placeholder="Enter username"
+                          onChange={handleLoginChange}
+                        />
+                      </div>
+
+                       <div className="form-group">
+                        <label className="mt-4" htmlFor="password">Password</label>
+                        <input
+                          type="password"
+                          placeholder="Enter password"
+                          className="form-control "
+                          id="password"
+                          name="password"
+                          value={loginData.password}
+                          onChange={handleLoginChange}
+                        />
+                      </div> 
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-sm mt-4"
+                        style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%' }}
+                      >
+                        Login
+                      </button>
+                      <hr />
+                      <p>Don't have an account? <a href='/signup'>SignUp</a></p>
+                      <p className='mb-2 text-secondary'>
+                        <Link to='/forgot-password' onClick={closeModal}>Forgot your password?</Link>
+                      </p>
+                    </form>
                     </>
                   )}
                 </div>
               </div>
             </div>
           </div>
-        )}
-      </Nav>
-    </Navbar.Collapse>
-  </Container>
-</Navbar>
+        )} 
+          </Navbar.Collapse>
+          </Nav>
+
+          </div>
+      </Navbar>
 
       {flashMessage && (
-        <div className={`flash-message ${flashMessage.type}`}>{flashMessage.message}</div>
-      )}
+        <div className="flash-message text-secondary" style={{backgroundColor:'transparent',  fontWeight:'normal'}}>
+          {flashMessage.message}
+        </div>
+    )}
       </>
       )}
       export default NavigationBar;

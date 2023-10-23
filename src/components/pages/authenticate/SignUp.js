@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 function SignUpForm() {
   const navigate = useNavigate();
 
-  const baseUrl = 'http://127.0.0.1:8000'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
   const [registrationData, setRegistrationData] = useState({
 
@@ -32,18 +32,19 @@ function SignUpForm() {
   };
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: '100vh', backgroundColor:'#121661' }}>
       <div className='container'>
         <div className='row' >
           <div className='col-md-4'></div>
           <div className='col-md-4' style={{marginTop:'17vh'}}>
-            <h3 className='mt-4'>Sign Up</h3>
-            <form className='card p-3' onSubmit={signUp}>
+            <form className='card p-3 what-card-navbar m-1' style={{background:'#121661', color:'white'}} onSubmit={signUp}>
+            <h3 className=' text-secondary'>Sign Up</h3>
+
               <div className='form-group'>
                 <label htmlFor='username'>Username</label>
                 <input
                   type='text'
-                  className='form-control'
+                  className='form-control mb-1'
                   id='username'
                   name='username'
                   value={registrationData.username}
@@ -87,7 +88,7 @@ function SignUpForm() {
                   required
                 />
               </div>
-              <button type='submit' className='btn btn-primary mt-1'>
+              <button type='submit' className='btn btn-sm text-white what-card-btn mt-4' style={{background:'#121661'}}>
                 Sign Up
               </button>
               <hr />

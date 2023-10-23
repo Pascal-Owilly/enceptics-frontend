@@ -72,10 +72,14 @@ const PlaceInfo = () => {
 
 
     const handleNavigateToBooking = (id, placeName, price) => {
+        console.log("Navigating to booking with placeName:", placeName);
+        console.log("Navigating to booking with price:", price);
+      
         navigate(`/booking?id=${id}&placeName=${encodeURIComponent(placeName)}&price=${price}`, {
-          state: { placeId: id, placeName, price }, // Pass placeName and price in the state
+          state: { placeId: id, placeName, price },
         });
       };
+      
       
 
       function toggleVideoPlayback() {

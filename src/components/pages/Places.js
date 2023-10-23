@@ -46,7 +46,7 @@ const Destination = () => {
     };
   }
  
-  const baseUrl = 'http://127.0.0.1:8000'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
   const [destinations, setDestinations] = useState([]);
   const [newDestination, setNewDestination] = useState({

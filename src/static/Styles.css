@@ -1,10 +1,13 @@
 /* START NAVBAR */
 /* Styles for the collapsed Navbar */
-.collapsed-navbar .nav-items {
+/* .collapsed-navbar .nav-items {
   height: 10vh;
   margin-top: 0.3rem;
-}
+} */
 
+.nav{
+  padding: 0 !important;
+}
 
 /* .naviation-links{
 left: 0;
@@ -773,7 +776,7 @@ button,
   background-color: #121661;
   box-shadow: 1px 1px 1px 1px #666;
   border-radius: 30px 30px 30px 30px;
-  padding: 3px;
+  /* padding: 3px; */
   }
 
   .search_input{
@@ -781,10 +784,12 @@ button,
   border: 0;
   outline: 0;
   background: none;
-  width: 150px;
-  caret-color:transparent;
+  width: 200px;
+  caret-color: #A9A9A9;
   line-height: 30px;
   transition: width 0.4s linear;
+  padding-left: 1rem;
+  cursor: text;
   }
 
   /* .searchbar:hover > .search_input{
