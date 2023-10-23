@@ -97,7 +97,7 @@ const LoginTest = () => {
           type="submit"
           className="btn btn-outline-secondary text-center mt-2 what-card-price btn-sm mt-4"
           style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%', margin:'auto'}}
-          onClick={handleLoginSubmit}
+          onClick={login}
         >
           Login
         </button>
