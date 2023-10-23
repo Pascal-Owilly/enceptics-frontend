@@ -65,9 +65,9 @@ const LoginTest = () => {
   return (
     <>
     <div className='container-fluid' style={{backgroundColor:'#121661'}}>
-      <div className='row'>
+      <div className='row' style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '14vh' }}>
         <div className='col-md-3'></div>
-        <div className='col-md-6' style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '14vh' }}>
+        <div className='col-md-6' >
         <div >
       <form className='what-card-nav' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
         <h3 className='text-center text-white'>Login</h3>
