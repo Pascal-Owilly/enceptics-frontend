@@ -402,7 +402,7 @@ Promise.all(fetchLikesData)
           <div className="input-group blogpost-input mb-3">
   {profile && profile.profile_pic && (
     <img
-    src={posts.author.profilePic} // Use a placeholder image if the profilePic is not available
+    src={`&{baseUrl}${profile.profile_pic}`}
     style={{
         width: '43px',
         height: '43px',
