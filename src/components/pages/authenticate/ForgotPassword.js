@@ -43,13 +43,13 @@ const ForgotPassword = () => {
                 />
               </div>
               <br />
-              <button type="submit" onClick={handleSubmit} className="btn what-card-btn" style={{background:'#121661', color:'white'}}>
+              <button type="submit" onClick={handleSubmit} className="btn what-card-price" style={{background:'#121661', color:'white'}}>
                 Reset Password
               </button>
             </form>
-
-            {message && <p>{message}</p>}
-
+            <hr />
+           <span  style={{color:'goldenrod', fontFamily:'cursive', fontSize:'20px', fontWeight:'700'}}> {message && <p>{message}</p>}</span>
+            <hr />
             <p>
               Remember your password? <Link to="/login">Login</Link>
             </p>
