@@ -65,7 +65,7 @@ const LoginTest = () => {
   return (
     <>
     <div className='container-fluid' style={{backgroundColor:'#121661'}}>
-      <div className='row' style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '14vh' }}>
+      <div className='row' style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '' }}>
         <div className='col-md-3'></div>
         <div className='col-md-6' >
         <div >
