@@ -393,7 +393,7 @@ Promise.all(fetchLikesData)
           <div className="input-group blogpost-input mb-3">
   {profile && profile.profile_pic && (
     <img
-      src={`${baseUrl}${profile.profile_pic}`}
+      src={`${baseUrl}/${profile.profile_pic}`}
       style={{
         width: '43px',
         height: '43px',
@@ -484,7 +484,7 @@ Promise.all(fetchLikesData)
     {profile && profile.profile_pic && (
                         <div className="d-flex align-items-center">
                           <img
-          src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
+          src={`${baseUrl}/${profile.profile_pic}`} // Use the full URL
           alt="img"
                             className="rounded-circle author-avatar"
                             style={{ width: '40px', height: '40px', marginRight: '10px' }}
