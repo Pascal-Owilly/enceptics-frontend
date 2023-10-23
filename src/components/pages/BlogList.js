@@ -379,7 +379,6 @@ Promise.all(fetchLikesData)
     },
   ];
 
-
   return (
     <div style={{ backgroundColor: '#121661', color: 'white' }}>
       <div className="container" style={{ minHeight: '100vh' }}>
@@ -400,7 +399,7 @@ Promise.all(fetchLikesData)
         borderRadius: '50%',
         objectFit: 'cover', // To maintain the aspect ratio of the profile picture
       }}
-      alt="Profile Pic"
+      alt="pic"
     />
   )}
   &nbsp;
@@ -484,7 +483,7 @@ Promise.all(fetchLikesData)
     {profile && profile.profile_pic && (
                         <div className="d-flex align-items-center">
                           <img
-          src={`${baseUrl}/${profile.profile_pic}`} // Use the full URL
+          src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
           alt="img"
                             className="rounded-circle author-avatar"
                             style={{ width: '40px', height: '40px', marginRight: '10px' }}
