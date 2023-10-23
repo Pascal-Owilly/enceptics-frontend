@@ -1,115 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import authService from './authService';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
-const LoginTest = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: '',
-  });
-
+function LoginForm() {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const login = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    try {
-      const authToken = await authService.login(loginData);
-      setIsLoggedIn(true);
-      Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
-      // Redirect to another page after successful login if needed
-      navigate('/booking'); // Replace '/dashboard' with your desired route
+  const [loginData, setLoginData] = useState({
 
-    } catch (error) {
-      // Handle login error
-      console.error('Login failed:', error);
-    }
-  };
-
-  useEffect(() => {
-    const storedToken = Cookies.get('authToken');
-    if (storedToken) {
-      setIsLoggedIn(true);
-    }
-
-    // Access query parameters from the URL
-    const query = new URLSearchParams(location.search);
-    const placeName = query.get("placeName");
-    const price = query.get("price");
-
-    // Use the placeName and price as needed
-    console.log("Place Name:", placeName);
-    console.log("Price:", price);
-
-    // Redirect to another page if the user is already logged in
-    if (isLoggedIn) {
-      navigate('/booking'); // Replace '/dashboard' with your desired route
-    }
-  }, [location.search, isLoggedIn]);
-
-  const handleLoginSubmit = (event) => {
-    event.preventDefault();
-    login();
-  };
+    username: '',
+    password1: '',
+  });
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '' }}>
-      <form className='what-card-nav' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
-        <h3 className='text-center text-white'>Login</h3>
-        <hr style={{ color: '#d9d9d9' }} />
-        <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
-          <label className="mt-1" htmlFor="username">Username</label>
-          <input
-            type="text"
-            style={{ background: '#d9d9d9' }}
-            className="form-control"
-            id="username"
-            name="username"
-            value={loginData.username}
-            placeholder="Enter username"
-            onChange={handleLoginChange}
-          />
-        </div>
+  const login = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${baseUrl}/api/auth/login/`, loginData);
+      navigate('/')
+      // Handle successful loginhere, e.g., show a success message or redirect to login.
+      console.log('login  success')
+    } catch (error) {
+      // Handle Login error here, e.g., display an error message.
+      console.error('login error:', error);
+    }
+  };
 
-        <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
-          <label className="mt-1" htmlFor="password">Password</label>
-          <input
-            type="password"
-            style={{ background: '#d9d9d9' }}
-            placeholder="Enter password"
-            className="form-control"
-            id="password"
-            name="password"
-            value={loginData.password}
-            onChange={handleLoginChange}
-          />
+  return (
+    <div style={{ height: '100vh', backgroundColor:'#121661' }}>
+      <div className='container'>
+        <div className='row' >
+          <div className='col-md-4'></div>
+          <div className='col-md-4' style={{marginTop:'17vh'}}>
+            <form className='card p-3 what-card-navbar m-1' style={{background:'#121661', color:'white'}} onSubmit={signUp}>
+            <h3 className=' text-secondary'>Login</h3>
+
+              <div className='form-group'>
+                <label htmlFor='username'>Username</label>
+                <input
+                  type='text'
+                  className='form-control mb-1'
+                  id='username'
+                  name='username'
+                  value={loginData.username}
+                  onChange={handleLoginChange}
+                  required
+                />
+              </div>
+
+              <div className='form-group'>
+                <label htmlFor='password1'>Password</label>
+                <input
+                  type='password'
+                  className='form-control'
+                  id='password1'
+                  name='password1'
+                  value={loginData.password1}
+                  onChange={handleLoginChange}
+                  required
+                />
+              </div>
+              <button type='submit' className='btn btn-sm text-white what-card-btn mt-4' style={{background:'#121661'}}>
+               Login
+              </button>
+              <hr />
+              <p className='mb-2 text-secondary p-1'>
+                 Don't have an account? <Link to='/signup'>Signup</Link>
+              </p>
+              <p className='mb-2 text-white p-1'>
+               <Link to='/forgot-password'>Forgot your password?</Link>
+              </p>
+            </form>
+          </div>
+          <div className='col-md-4'></div>
         </div>
-        <button
-          type="submit"
-          className="btn btn-outline-secondary text-center mt-2 what-card-price btn-sm mt-4"
-          style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%', margin:'auto'}}
-        >
-          Login
-        </button>
-        <hr />
-        <p className='mb-2 text-secondary'>
-          Don't have an account? <Link to='/signup'>Signup</Link>
-        </p>
-        <p className='mb-2 text-secondary'>
-          <Link to='/forgot-password'>Forgot your password?</Link>
-        </p>
-      </form>
+      </div>
     </div>
   );
-};
+}
 
-export default LoginTest;
+export default LoginForm;
