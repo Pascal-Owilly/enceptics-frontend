@@ -452,7 +452,7 @@ Promise.all(fetchLikesData)
               </div>
             )}
             <div className="row">
-              {posts.map((post) => (
+            {posts.map((post) => (
                 <div key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', width: '97%' }}>
                   <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
                     <div className="d-flex align-items-center">
