@@ -66,10 +66,10 @@ const LoginTest = () => {
     <>
     <div className='container-fluid' style={{backgroundColor:'#121661'}}>
       <div className='row' style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '' }}>
-        <div className='col-md-3'></div>
-        <div className='col-md-6' >
+        <div className='col-md-4'></div>
+        <div className='col-md-4' >
         <div >
-      <form className='what-card-nav' onSubmit={handleLoginSubmit} style={{ width: '350px', height: '400px', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
+      <form className='what-card-nav' onSubmit={handleLoginSubmit} style={{ width: '100%', marginTop: '', marginLeft: '', backgroundColor: '#121661' }}>
         <h3 className='text-center text-white'>Login</h3>
         <hr style={{ color: '#d9d9d9' }} />
         <div className="form-group" style={{ color:'#d9d9d9', fontSize:'18px'}}>
@@ -118,7 +118,7 @@ const LoginTest = () => {
     </div>
 
         </div>
-        <div className='col-md-3'></div>
+        <div className='col-md-4'></div>
 
       </div>
       </div>
