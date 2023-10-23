@@ -28,7 +28,9 @@ function BlogList() {
   const [commentText, setCommentText] = useState('');
   const [likes, setLikes] = useState({});
 
-  const baseUrl = 'https://enc.pythonanywhere.com'
+  // const baseUrl = 'https://enc.pythonanywhere.com'
+  const baseUrl = 'http://127.0.0.1:8000'
+
 
   useEffect(() => {
     if (authToken) {
@@ -467,7 +469,7 @@ Promise.all(fetchLikesData)
                           {post.author_full_name}
                         </h5>
                         <p className="author-meta" style={{ fontSize: '14px', color: '#666' }}>
-                          <span style={{ fontSize: '12px' }}>{post.followers} </span> &nbsp; {formatTimeDifference(post.created_at)}
+                          <span style={{fontSize: '12px' }}>{post.followers} </span> &nbsp; {formatTimeDifference(post.created_at)}
                         </p>
                       </div>
                     </div>
