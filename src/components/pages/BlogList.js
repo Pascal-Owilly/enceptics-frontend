@@ -188,7 +188,6 @@ Promise.all(fetchLikesData)
 
   }, [authToken]);
  
-
   const deletePost = (id) => {
     axios
       .delete(`${baseUrl}/api/blogposts/${id}/`)
