@@ -23,7 +23,7 @@ const LoginTest = () => {
       Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
 
       // Redirect to another page after successful login if needed
-      navigate('/booking'); // Replace '/dashboard' with your desired route
+      navigate('/'); // Replace '/dashboard' with your desired route
 
     } catch (error) {
       // Handle login error
@@ -97,7 +97,7 @@ const LoginTest = () => {
           type="submit"
           className="btn btn-outline-secondary text-center mt-2 what-card-price btn-sm mt-4"
           style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%', margin:'auto'}}
-          onClick={login}
+          onClick={handleLoginSubmit}
         >
           Login
         </button>

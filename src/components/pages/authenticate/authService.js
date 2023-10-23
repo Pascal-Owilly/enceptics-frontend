@@ -5,7 +5,7 @@ const BASE_URL = 'https://enc.pythonanywhere.com'; // Replace with your API base
 const authService = {
   login: async (loginData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/login/`, loginData);
+      const response = await axios.post(`${BASE_URL}/api/auth/login/`, loginData);
       const authToken = response.data.key;
       return authToken;
     } catch (error) {
