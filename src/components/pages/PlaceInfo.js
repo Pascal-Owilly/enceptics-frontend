@@ -138,7 +138,7 @@ const PlaceInfo = () => {
           color: 'white',
         }}
       >
-        <p className='text-center text-secondary' style={{width:'80%', top: '10%', fontSize:'18px',letterSpacing:'1px'}}>{placeInfo.weather_forecast}</p>
+        <p className='text-center white' style={{width:'80%', top: '10%', fontSize:'18px',letterSpacing:'1px'}}>{placeInfo.weather_forecast}</p>
       </div>
     </div>
   </Carousel.Item>
