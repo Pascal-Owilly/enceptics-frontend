@@ -20,6 +20,20 @@ const authService = {
       throw error;
     }
   },
+  getUserRole: async (authToken) => {
+    try {
+      // Implement your API request to get the user role using the authToken
+      const response = await axios.get(`${BASE_URL}/api/auth/api/user/role/`, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
+      });
+
+      return response.data; // Assuming your API returns the user's role
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authService;

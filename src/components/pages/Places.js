@@ -9,7 +9,23 @@ import PlaceInfo from "./PlaceInfo";
 import Cookies from 'js-cookie';
 import { HiChatAlt2 } from "react-icons/hi";
 
+import authService from './authenticate/authService'; // Make sure the path is correct
+
+import { checkUserRole } from './authenticate/CheckUserRoleUtils'; // Update the path accordingly
+
+
+
 const Destination = () => {
+
+  const [userRole, setUserRole] = useState('loading'); // Initialize with 'loading'
+
+  useEffect(() => {
+    // Check user role and update state
+    checkUserRole().then((role) => {
+      setUserRole(role);
+    })
+    });
+
   const navigate = useNavigate();
 
   function resizeImage(file, maxWidth, maxHeight, callback) {
@@ -46,7 +62,7 @@ const Destination = () => {
     };
   }
  
-  const baseUrl = 'https://enc.pythonanywhere.com'
+  const baseUrl = 'https://enc.pythonanywhere.com/'
 
   const [destinations, setDestinations] = useState([]);
   const [newDestination, setNewDestination] = useState({
@@ -240,13 +256,15 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
       <Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
         <div className="" style={{marginTop:'10vh'}}>
   <h1 className="places-span" style={{  color:'#a9a9a9', fontWeight:'500' }}>Adventure awaits. Let your vacay begin</h1>
-  <button className="mt-4 p-1 what-card-btn" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
-    <FaPlus /> Add New Destination
-  </button>
+  {userRole === 'superuser' && ( // Render only if user is a superuser
+            <button className="mt-4 p-1 what-card-btn" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
+              <FaPlus /> Add New Destination
+            </button>
+          )}
   <hr className="text-secondary"/>
 
 </div>
-
+    
         {isLoading ? ( 
           <p style={{color:'#f9f9f9', fontSize:'23px', textAlign:'center', marginTop:''}}>Loading...</p>
           ) : destinations.length === 0 ? (
@@ -276,7 +294,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                         See description
                       </button> 
                       {/* <hr className="text-secondary"/> */}
-                      <div className="d-flex mb-1 mt-1">
+                      {/* <div className="d-flex mb-1 mt-1">
                         <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
                           <FaEdit /> Edit
                         </button>
@@ -284,7 +302,7 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                         <button className="btn btn-sm btn-outline-danger" onClick={() => deleteDestination(destination.id)}>
                           <FaTrash /> Delete
                         </button>
-                      </div>
+                      </div> */}
                     </Card.Footer>
                   </Card>
                 </div>
