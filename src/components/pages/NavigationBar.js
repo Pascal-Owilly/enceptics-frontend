@@ -329,8 +329,6 @@ const handleRegistrationChange = (e) => {
 
               </li>   
 
-  
-
               <li className="nav-item mx-2 ">
               <a style={{fontFamily:'cursive', fontWeight:'400', letterSpacing:'1px', fontSize:'16px', color:'goldenrod'}} className="nav-link" href="/currencyconverter">
                   Currency
@@ -341,55 +339,9 @@ const handleRegistrationChange = (e) => {
 
               </li>
 
-
-            </ul>
-
-            {!isLoggedIn && ( // Render only if not logged in
-          <div>
-            {/* <Link to='/signup'> */}
-            <button
-              type="button"
-              className="btn btn-sm m-1 what-card-btn"
-              style={{color: '#d9d9d9', border: 'none' }}
-              onClick={openSignUpModal}
-
-            >
-                                          <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
-
-              <span style={{padding:'5px'}}>
-              Sign Up 
-              </span>
-              </span>
-            </button>
-            {/* </Link> */}
-
-            {/* <Link to='/login'> */}
-            <button
-              type="button"
-              className="btn btn-sm m-1 what-card-btn"
-              style={{color: '#d9d9d9', border: 'none' }}
-              onClick={openLoginModal}
-            >
-                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white" >
-
-              <span style={{padding:'5px'}}>
-
-              Login
-                            </span>
-
-              </span>
-            </button>
-            {/* </Link> */}
-          </div>
-        )} 
-
-      {isLoggedIn && ( 
-            
-<>
-
-<li>
+              <li>
               <a href="/blog">
-              <button className="btn btn-sm  mt-2 what-card-btn" 
+              <button className="btn btn-sm  mt-2 mx-4 what-card-btn" 
                     style={{borderRadius:'0 20px 20px 20px', fontSize:'11px', color:'rgb(87, 187,87)'}}
                     >
                       <span style={{padding:'10px'}}>
@@ -398,6 +350,55 @@ const handleRegistrationChange = (e) => {
                     
                   </button> </a>
               </li>
+
+
+            </ul>
+
+            {!isLoggedIn && ( // Render only if not logged in
+          <div>
+            {/* <Link to='/signup'> */}
+            <a href='/signup'>
+            <button
+              type="button"
+              className="btn btn-sm m-1 what-card-btn"
+              style={{color: '#d9d9d9', border: 'none' }}
+              // onClick={openSignUpModal}
+            >
+              <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white" >
+
+              <span style={{padding:'5px'}}>
+              Sign Up 
+              </span>
+              </span>
+            </button>
+            </a>
+            {/* </Link> */}
+
+            {/* <Link to='/login'> */}
+            <a href='/login'>
+            <button
+              type="button"
+              className="btn btn-sm m-1 what-card-btn"
+              style={{color: '#d9d9d9', border: 'none' }}
+              // onClick={openLoginModal}
+            >
+                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white" >
+
+              <span style={{padding:'5px'}}>
+
+              Login
+                            </span>
+
+              </span>
+            </button>
+            </a>
+            {/* </Link> */}
+          </div>
+        )} 
+
+      {isLoggedIn && ( 
+            
+<>
 
               <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-33px' }}>
   <a className="nav-link text-white" href="/profile" >
@@ -423,7 +424,7 @@ const handleRegistrationChange = (e) => {
                                 style={{  color: '#d9d9d9', border: 'none'}}
                                 onClick={logout}
                               >
- <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-link text-white">
+ <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white">
 
 <span style={{padding:'5px'}}>
 

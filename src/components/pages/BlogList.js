@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
@@ -13,6 +14,8 @@ import { Carousel } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 
 function BlogList() {
+
+  const navigate = useNavigate()
   const [posts, setPosts] = useState([]);
   const [sortedPosts, setSortedPosts] = useState([]);
   const [newPostContent, setNewPostContent] = useState('');
@@ -22,13 +25,24 @@ function BlogList() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState({});
   const [profilePicUrl, setProfilePicUrl] = useState(null);
-  const authToken = Cookies.get('authToken');
+  const [authToken, setAuthToken] = useState(Cookies.get('authToken'));
   const [selectedPost, setSelectedPost] = useState(null);
   const [showComments, setShowComments] = useState({});
   const [commentText, setCommentText] = useState('');
   const [likes, setLikes] = useState({});
 
   const baseUrl = 'https://enc.pythonanywhere.com'
+
+  useEffect(() => {
+    // Check for authToken, if not present, redirect to login page
+    if (!authToken) {
+      navigate('/login-blog'); // Replace '/login' with your actual login page path
+    }
+     else {
+      // Your existing code to fetch user data, posts, comments, etc.
+      // This will only execute if the user is authenticated
+    }
+  }, [authToken, navigate]);
 
   useEffect(() => {
     if (authToken) {
@@ -138,6 +152,7 @@ function BlogList() {
           console.error('Error fetching user data:', error);
         });
     }
+
     const fetchCommentsData = posts.map((post) => {
       axios
         .get(`${baseUrl}/api/comments/?post=${post.id}`, {
@@ -332,6 +347,7 @@ Promise.all(fetchLikesData)
 
   const handleLike = (postId) => {
     if (!authToken || !postId) {
+      navigate('/login-blog')
       console.error('Authentication token or post ID is missing.');
       return;
     }
@@ -424,7 +440,7 @@ Promise.all(fetchLikesData)
       style={{ display: 'none' }}
     />
     <span className="custom-button mx-1">
-      <FontAwesomeIcon icon={faImages} />&nbsp;Photo
+      <FontAwesomeIcon icon={faImages} />&nbsp;<span style={{fontSize:'10px'}}>Photo</span>
       <br />
     </span>
   </label>
@@ -480,11 +496,11 @@ Promise.all(fetchLikesData)
                   <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
                     {selectedPost && selectedPost.id === post.id && (
                       <div className="card-footer blog-post-footer" style={{ borderTop: '1px solid #e1e1e1' }}>
-    {profile && profile.profile_pic && (
+                        {profile && profile.profile_pic && (
                         <div className="d-flex align-items-center">
                           <img
-          src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
-          alt="img"
+                            src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
+                            alt="img"
                             className="rounded-circle author-avatar"
                             style={{ width: '40px', height: '40px', marginRight: '10px' }}
                           />

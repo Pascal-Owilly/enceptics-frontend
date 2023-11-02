@@ -211,17 +211,22 @@ const PlaceInfo = () => {
                                                             <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.summary}</td>
                                                         </tr>
                                                         <tr>
-                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Temperature (°C)</th>
-                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.temperature_celsius}</td>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Temperature</th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.temperature_celsius} °C</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Humidity </th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.humidity} %</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Wind Speed </th>
+                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.windSpeed} Km/h</td>
                                                         </tr>
                                                         <tr>
                                                             <th style={{ border: '1px dotted green', padding: '5px' }}>Icon</th>
                                                             <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.icon}</td>
                                                         </tr>
-                                                        <tr>
-                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Humidity (%)</th>
-                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.humidity}</td>
-                                                        </tr>
+
                                                         <tr>
                                                             <th style={{ border: '1px dotted green', padding: '5px' }}>Visibility</th>
                                                             <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.visibility}</td>
@@ -234,10 +239,7 @@ const PlaceInfo = () => {
                                                             <th style={{ border: '1px dotted green', padding: '5px' }}>Cloud Cover</th>
                                                             <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.cloudCover}</td>
                                                         </tr>
-                                                        <tr>
-                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Wind Speed (Km/h)</th>
-                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.windSpeed}</td>
-                                                        </tr>
+
                                                         <tr>
                                                             <th style={{ border: '1px dotted green', padding: '5px' }}>Wind Gust</th>
                                                             <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.windGust}</td>

@@ -30,17 +30,16 @@ const inputStyle = {
   border: 'none',
   borderRadius: '30px',
   paddingLeft:'2rem',
-  backgroundColor: 'rgb(255,255,255,0.7)',
-  color: 'green',
-  width: '250px',
-  marginBottom: '20px',
+  color: 'black',
+  width: '90%',
+  marginBottom: '50px',
 };
 
 const dropdownStyle = {
-  backgroundColor: 'green',
-  color: 'white',
-  border: '1px solid white',
-  maxHeight: '200px', // Set a max height
+  backgroundColor: 'white',
+  color: 'black',
+  border: 'none',
+  maxHeight: '100px', // Set a max height
   overflowY: 'scroll', // Add scroll for overflow
   width: '100%',
   marginBottom: '20px',
@@ -109,10 +108,10 @@ function CurrencyConverter() {
   return (
     <div style={containerStyle}  >
 		      <div style={headingStyle} >
-        <h1 className='' style={{color:'green', marginTop:'17vh'}}>Convert to your desired currency</h1>
+        <h3 className='' style={{color:'white', marginTop:'17vh'}}>Convert Currency</h3>
 
       </div>
-<div className=' p-4 m-3 ' style={{background:'', transition:'none', borderRadius:'0', height:'400px', border:'1px solid #a9a9a9', width:'80%'}}>
+<div className=' p-4 m-3 ' style={{background:'', transition:'none', borderRadius:'0'}}>
 
       <div style={formStyle}>
         <h4 style={{fontFamily:'cursive', fontWeight:'300'}}>Enter Amount</h4>

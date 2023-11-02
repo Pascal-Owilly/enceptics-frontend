@@ -8,7 +8,6 @@ function SearchResults() {
   const searchQuery = new URLSearchParams(location.search).get("query");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true); // Initialize loading as true
-  const authToken = Cookies.get('authToken');
 
   const baseUrl = 'https://enc.pythonanywhere.com'
 
@@ -17,9 +16,6 @@ function SearchResults() {
     if (searchQuery) {
       axios
         .get(`${baseUrl}/api/places/search/?query=${encodeURIComponent(searchQuery)}`, {
-          headers: {
-            Authorization: `Token ${authToken}`,
-          },
         })
         .then((response) => {
           console.log("API Response:", response.data); // Add this line
@@ -36,7 +32,7 @@ function SearchResults() {
     } else {
       setLoading(false);
     }
-  }, [searchQuery, authToken]);
+  }, [searchQuery]);
   
 
   return (
@@ -46,7 +42,7 @@ function SearchResults() {
       <div className="row">
         <div className="col-md-1"></div>
         <div className="col-md-8" style={{marginTop:'17vh'}}>
-        <div className="" style={{ height: '100vh', backgroundColor:'#121661', color:'white' }}>
+        <div className="" style={{ height: 'auto', backgroundColor:'#121661', color:'white' }}>
       <div className="">
     <h2 className="text-secondary" style={{}}>Search Results for "{searchQuery}"</h2>
     <hr />

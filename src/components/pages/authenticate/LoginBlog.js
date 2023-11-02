@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import authService from './authService';
 
-const LoginTest = () => {
+const LoginBlog = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({
     username: '',
@@ -44,7 +44,7 @@ const LoginTest = () => {
 
     // Redirect to another page if the user is already logged in
     if (isLoggedIn) {
-      navigate('/'); // Replace '/dashboard' with your desired route
+      navigate('/blog'); // Replace '/dashboard' with your desired route
     }
   }, [isLoggedIn]);
 
@@ -63,7 +63,7 @@ const LoginTest = () => {
         <div className='col-md-4'></div>
         <div className='col-md-4'>
           <form className='what-card-navbar p-4' onSubmit={handleLoginSubmit} style={{ width: '100%', backgroundColor: '#121661' }}>
-            <h3 className='text-secondary'>Login</h3>
+            <h5 className='text-secondary'>Please login to join the conversation</h5>
             <hr style={{ color: '#d9d9d9' }} />
             <div className="form-group" style={{ color: '#d9d9d9', fontSize: '18px' }}>
               <label className="mt-1 text-secondary" htmlFor="username">Username</label>
@@ -105,7 +105,7 @@ const LoginTest = () => {
             </button>
             <hr />
             <p className='mb-2 text-secondary'>
-              Don't have an account? <Link to='/signup'>Signup</Link>
+              Don't have an account? <Link to='/signup-blog'>Signup</Link>
             </p>
             <p className='mb-2 text-secondary'>
               <Link to='/forgot-password'>Forgot your password?</Link>
@@ -118,4 +118,4 @@ const LoginTest = () => {
   );
 };
 
-export default LoginTest;
+export default LoginBlog;

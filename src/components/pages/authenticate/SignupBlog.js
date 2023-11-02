@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-const SignUpForm = () => {
+const SignUpBlog = () => {
   const navigate = useNavigate();
   const baseUrl = 'https://enc.pythonanywhere.com';
   
@@ -29,7 +29,7 @@ const SignUpForm = () => {
 
     try {
       const response = await axios.post(`${baseUrl}/api/auth/register/`, registrationData);
-      navigate('/login');
+      navigate('/login-blog');
       // Handle successful sign-up here
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -136,7 +136,7 @@ const SignUpForm = () => {
 
               <hr />
               <p>
-                Already have an account? <Link to='/login'>Login</Link>
+                Already have an account? <Link to='/login-blog'>Login</Link>
               </p>
             </form>
           </div>
@@ -147,4 +147,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignUpBlog;

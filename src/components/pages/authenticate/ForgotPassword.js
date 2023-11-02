@@ -27,12 +27,12 @@ const ForgotPassword = () => {
         <div className='row'>
           <div className='col-md-3'></div>
           <div className='col-md-6 what-card-navbar p-3' >
-            <h3>Forgot Password</h3>
-            <p>Enter your email to reset your password.</p>
+            <h3 className='text-secondary'>Forgot Password</h3>
+            <p  className='text-secondary'>Enter your email to reset your password.</p>
 
             <form onSubmit={handleSubmit} className=''>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email" className='text-secondary'>Email</label>
                 <input
                   type="email"
                   className="form-control"
@@ -43,14 +43,14 @@ const ForgotPassword = () => {
                 />
               </div>
               <br />
-              <button type="submit" onClick={handleSubmit} className="btn what-card-btn" style={{background:'#121661', color:'white'}}>
+              <button type="submit" onClick={handleSubmit} className="btn what-card-btn text-secondary" style={{background:'#121661', color:'white'}}>
                 Reset Password
               </button>
             </form>
+            
+           <span  style={{color:'green', fontFamily:'cursive', fontSize:'18px', fontWeight:'700'}}>  {message && <p><hr />{message}</p>}</span>
             <hr />
-           <span  style={{color:'green', fontFamily:'cursive', fontSize:'18px', fontWeight:'700'}}> {message && <p>{message}</p>}</span>
-            <hr />
-            <p>
+            <p className='text-secondary'>
               Remember your password? <Link to="/login">Login</Link>
             </p>
           </div>

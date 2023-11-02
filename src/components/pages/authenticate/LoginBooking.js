@@ -9,6 +9,7 @@ const LoginTest = () => {
     username: '',
     password: '',
   });
+  const [errorMessages, setErrorMessages] = useState({});
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,39 +20,33 @@ const LoginTest = () => {
     }
     try {
       const authToken = await authService.login(loginData);
-      Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });
+      setIsLoggedIn(true);
+      Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
 
-      // Set a flag in localStorage to indicate successful login
-      localStorage.setItem('isLoggedIn', 'true');
-
-      // Refresh the page
+      // Reload the page after successful login
       window.location.reload();
     } catch (error) {
       // Handle login error
-      console.error('Login failed:', error);
+      if (error.response && error.response.status === 400) {
+        const errorData = error.response.data;
+        setErrorMessages({ invalidCredentials: "Invalid username or password" });
+      } else {
+        console.error('Login failed:', error);
+      }
     }
   };
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const placeName = query.get("placeName");
-    const price = query.get("price");
-
     const storedToken = Cookies.get('authToken');
-
     if (storedToken) {
       setIsLoggedIn(true);
     }
 
-    // Check if the flag is set in localStorage
-    const isLoggedInFlag = localStorage.getItem('isLoggedIn');
-    if (isLoggedInFlag === 'true') {
-      // Clear the flag to avoid repeated navigation
-      localStorage.removeItem('isLoggedIn');
-      // Navigate to "/places"
-      navigate('/places');
+    // Redirect to another page if the user is already logged in
+    if (isLoggedIn) {
+      navigate('/places'); // Replace '/dashboard' with your desired route
     }
-  }, [location.search, navigate]);
+  }, [isLoggedIn]);
 
   const handleLoginSubmit = (event) => {
     event.preventDefault();
@@ -63,52 +58,62 @@ const LoginTest = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius:'10px' }}>
-      <form className='what-card-navbar p-1' onSubmit={handleLoginSubmit} style={{ width: '350px', backgroundColor: '#121661' }}>
-        <h3 className='text-center text-white'>Login</h3>
-        <hr style={{ color: '#d9d9d9' }} />
-        <div className="form-group p-1" style={{ color:'#d9d9d9', fontSize:'18px'}}>
-          <label className="mt-1" htmlFor="username">Username</label>
-          <input
-            type="text"
-            style={{ background: '#d9d9d9' }}
-            className="form-control"
-            id="username"
-            name="username"
-            value={loginData.username}
-            placeholder="Enter username"
-            onChange={handleLoginChange}
-          />
-        </div>
+    <div className='container-fluid' style={{ backgroundColor: '#121661' }}>
+      <div className='row' style={{ height: '100vh', backgroundColor: '#121661', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className='col-md-4'></div>
+        <div className='col-md-4'>
+          <form className='what-card-navbar p-4' onSubmit={handleLoginSubmit} style={{ width: '100%', backgroundColor: '#121661' }}>
+            <h3 className='text-secondary'>Login</h3>
+            <hr style={{ color: '#d9d9d9' }} />
+            <div className="form-group" style={{ color: '#d9d9d9', fontSize: '18px' }}>
+              <label className="mt-1 text-secondary" htmlFor="username">Username</label>
+              <input
+                type="text"
+                style={{ background: '#d9d9d9' }}
+                className="form-control"
+                id="username"
+                name="username"
+                value={loginData.username}
+                placeholder="Enter username"
+                onChange={handleLoginChange}
+              />
+            </div>
 
-        <div className="form-group p-1" style={{ color:'#d9d9d9', fontSize:'18px'}}>
-          <label className="mt-1" htmlFor="password">Password</label>
-          <input
-            type="password"
-            style={{ background: '#d9d9d9' }}
-            placeholder="Enter password"
-            className="form-control"
-            id="password"
-            name="password"
-            value={loginData.password}
-            onChange={handleLoginChange}
-          />
+            <div className="form-group" style={{ color: '#d9d9d9', fontSize: '18px' }}>
+              <label className="mt-1 text-secondary" htmlFor="password">Password</label>
+              <input
+                type="password"
+                style={{ background: '#d9d9d9' }}
+                placeholder="Enter password"
+                className="form-control"
+                id="password"
+                name="password"
+                value={loginData.password}
+                onChange={handleLoginChange}
+              />
+              {errorMessages.invalidCredentials && (
+                <p style={{ color: 'greenyellow', fontSize:'12px'}}>{errorMessages.invalidCredentials}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-outline-secondary text-center mt-2 what-card-price btn-sm mt-4"
+              style={{ backgroundColor: '#121661', borderColor: '#000092', width: '100%', margin: 'auto' }}
+            >
+              Login
+            </button>
+            <hr />
+            <p className='mb-2 text-secondary'>
+              Don't have an account? <Link to='/signup'>Signup</Link>
+            </p>
+            <p className='mb-2 text-secondary'>
+              <Link to='/forgot-password'>Forgot your password?</Link>
+            </p>
+          </form>
         </div>
-        <button
-          type="submit"
-          className="btn btn-outline-secondary text-center mt-2 what-card-btn p-1 btn-sm mt-4"
-          style={{ backgroundColor: '#121661', borderColor: '#000092', width:'200px'}}
-        >
-          Login
-        </button>
-        <hr />
-        <p className='mb-2 text-secondary p-1'>
-          Don't have an account? <Link to='/signup'>Signup</Link>
-        </p>
-        <p className='mb-2 text-white p-1'>
-          <Link to='/forgot-password'>Forgot your password?</Link>
-        </p>
-      </form>
+        <div className='col-md-4'></div>
+      </div>
     </div>
   );
 };

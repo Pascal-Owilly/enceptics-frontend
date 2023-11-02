@@ -16,6 +16,8 @@ import NavigationBar from './components/pages/NavigationBar';
 import Home from './components/pages/Home';
 import Login from './components/pages/authenticate/Login';
 import LoginBooking from './components/pages/authenticate/LoginBooking';
+import LoginBlog from './components/pages/authenticate/LoginBlog';
+import SignUpBlog from './components/pages/authenticate/SignupBlog';
 import ForgotPassword from './components/pages/authenticate/ForgotPassword';
 
 import SignUp from './components/pages/authenticate/SignUp';
@@ -65,6 +67,9 @@ function App() {
           <Route path="/about" element={<Aboutus />} />
           <Route path="/login" element={<Login />} />
           <Route path="/login-booking" element={<LoginBooking />} />
+          <Route path="/login-blog" element={<LoginBlog />} />
+          <Route path="/signup-blog" element={<SignUpBlog />} />
+
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
