@@ -62,7 +62,7 @@ const Destination = () => {
     };
   }
  
-  const baseUrl = 'https://enc.pythonanywhere.com/'
+  const baseUrl = 'http://127.0.0.1:8000/'
 
   const [destinations, setDestinations] = useState([]);
   const [newDestination, setNewDestination] = useState({
@@ -85,7 +85,7 @@ const Destination = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [price, setPrice] = useState(null); // Initialize with an appropriate default value
-const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with an appropriate default value
+  const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with an appropriate default value
 
 
   const fetchPlaceInfo = (destinationId) => {
@@ -293,16 +293,24 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                       >
                         See description
                       </button> 
-                      {/* <hr className="text-secondary"/> */}
-                      {/* <div className="d-flex mb-1 mt-1">
+
+                      <hr className="text-secondary"/> 
+                      <div className="d-flex mb-1 mt-1">
+                      {userRole === 'superuser' && ( // Render only if user is a superuser
+
                         <button className=" btn btn-sm btn-outline-primary" onClick={() => openUpdateModal(destination)}>
                           <FaEdit /> Edit
                         </button>
+                      )}
+
                         &nbsp;&nbsp;&nbsp;
+                        {userRole === 'superuser' && ( // Render only if user is a superuser
+
                         <button className="btn btn-sm btn-outline-danger" onClick={() => deleteDestination(destination.id)}>
                           <FaTrash /> Delete
                         </button>
-                      </div> */}
+                        )}
+                      </div>
                     </Card.Footer>
                   </Card>
                 </div>
@@ -323,13 +331,13 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
             margin: '0',     
           }}  
         >
-<Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', borderRadius: '10px' }}>
-  <Modal.Title className="text-center  ">
-    <h3 className="text-secondary" style={{ color: '' }}>
-      {isUpdateMode ? 'Update Destination' : 'Add New Destination'}
-    </h3>
-  </Modal.Title>
-</Modal.Header>
+        <Modal.Header className="m-1 " closeButton style={{ backgroundColor: '#121661', borderRadius: '10px' }}>
+          <Modal.Title className="text-center  ">
+            <h3 className="text-secondary" style={{ color: '' }}>
+              {isUpdateMode ? 'Update Destination' : 'Add New Destination'}
+            </h3>
+          </Modal.Title>
+        </Modal.Header>
  
           <Modal.Body className=" text-secondary m-1" style={{ height: '100%', width:'auto', backgroundColor: '#121661', borderRadius:'10px' }}>
             <div className="container">
@@ -341,12 +349,12 @@ const [placeBookingData, setPlaceBookingData] = useState({}); // Initialize with
                 <p style={{ fontSize:'18px'}}>Upload cover image</p>
               
                 <input
-  className="bg-white"
-  style={{ border: '1px solid #121661', width: '100%', color: 'rgb(18, 187, 87)' }}
-  type="file"
-  name="cover_image"
-  onChange={handleNewDestinationChange} // Make sure the event handler is correctly wired up
-/>
+                  className="bg-white"
+                  style={{ border: '1px solid #121661', width: '100%', color: 'rgb(18, 187, 87)' }}
+                  type="file"
+                  name="cover_image"
+                  onChange={handleNewDestinationChange} // Make sure the event handler is correctly wired up
+                />
            
             <p style={{fontSize:'18px'}}>Name of destination</p>
             <p>

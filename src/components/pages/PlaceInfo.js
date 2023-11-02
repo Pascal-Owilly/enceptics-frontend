@@ -10,7 +10,7 @@ const PlaceInfo = () => {
 
     const navigate = useNavigate();
 
-    const baseUrl = 'https://enc.pythonanywhere.com'
+    const baseUrl = 'http://127.0.0.1:8000/'
 
 
     console.log('Place ID:', id);

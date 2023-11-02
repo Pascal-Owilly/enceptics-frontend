@@ -9,7 +9,7 @@ function SearchResults() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true); // Initialize loading as true
 
-  const baseUrl = 'https://enc.pythonanywhere.com'
+  const baseUrl = 'http://127.0.0.1:8000'
 
   useEffect(() => {
     // Fetch search results based on the searchQuery
@@ -42,7 +42,7 @@ function SearchResults() {
       <div className="row">
         <div className="col-md-1"></div>
         <div className="col-md-8" style={{marginTop:'17vh'}}>
-        <div className="" style={{ height: 'auto', backgroundColor:'#121661', color:'white' }}>
+        <div className="" style={{ minHeight: '100vh', backgroundColor:'#121661', color:'white' }}>
       <div className="">
     <h2 className="text-secondary" style={{}}>Search Results for "{searchQuery}"</h2>
     <hr />

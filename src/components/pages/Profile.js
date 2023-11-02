@@ -22,7 +22,7 @@ const Profile = () => {
   });
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const baseUrl = 'https://enc.pythonanywhere.com'
+  const baseUrl = 'http://127.0.0.1:8000/'
 
   const handleEditProfilePic = (file) => {
     resizeAndSetProfilePic(file);

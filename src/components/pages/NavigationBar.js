@@ -4,25 +4,11 @@ import '../../static/customFont.css';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // Import js-cookie library
 import './Profile.js';
-import { Button, Dropdown, Navbar, Nav, Container, Row, Col, NavLink, Form, FormControl } from 'react-bootstrap';
+import {Navbar, Nav } from 'react-bootstrap';
 import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
 import { IoMdChatboxes } from 'react-icons/io';
-import dash from '../../images/three-dashes.svg';
-import SearchResults from './SearchResults';
-import Places from './Places'; // Import your Places component
-import Blogs from './Blogs'; // Import your Blogs component
-// import { useAuth } from "../pages/authenticate/AuthContext";
-import { useNavigate, Link } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
+import { useNavigate} from 'react-router-dom';
 
-
-function FlashMessage({ message, type }) {
-  return (
-    <div className={`flash-message ${type}`}>
-      <p>{message}</p>
-    </div>
-  );
-}
 
 function NavigationBar() {
 
@@ -30,35 +16,12 @@ function NavigationBar() {
   const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
   const [expanded, setExpanded] = useState(false);
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const baseUrl = 'https://enc.pythonanywhere.com'
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const baseUrl = 'http://127.0.0.1:8000/'
 
    const toggleExpanded = () => {
     setExpanded(!expanded);
   };
-
-  // Add an event handler to close the navbar when a nav link is clicked and scroll to the top
-  const handleNavigationLinkClick = () => {
-    setIsMenuOpen(false); // Close the navbar
-    // Use JavaScript to scroll to the top of the page smoothly
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
   
-
-
-    // Add an event handler to close the navbar when a nav link is clicked
-
-  const isSmallScreen = useMediaQuery({ maxWidth: 767 }); // Adjust the maxWidth as needed
-
-// search
   const [searchQuery, setSearchQuery] = useState("");
 
 
@@ -66,7 +29,6 @@ function NavigationBar() {
  const handleSearchInputChange = (e) => {
   setSearchQuery(e.target.value);
 };
-
 
   // Function to handle the search button click
   const handleSearch = () => {
@@ -83,50 +45,17 @@ useEffect(() => {
   if (flashMessage) {
     const timer = setTimeout(() => {
       setFlashMessage(null); // Remove the flash message after 2 seconds
-    }, 2000); 
+    }, 5000); 
 
     return () => clearTimeout(timer);
   }
 }, [flashMessage]);
 
-const [registrationData, setRegistrationData] = useState({
-  username: '',
-  email: '',
-  password1: '',
-  password2: '',
-});
-
-const [loginData, setLoginData] = useState({
-  username: '',
-  password: '',
-});
-
 const [profile, setProfile] = useState([]);
-// const [user, setUser] = useState(null);
+
 const authToken = Cookies.get('authToken');
 const [user, setUser] = useState({})
 
-const login = async (e) => {
-  if (e) {
-    e.preventDefault();
-  }
-  try {
-    const response = await axios.post(`${baseUrl}/api/auth/login/`, loginData);
-  
-    const authToken = response.data.key;
-
-    setIsLoggedIn(true);
-
-    Cookies.set('authToken', authToken, { expires: 1, sameSite: 'None', secure: true });    
-
-    setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' });
-    closeModal();
-    window.location.reload()
-
-  } catch (error) {
-    setFlashMessage({ message: "That didn't go well!", type: 'error' });
-  }
-};
 
 useEffect(() => {
   const storedToken = Cookies.get('authToken'); // Retrieve the token from the cookie
@@ -165,108 +94,26 @@ const fetchProfile = async () => {
   }
 };
 
-
-const [showModal, setShowModal] = useState(false);
-const [isSignUpModal, setIsSignUpModal] = useState(false);
 const [isLoggedIn, setIsLoggedIn] = useState(false); // Track user's authentication state
-
-const openSignUpModal = () => {
-  setShowModal(true);
-  setIsSignUpModal(true);
-};
-
-const openLoginModal = () => {
-  setShowModal(true);
-  setIsSignUpModal(false);
-};
-
-const signUp = async (e) => {
-  if (e) {
-    e.preventDefault();
-  }
-  try {
-    const response = await axios.post(`${baseUrl}/api/auth/register/`, registrationData);
-    setFlashMessage({ message: `Welcome ${registrationData.username} !`, type: 'success' }); // Set flash message
-    closeModal();
-    navigate('/login')
-
-    window.location.reload()
-  } catch (error) {
-    alert(`Oops something went wrong but we are working on it`);
-  }
-};
-
-const handleRegistrationSubmit = (e) => {
-  e.preventDefault();
-  signUp();
-};
-
-// Inside NavigationBar component
-
 
 
 const logout = async () => {
   try {
     await axios.post(`${baseUrl}/api/auth/logout/`);
-    setIsLoggedIn(false);
     
     // Remove the authToken cookie
     Cookies.remove('authToken', { sameSite: 'None', secure: true });
+    window.location.reload()
+
     setFlashMessage({ message: 'You have successfully logged out', type: 'success' });
     navigate('/')
 
-    window.location.reload()
   } catch (error) {
     setFlashMessage({ message: 'Failed to logout', type: 'error' });
   }
 };
 
-
-
-const handleLoginSubmit = (event) => {
-  event.preventDefault();
-  login();
-};
-
-
-const handleRegistrationChange = (e) => {
-    setRegistrationData({ ...registrationData, [e.target.name]: e.target.value });
-  };
-
-  const handleLoginChange = (e) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  };
-
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    setRegistrationData({
-      username: '',
-      email: '',
-      password1: '',
-      password2: '',
-    });
-    setLoginData({
-      username: '',
-      password: '',
-    });
-  };
-
-  const greatvibes = {
-    fontFamily: 'lobster',
-    fontSize: '14px',
-    textDecoration: 'overline',
-    textDecorationColor: 'green',
-    textDecorationSkipInk: "3rem",
-    color:'rgb(18, 187, 18)',
-    fontWeight:'500',
-
-  };
-
-  return (
+return (
 <>
 <Navbar className={`what-card-navbar ${expanded ? 'collapsed-navbar' : ''} custom-navbar`} variant="primary" expand="md" style={{ backgroundColor: '#121661', position: 'fixed', zIndex: '2', width: '100%', borderRadius: '0' }}>
 
@@ -276,17 +123,18 @@ const handleRegistrationChange = (e) => {
             <sub style={{fontFamily:'cursive', fontWeight:'bold', letterSpacing:'2px', fontSize:'16px'}} className="brand-text">nceptics</sub>
           </a>
 
-<Nav className="" style={{textAlign:'center'}}>
-<Navbar.Toggle
+          <Navbar.Toggle
     aria-controls="basic-navbar-na"
-    style={{ marginRight: '0.5rem', fontSize: '18px', border:'1px solid #a9a9a9', padding:'5px' }}
+    style={{ marginRight: '0.5rem', fontSize: '18px', padding:'5px' }}
     onClick={toggleExpanded}
  >     
 {expanded ? <FaTimes style={{fontSize:'20px', color:'#a9a9a9'}}/> : <FaBars style={{fontSize:'20px', color:'#a9a9a9', border:'none', fontWeight:'200'}} />}
 </Navbar.Toggle>
+ 
+<Nav className="" style={{textAlign:'center'}}>
+
 <Navbar.Collapse id="basic-navbar-nav" style={{ zIndex: 999}}>
     <hr style={{color:'#a9a9a9'}}/>
-
          <ul className="navbar-nav">
               <li className="nav-items">
                 <div className="container h-100">
@@ -297,10 +145,9 @@ const handleRegistrationChange = (e) => {
                         onChange={handleSearchInputChange}
                        />
               <a className="search_icon" onClick={handleSearch}><FaSearch /></a>
-        </div>
-      </div>
-    </div>
-
+                    </div>
+                  </div>
+                </div>
           </li> 
             <li className="nav-item">
                 <a style={{fontFamily:'sanserif', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/">
@@ -313,32 +160,17 @@ const handleRegistrationChange = (e) => {
                 </a>
               </li>
               <li className="nav-items">
-
               <a style={{fontFamily:'arial', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/places">
-
                 <button className='btn btn-sm what-card-btn ' style={{backgroundColor:'green', color:'#fff', fontWeight:'bolder', padding:''}}>
                  <span style={{padding:'10px'}}> Book Now</span>
                   </button>
                   </a>
-
               </li>
-
-              <li>
-
-{/* <SearchBar /> */}
-
-              </li>   
-
               <li className="nav-item mx-2 ">
               <a style={{fontFamily:'cursive', fontWeight:'400', letterSpacing:'1px', fontSize:'16px', color:'goldenrod'}} className="nav-link" href="/currencyconverter">
                   Currency
                 </a>
               </li>
-
-              <li>
-
-              </li>
-
               <li>
               <a href="/blog">
               <button className="btn btn-sm  mt-2 mx-4 what-card-btn" 
@@ -347,223 +179,77 @@ const handleRegistrationChange = (e) => {
                       <span style={{padding:'10px'}}>
                     <IoMdChatboxes style={{fontSize:'19px'}} /> chat
                     </span>
-                    
-                  </button> </a>
+                  </button> 
+                  </a>
               </li>
-
-
             </ul>
 
-            {!isLoggedIn && ( // Render only if not logged in
+        {!isLoggedIn && ( 
           <div>
-            {/* <Link to='/signup'> */}
             <a href='/signup'>
             <button
               type="button"
               className="btn btn-sm m-1 what-card-btn"
               style={{color: '#d9d9d9', border: 'none' }}
-              // onClick={openSignUpModal}
             >
               <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white" >
-
               <span style={{padding:'5px'}}>
               Sign Up 
               </span>
               </span>
             </button>
             </a>
-            {/* </Link> */}
-
-            {/* <Link to='/login'> */}
             <a href='/login'>
             <button
               type="button"
               className="btn btn-sm m-1 what-card-btn"
               style={{color: '#d9d9d9', border: 'none' }}
-              // onClick={openLoginModal}
             >
-                            <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white" >
-
+              <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white" >
               <span style={{padding:'5px'}}>
-
               Login
-                            </span>
-
+              </span>
               </span>
             </button>
             </a>
-            {/* </Link> */}
           </div>
         )} 
-
       {isLoggedIn && ( 
-            
-<>
-
-              <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-33px' }}>
-  <a className="nav-link text-white" href="/profile" >
-    {profile && profile.profile_pic && (
-      <>
-        <img
-          src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
-          style={{ width: '40px', height: '40px', borderRadius: '100%' }}
-          alt=""
-        />
-        <div style={{ maxWidth: '30px' }}>
-          <span style={{ fontSize: '14px', fontWeight: '500', opacity: '.9', fontFamily: 'cursive', letterSpacing: '1px', lineHeight: '1px' }} className='text-white text-center'>{profile && user.username}</span>
-        </div>
-      </>
-    )}
-  </a>
-</li>
-
-
-                <button
-                                type="button"
-                                className="btn btn-sm mx-4 what-card-btn"
-                                style={{  color: '#d9d9d9', border: 'none'}}
-                                onClick={logout}
-                              >
- <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white">
-
-<span style={{padding:'5px'}}>
-
-Logout
-              </span>
-
-</span>                                  
-                                </button>
-                                </>
-                              )} 
-      {showModal && (
-          <div className="modal" style={{ display: 'flex', alignItems:'center', justifyContent:'center', height:'100vh', backgroundColor:'rgb(0, 0, 0, 0.8)' }}>
-            <div className="modal-dialog">
-              <div className="modal-content what-card-nav mx-2 text-secondary" style={{background:'#121661', width:'360px'}}>
-                <div className="modal-header">
-                  <h5 className="modal-title text-secondary">{isSignUpModal ? 'Sign Up' : 'Login'}</h5>
-                  <button style={{backgroundColor:'', border:'none', color:'white', width:'40px', borderRadius:'4px'}} type="button" className="close" onClick={closeModal}>
-                    <span className='text-dark' aria-hidden="true">&times;</span>
-                  </button>
+        <>
+        <li className="nav-items mx-4" style={{ backgroundColor: 'transparent', width: '40px', height: '40px', borderRadius: '100%', listStyleType: 'none', marginTop:'-33px' }}>
+          <a className="nav-link text-white" href="/profile" >
+            {profile && profile.profile_pic && (
+              <>
+                <img
+                  src={`${baseUrl}${profile.profile_pic}`} // Use the full URL
+                  style={{ width: '40px', height: '40px', borderRadius: '100%' }}
+                  alt=""
+                />
+                <div style={{ maxWidth: '30px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: '500', opacity: '.9', fontFamily: 'cursive', letterSpacing: '1px', lineHeight: '1px' }} className='text-white text-center'>{profile && user.username}</span>
                 </div>
-                <div className="modal-body ">
-                  {isSignUpModal ? (
-                    <form onSubmit={handleRegistrationSubmit}>
-               
-                      <div className="form-group">
-                        <label className="mt-4" htmlFor="username">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="username"
-                          name="username"
-                          value={registrationData.username}
-                          placeholder="Enter username"
-                          onChange={handleRegistrationChange}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="mt-4" htmlFor="email">Email</label>
-                        <input
-                          type="email"
-                          className="form-control "
-                          id="email"
-                          name="email"
-                          placeholder="Enter email"
-                          value={registrationData.email}
-                          onChange={handleRegistrationChange}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="mt-4" htmlFor="password">Password</label>
-                        <input
-                          type="password"
-                          placeholder="Enter password"
-                          className="form-control"
-                          id="password1"
-                          name="password1"
-                          value={registrationData.password1}
-                          onChange={handleRegistrationChange}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="mt-4" htmlFor="confirm_password">Confirm Password</label>
-                        <input
-                          type="password"
-                          placeholder="Confirm password"
-                          className="form-control"
-                          id="password2"
-                          name="password2"
-                          value={registrationData.password2}
-                          onChange={handleRegistrationChange}
-                        />
-                      </div>
-                      
-                      <button
-                        type="submit"
-                        className="btn btn-primary btn-sm mt-3"
-                        style={{ backgroundColor: '#000092', borderColor: '#000092' , width:'100%'}}
-                      >
-                        Sign Up
-                      </button> <hr />
-                      <p>Already have an account? <a href='/login'>Login</a></p>
-                    </form> 
-                  ) : (
-                    <>
-                    
-                    <form onSubmit={handleLoginSubmit} >
-                      <div className="form-group">
-                        <label className="mt-4" htmlFor="username">Username</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="username"
-                          name="username"
-                          value={loginData.username}
-                          placeholder="Enter username"
-                          onChange={handleLoginChange}
-                        />
-                      </div>
-
-                       <div className="form-group">
-                        <label className="mt-4" htmlFor="password">Password</label>
-                        <input
-                          type="password"
-                          placeholder="Enter password"
-                          className="form-control "
-                          id="password"
-                          name="password"
-                          value={loginData.password}
-                          onChange={handleLoginChange}
-                        />
-                      </div> 
-                      <button
-                        type="submit"
-                        className="btn btn-primary btn-sm mt-4"
-                        style={{ backgroundColor: '#121661', borderColor: '#000092', width:'100%' }}
-                      >
-                        Login
-                      </button>
-                      <hr />
-                      <p>Don't have an account? <a href='/signup'>SignUp</a></p>
-                      <p className='mb-2 text-secondary'>
-                        <Link to='/forgot-password' onClick={closeModal}>Forgot your password?</Link>
-                      </p>
-                    </form>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )} 
+              </>
+            )}
+          </a>
+        </li>
+        <button
+            type="button"
+            className="btn btn-sm mx-4 what-card-btn"
+            style={{  color: '#d9d9d9', border: 'none'}}
+            onClick={logout}
+          >
+        <span style={{fontFamily:'sans', fontWeight:'200px', letterSpacing:'1px', fontSize:'14px'}} className="nav-lin text-white">
+        <span style={{padding:'5px'}}>
+            Logout
+        </span>
+        </span>                                  
+        </button>
+         </>
+            )} 
           </Navbar.Collapse>
           </Nav>
-
           </div>
       </Navbar>
-
       {flashMessage && (
         <div className="flash-message text-secondary" style={{backgroundColor:'transparent',  fontWeight:'normal'}}>
           {flashMessage.message}

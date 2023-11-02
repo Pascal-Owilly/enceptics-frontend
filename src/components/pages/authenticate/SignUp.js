@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const baseUrl = 'https://enc.pythonanywhere.com';
+  const baseUrl = 'http://127.0.0.1:8000';
   
   const [registrationData, setRegistrationData] = useState({
     username: '',
@@ -49,7 +49,7 @@ const SignUpForm = () => {
           <div className='col-md-4'></div>
           <div className='col-md-4' style={{ marginTop: '17vh' }}>
             <form
-              className='card p-3 what-card-navbar m-1 mb-2'
+              className='card p-3 what-card-navbar m-1 mb-5'
               style={{ background: '#121661', color: 'white' }}
               onSubmit={signUp}
             >

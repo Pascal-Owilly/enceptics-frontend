@@ -3,7 +3,16 @@ import Cookies from 'js-cookie';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import authService from './authService';
 
+function FlashMessage({ message, type }) {
+  return (
+    <div className={`flash-message ${type}`}>
+      <p>{message}</p>
+    </div>
+  );
+}
+
 const LoginTest = () => {
+  const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({
     username: '',
@@ -23,8 +32,12 @@ const LoginTest = () => {
       setIsLoggedIn(true);
       Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
 
+      // window.location.reload();
+
       // Reload the page after successful login
-      window.location.reload();
+      setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' });
+
+
     } catch (error) {
       // Handle login error
       if (error.response && error.response.status === 400) {
@@ -32,9 +45,21 @@ const LoginTest = () => {
         setErrorMessages({ invalidCredentials: "Invalid username or password" });
       } else {
         console.error('Login failed:', error);
+        setFlashMessage({ message: "That didn't go well!", type: 'error' });
+
       }
     }
   };
+
+  useEffect(() => {
+    if (flashMessage) {
+      const timer = setTimeout(() => {
+        setFlashMessage(null); // Remove the flash message after 2 seconds
+      }, 3000); 
+  
+      return () => clearTimeout(timer);
+    }
+  }, [flashMessage]);
 
   useEffect(() => {
     const storedToken = Cookies.get('authToken');
@@ -92,7 +117,7 @@ const LoginTest = () => {
                 onChange={handleLoginChange}
               />
               {errorMessages.invalidCredentials && (
-                <p style={{ color: 'greenyellow', fontSize:'12px'}}>{errorMessages.invalidCredentials}</p>
+                <p style={{ color: '', fontSize:'12px'}}><i><em>{errorMessages.invalidCredentials}</em></i></p>
               )}
             </div>
 
@@ -112,9 +137,17 @@ const LoginTest = () => {
             </p>
           </form>
         </div>
-        <div className='col-md-4'></div>
-      </div>
+          <div className='col-md-4'></div>
+        </div>
+        <>
+  {flashMessage && (
+    <div className="flash-message text-secondary" style={{backgroundColor:'transparent',  fontWeight:'normal'}}>
+      {flashMessage.message}
     </div>
+  )}
+  </>
+    </div>
+
   );
 };
 

@@ -16,7 +16,7 @@ const Booking = () => {
   
   const price = parseFloat(priceFromURL) || 0; // Ensure it's a number, default to 0 if parsing fails
 
-  const baseUrl = 'https://enc.pythonanywhere.com'
+  const baseUrl = 'http://127.0.0.1:8000/'
 
   const id = queryParams.get('id');
 
