@@ -11,6 +11,8 @@ import placeholderImage1 from '../../images/house1.jpg';
 import placeholderImage2 from '../../images/house2.jpg';
 import placeholderImage3 from '../../images/house3.jpg';
 import { Carousel } from 'react-bootstrap';
+import { checkUserRole } from './authenticate/CheckUserRoleUtils'; // Update the path accordingly
+
 import Cookies from 'js-cookie';
 
 function BlogList() {
@@ -31,7 +33,8 @@ function BlogList() {
   const [commentText, setCommentText] = useState('');
   const [likes, setLikes] = useState({});
 
-  const baseUrl = 'https://enc.pythonanywhere.com'
+
+  const baseUrl = 'http://127.0.0.1:8000'
 
   useEffect(() => {
     // Check for authToken, if not present, redirect to login page

@@ -6,7 +6,6 @@ import './App.css';
 import '../src/static/Homepage.css';
 import PlaceInfo from './components/pages/PlaceInfo';
 import Homepage from './components/pages/Hero';
-import Blogs from '../src/components/pages/Blogs';
 import Profile from '../src/components/pages/Profile';
 import BookingPage from '../src/components/pages/BookingPage';
 import Places from '../src/components/pages/Places';
@@ -27,7 +26,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import BlogList from './components/pages/BlogList';
 import AddPlaceInfo from './components/pages/placeinfotest/AddPlaceInfo';
 
-import BookingExample from './components/pages/BookingExample';
 import { SearchProvider } from './components/pages/SearchContext';
 import SearchResults from './components/pages/SearchResults';
 
@@ -93,8 +91,6 @@ function App() {
 
           <Route path="/payment/response" element={<PaymentResponsePage paymentResponse={response} />} />
                   
-          <Route path="/bookingexample" element={<BookingExample />} />          
-
         </Routes>
         <Footer />  
       </div>

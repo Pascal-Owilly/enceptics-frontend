@@ -255,7 +255,7 @@ const Destination = () => {
     <>
       <Container className='p-4' fluid style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
         <div className="" style={{marginTop:'10vh'}}>
-  <h1 className="places-span" style={{  color:'#a9a9a9', fontWeight:'500' }}>Adventure awaits. Let your vacay begin</h1>
+  <h3 className="places-span" style={{  color:'#a9a9a9', fontWeight:'500' }}>Begin your adventure in style</h3>
   {userRole === 'superuser' && ( // Render only if user is a superuser
             <button className="mt-4 p-1 what-card-btn" style={{ backgroundColor: '#121661', color: '#d9d9d9' }} onClick={openModal}>
               <FaPlus /> Add New Destination

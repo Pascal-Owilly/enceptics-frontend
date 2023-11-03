@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Places from '../pages/Places';
 import Hero from '../pages/Hero';
-import Blogs from '../pages/Blogs';
 import axios from 'axios';
 import TopChats from './TopChats';
 
@@ -24,7 +23,6 @@ function Home() {
     <>
       <Hero />
       <Places />
-      <Blogs />
       {/* Render the TopChats component and pass the fetched blog posts */}
       {/* <TopChats blogPosts={blogPosts} /> */}
     </>
