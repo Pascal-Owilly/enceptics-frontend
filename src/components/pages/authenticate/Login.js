@@ -32,7 +32,7 @@ const LoginTest = () => {
       setIsLoggedIn(true);
       Cookies.set('authToken', authToken, { expires: 10, sameSite: 'None', secure: true });
 
-      // window.location.reload();
+      window.location.reload();
 
       // Reload the page after successful login
       setFlashMessage({ message: `Welcome back ${loginData.username} !`, type: 'success' });

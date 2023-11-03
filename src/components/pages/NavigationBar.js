@@ -162,7 +162,7 @@ return (
               <li className="nav-items">
               <a style={{fontFamily:'arial', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/places">
                 <button className='btn btn-sm what-card-btn ' style={{backgroundColor:'green', color:'#fff', fontWeight:'bolder', padding:''}}>
-                 <span style={{padding:'10px'}}> Book Now</span>
+                 <span style={{padding:'10px'}}> See Places</span>
                   </button>
                   </a>
               </li>

@@ -11,9 +11,12 @@ const checkUserRole = async () => {
   
       // Make a request to your API to get user role (you need to implement this API endpoint)
       const response = await authService.getUserRole(authToken);
+      console.log('user role is ', response)
   
       // Assuming your API returns user role as 'superuser' or 'regular'
-      return response.data.role;
+      console.log('user response', response.role)
+
+      return response.role;
     } catch (error) {
       console.error('Error checking user role:', error);
       return 'anonymous'; // Handle errors gracefully, assume anonymous role
