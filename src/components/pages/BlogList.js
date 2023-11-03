@@ -36,6 +36,15 @@ function BlogList() {
 
   const baseUrl = 'http://127.0.0.1:8000'
 
+  const [userRole, setUserRole] = useState('loading'); // Initialize with 'loading'
+
+  useEffect(() => {
+    // Check user role and update state
+    checkUserRole().then((role) => {
+      setUserRole(role);
+    })
+    });
+
   useEffect(() => {
     // Check for authToken, if not present, redirect to login page
     if (!authToken) {
@@ -463,7 +472,7 @@ Promise.all(fetchLikesData)
   </div>
 </div>
 
-            <hr />
+            {/* <hr /> */}
             {imagePreview && (
               <div className="mb-3 mt-1">
                 <img src={imagePreview} alt="Image Preview" style={{ width: '100%' }} />
@@ -471,7 +480,7 @@ Promise.all(fetchLikesData)
             )}
             <div className="row">
             {posts.map((post) => (
-                <div key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', width: '97%' }}>
+                <div key={post.id} className="card blog-post-card m-auto mb-2" style={{ margin: '5px', padding: '10px', width: '95%' }}>
                   <div className="card-header blog-post-header" style={{ borderBottom: '1px solid #e1e1e1' }}>
                     <div className="d-flex align-items-center">
                       <img
@@ -526,8 +535,14 @@ Promise.all(fetchLikesData)
                       </div>
                     )}
                     <div className="d-flex justify-content-between">
-                      <div></div>
+                      <div>
+                      {userRole === 'superuser' && ( // Render only if user is a superuser
+          
+          <button onClick={() => deletePost(post.id)} className="btn btn-outline-danger btn-sm delete-button"><i className="fa fa-trash"></i> Delete</button>
+  )}
+                      </div>
                       <div className="post-stats" style={{ fontSize: '12px', color: '#666' }}>
+   
                       <span className="text-primary like-button" onClick={() => handleLike(post.id)}>
     <i className="fa fa-thumbs-up"></i>&nbsp;
     <span className="like-count">{likes[post.id] || 0} Likes</span>
@@ -550,7 +565,10 @@ Promise.all(fetchLikesData)
                           ))}
                         </div>
                       )}
+                                        
                   </div>
+
+
                 </div>
               ))}
             </div>

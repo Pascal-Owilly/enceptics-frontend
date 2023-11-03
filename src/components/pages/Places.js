@@ -261,8 +261,7 @@ const Destination = () => {
               <FaPlus /> Add New Destination
             </button>
           )}
-  <hr className="text-secondary"/>
-
+          <hr className='text-secondary' />
 </div>
     
         {isLoading ? ( 
@@ -275,7 +274,7 @@ const Destination = () => {
               {destinations.map((destination) => (
                 <div key={destination.id}>
                   <Card className="what-card-places" style={{ backgroundColor: '#121661', width:'100%', height:'480px'}}>
-                    <Card.Img src={destination.cover_image} style={{ width: '100%', height:'180px' }} />
+                    <Card.Img src={destination.cover_image} style={{ width: '100%', height:'200px' }} />
                     <Card.Body style={{ color: 'black' }}>
                       <h5 className="mt-2" style={{ color: 'yellow', fontWeight: 500 }}>
                         {destination.name}
@@ -294,7 +293,6 @@ const Destination = () => {
                         See description
                       </button> 
 
-                      <hr className="text-secondary"/> 
                       <div className="d-flex mb-1 mt-1">
                       {userRole === 'superuser' && ( // Render only if user is a superuser
 

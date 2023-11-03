@@ -4,7 +4,7 @@ import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import { Carousel, Card } from 'react-bootstrap';
 import '../../static/Styles.css';
-
+import weather from '../../images/weather.avif'
 const PlaceInfo = () => {
     const { id } = useParams();
 
@@ -96,18 +96,21 @@ const PlaceInfo = () => {
     
 
     return (
-        <div style={{ minHeight: 'auto', backgroundColor: '#121661' }}>
+        <div style={{ minHeight: '100vh', backgroundColor: '#121661' }}>
             {placeInfo ? (
                 <div>
-                    <div className="container-fluid" style={{ marginTop: '', color: 'yellow' }}>
+                    <div className="container" style={{ marginTop: '', color: 'yellow' }}>
                         <div className="row">
                             <h2 className="" style={{ marginTop: '14vh' }}>
                                 {placeName} <span style={{fontSize:'16px', fontFamily:'cursive'}}>{price && `Price: ${price}`} </span>
+                                
                             </h2>
+                            <hr />
 
                             <div className="col-md-8">
-    <hr />
-    <Card className='place-info-slide' style={{ height: '450px', background:'black' }}>
+
+                            <p className=' text-white' style={{width:'', top: '', fontSize:'14px',letterSpacing:'1px'}}>{placeInfo.weather_forecast}</p>
+                            <Card className='place-info-slide mb-5' style={{ height: '', background:'#121661' }}>
     <Carousel
   fade={false}
   controls={true}
@@ -121,7 +124,7 @@ const PlaceInfo = () => {
         className="place-info-slide"
         src={placeInfo.pictures}
         alt="img"
-        style={{ width: '100%', height: '450px' }}
+        style={{ width: '100%', height: 'auto' }}
       />
       <div
         className="full-width-caption"
@@ -138,13 +141,12 @@ const PlaceInfo = () => {
           color: 'white',
         }}
       >
-        <p className='text-center white' style={{width:'80%', top: '10%', fontSize:'18px',letterSpacing:'1px'}}>{placeInfo.weather_forecast}</p>
       </div>
     </div>
   </Carousel.Item>
 
   <Carousel.Item style={{ width: '100%', position: 'relative' }}>
-    <video className='place-info-slide mt-1 mb-1' id="videoPlayer" width="100%" controls style={{ top: 0, display: 'block', width: '100%', height:'450px' }}>
+    <video className='place-info-slide mt-1 mb-1' id="videoPlayer" width="100%" controls style={{ top: 0, display: 'block', width: '100%', height:'auto' }}>
       <source src={placeInfo.videos} type="video/mp4" />
       <source src={placeInfo.videos} type="video/webm" />
       <source src={placeInfo.videos} type="video/ogg" />
@@ -177,34 +179,22 @@ const PlaceInfo = () => {
 </Carousel>
 
 </Card>
-
-                                        <button
-                                            onClick={() => handleNavigateToBooking(id, placeName, price)}
-
-                                            className="what-card-btn btn mt-3 mb-5  btn-sm"
-                                            style={{
-                                                fontSize: '18px',
-                                                color: 'goldenrod',
-                                                fontWeight: 'bold',
-                                                width: 'auto',
-                                                textAlign: 'right',
-                                            }}
-                                        >
-                                            Proceed to booking &nbsp;&nbsp; <FaArrowRight />
-                                        </button>
 </div>
 
+<div className='col-md-4'>
                             {loadWeather && (
-                                <div className="col-md-4 text-center mt-3" style={{}}>
-                                    <div className="weather-widget">
+                                
+                                <div className="col-md-12 text-center  mt-3">
+
+                                    <div className="weather-background">
                                        
                                         {isLoadingWeather ? (
                                             <p>Loading weather data...</p>
                                         ) : weatherData ? (
-                                            <Card className="weather-card" style={{ background: '#121661' }}>
+                                            <Card className="weather-card" style={{ background: 'transparent' }}>
                                             <Card.Body>
                                                 <Card.Title style={{color:'#A9A9A9'}}>Weather Forecast for {placeName}</Card.Title>
-                                                <table style={{ background: '#121661', color: 'greenyellow' }}>
+                                                <table style={{ background: 'transparent', color: 'greenyellow' }}>
                                                     <tbody>
                                                         <tr>
                                                             <th style={{ border: '1px dotted green', padding: '5px' }}>Summary</th>
@@ -228,33 +218,43 @@ const PlaceInfo = () => {
                                                         </tr>
 
                                                         <tr>
-                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Visibility</th>
-                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.visibility}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>UV Index</th>
-                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.uvIndex}</td>
-                                                        </tr>
-                                                        <tr>
                                                             <th style={{ border: '1px dotted green', padding: '5px' }}>Cloud Cover</th>
                                                             <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.cloudCover}</td>
                                                         </tr>
-
-                                                        <tr>
-                                                            <th style={{ border: '1px dotted green', padding: '5px' }}>Wind Gust</th>
-                                                            <td style={{ border: '1px dotted green', padding: '5px' }}>{weatherData.windGust}</td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
+                                               
                                             </Card.Body>
-                                        </Card>                ) : (
+                                    
+                                        </Card>    
+                                                    ) : (
                                             <p>No weather data available</p>
                                         )}
                                     </div>
-                                  
+                                    
+                                    <button
+                                            onClick={() => handleNavigateToBooking(id, placeName, price)}
+
+                                            className="what-card-btn mt-3 mb-5 btn btn-sm"
+                                            style={{
+                                                fontSize: '18px',
+                                                color: 'goldenrod',
+                                                fontWeight: 'bold',
+                                                width: 'auto',
+                                                textAlign: 'right',
+                                            }}
+                                        >
+                                            Proceed to booking &nbsp;&nbsp; <FaArrowRight />
+                                        </button>
                                 </div>
+                  
                             )}
+                            </div>
                         </div>
+                        
+                                        </div>
+                        <div>
+
                     </div>
                 </div>
             ) : placeInfo === 0 ? (
@@ -304,8 +304,11 @@ const PlaceInfo = () => {
 
                     </div>
                 </div>
+                
             )}
+            
         </div>
+        
         
     );
 };

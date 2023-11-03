@@ -3,6 +3,7 @@ import Places from '../pages/Places';
 import Hero from '../pages/Hero';
 import axios from 'axios';
 import TopChats from './TopChats';
+import BlogList from './BlogList';
 
 function Home() {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -23,6 +24,7 @@ function Home() {
     <>
       <Hero />
       <Places />
+      {/* <BlogList /> */}
       {/* Render the TopChats component and pass the fetched blog posts */}
       {/* <TopChats blogPosts={blogPosts} /> */}
     </>
