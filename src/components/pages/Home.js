@@ -10,7 +10,7 @@ function Home() {
 
   useEffect(() => {
     // Fetch blog posts and their likes
-    axios.get('http://127.0.0.1:8000/api/blogposts/')
+    axios.get('https://enc.pythonanywhere.com/api/blogposts')
       .then((response) => {
         const postsData = response.data;
         setBlogPosts(postsData);

@@ -34,7 +34,7 @@ function BlogList() {
   const [likes, setLikes] = useState({});
 
 
-  const baseUrl = 'http://127.0.0.1:8000'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
   const [userRole, setUserRole] = useState('loading'); // Initialize with 'loading'
 

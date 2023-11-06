@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:8000/'; // Replace with your API base URL
+const BASE_URL = 'https://enc.pythonanywhere.com'; // Replace with your API base URL
 
 const authService = {
   login: async (loginData) => {

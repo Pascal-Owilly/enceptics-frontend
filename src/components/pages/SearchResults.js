@@ -9,7 +9,7 @@ function SearchResults() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true); // Initialize loading as true
 
-  const baseUrl = 'http://127.0.0.1:8000'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
   useEffect(() => {
     // Fetch search results based on the searchQuery

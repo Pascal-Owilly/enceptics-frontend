@@ -16,7 +16,7 @@ function NavigationBar() {
   const [flashMessage, setFlashMessage] = useState(null); // Initialize with null
   const [expanded, setExpanded] = useState(false);
 
-  const baseUrl = 'http://127.0.0.1:8000/'
+  const baseUrl = 'https://enc.pythonanywhere.com'
 
    const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -123,16 +123,14 @@ return (
             <sub style={{fontFamily:'cursive', fontWeight:'bold', letterSpacing:'2px', fontSize:'16px'}} className="brand-text">nceptics</sub>
           </a>
 
-          <Navbar.Toggle
+<Nav className="" style={{textAlign:'center'}}>
+<Navbar.Toggle
     aria-controls="basic-navbar-na"
     style={{ marginRight: '0.5rem', fontSize: '18px', padding:'5px' }}
     onClick={toggleExpanded}
  >     
 {expanded ? <FaTimes style={{fontSize:'20px', color:'#a9a9a9'}}/> : <FaBars style={{fontSize:'20px', color:'#a9a9a9', border:'none', fontWeight:'200'}} />}
 </Navbar.Toggle>
- 
-<Nav className="" style={{textAlign:'center'}}>
-
 <Navbar.Collapse id="basic-navbar-nav" style={{ zIndex: 999}}>
     <hr style={{color:'#a9a9a9'}}/>
          <ul className="navbar-nav">
@@ -162,7 +160,7 @@ return (
               <li className="nav-items">
               <a style={{fontFamily:'arial', fontWeight:'200px', letterSpacing:'2px', fontSize:'16px'}} className="nav-link text-white" href="/places">
                 <button className='btn btn-sm what-card-btn ' style={{backgroundColor:'green', color:'#fff', fontWeight:'bolder', padding:''}}>
-                 <span style={{padding:'10px'}}> See Places</span>
+                 <span style={{padding:'10px'}}> Destinations</span>
                   </button>
                   </a>
               </li>
